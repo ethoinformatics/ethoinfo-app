@@ -134,7 +134,16 @@ We run / build our application via scripts defined in package.json:
 *   [Leaflet](http://leafletjs.com/) is used for mapping.
 *   [Onsen](http://onsen.io/v2/) provides mobile UI components with a native look and feel.
 
-## Troubleshooting
+
+### Known issues
+* **sync error**
+    
+    Sometimes you might see the following error when you sync with CouchDB:
+    ![alt text](http://ethoinfo.s3.amazonaws.com/sync-error.png "Sync error")
+
+    This error was present on previous versions of the project (ethoinfo-project-app / ethoinfo-framework). Todo: Investigate whether this is something server-side or the way we are replicating from pouch <==> couch.
+
+### Other troubleshooting
 * **npm permissions**
 
     If you see an error message in terminal about npm permissions, it can likely be fixed via the instructions here: [fixing-npm-permission](https://docs.npmjs.com/getting-started/fixing-npm-permissions)

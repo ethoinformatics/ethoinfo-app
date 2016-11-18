@@ -110,6 +110,7 @@ export default class DataStore {
       const docsWritten = info.docs_written;
       this.statusMessage = `Download success: ${docsWritten} docs written.`;
     }).on('error', (err) => {
+      console.log(err);
       this.operationInFlight = false;
       this.statusMessage = `Download error: ${err.message}`;
     });
