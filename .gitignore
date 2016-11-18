@@ -1,0 +1,12 @@
+.idea/
+cordova/platforms/*
+node_modules/
+uploads/
+generated/
+dist/
+build/
+*.iml
+webpack-assets.json
+webpack-stats.json
+npm-debug.log
+.DS_Store

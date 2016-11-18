@@ -1,0 +1,41 @@
+@require '../shared/config'
+.sync
+  .progress-bar
+    margin-bottom 2em
+
+  .progress-bar--indeterminate:before
+    background-color: #000
+
+  .progress-bar--indeterminate:after
+    background-color: #000
+
+.progressContainer
+  position relative
+  height 20px
+
+.syncFields
+  list-style none
+  padding 0
+  margin 0 0 2em 0
+
+.syncField
+  display block
+  margin 0 0 1em 0
+  padding 0
+  input
+    background transparent
+    height 44px
+    line-height 44px
+    border none
+    width 100%
+    box-sizing border-box
+    border-bottom 1px solid #bbb
+  label
+    display block
+    font-weight 700
+
+.button
+  margin-bottom 1em
+  cursor pointer
+
+    

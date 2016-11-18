@@ -1,0 +1,10 @@
+---
+# Schema for a Diary
+name: Diary
+fields:
+  - name: eventDate
+    type: Date
+  - name: collections
+    type: [PoopSample, PlantSample]
+  - name: markPatches
+    type: [MarkPatch]
