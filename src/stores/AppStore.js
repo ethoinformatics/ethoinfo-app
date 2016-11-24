@@ -1,18 +1,17 @@
 import { action, computed, observable } from 'mobx';
 
-import schemas from '../schemas';
-
-const { Diary } = schemas;
-
-console.log(schemas);
+// import schemas from '../schemas';
+// const { Diary } = schemas;
+// console.log(schemas);
 // console.log(Contact);
-console.log(Diary);
+// console.log(Diary);
 
 export default class AppStore {
   dataStore = null;
 
-  constructor(dataStore) {
+  constructor(dataStore, geoStore) {
     this.dataStore = dataStore;
+    this.geoStore = geoStore;
   }
 
   routes = [
