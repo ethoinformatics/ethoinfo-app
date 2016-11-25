@@ -40,7 +40,7 @@ export default class AppStore {
       action: () => this.showStaticView('codeManager')
     },
     {
-      iconClass: 'md-my-location',
+      iconClass: 'ion-map',
       name: 'Geolocation viewer',
       action: () => this.showStaticView('geoViewer')
     }
