@@ -6,19 +6,41 @@ import DataStore from './stores/DataStore';
 import GeoStore from './stores/GeoStore';
 import startRouter from './router';
 
-const dataStore = new DataStore();
-const geoStore = new GeoStore();
-const appStore = new AppStore(dataStore, geoStore);
+function start() {
+  // Initialize our stores
+  const dataStore = new DataStore();
+  const geoStore = new GeoStore();
+  const appStore = new AppStore(dataStore, geoStore);
 
-/* geolocator.getCurrentPosition()
-  .then(position => console.log('geolocation:', position))
-  .catch(err => console.log('Error geolocating:', err)); */
+  // Tell the geolocation store to start watching position
+  geoStore.watchPosition();
 
-geoStore.watchPosition();
+  // Start URL routing
+  startRouter(appStore);
 
-startRouter(appStore);
+  // Render our app into the DOM at the node with id 'root'
+  ReactDOM.render(
+    <App store={appStore} dataStore={dataStore} geoStore={geoStore} />,
+    document.getElementById('root')
+  );
+}
 
-ReactDOM.render(
-  <App store={appStore} dataStore={dataStore} geoStore={geoStore} />,
-  document.getElementById('root')
-);
+// We'd should try to keep cordova specific logic compartmentalized,
+// but for the simplicity of our initial use case,
+// we hook into the Cordova device lifecycle events here.
+// The 'deviceready' event signals that Cordova's device APIs
+// have loaded and are ready to access.
+// We wait for it before bootstrapping our application, otherwise
+// certain features may not work
+// (e.g. geolocation will use browser API vs. native capabilities)
+
+// https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
+if (window.cordova) {
+  document.addEventListener('deviceready', start, false);
+} else {
+  start();
+}
+
+
+
+

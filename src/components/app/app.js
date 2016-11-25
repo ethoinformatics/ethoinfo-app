@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import 'normalize.css/normalize.css';
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
-import DevTools from 'mobx-react-devtools';
+// import DevTools from 'mobx-react-devtools';
 import { Page, Splitter, SplitterContent } from 'react-onsenui';
 
 import './app.styl';
@@ -38,7 +38,6 @@ function renderCurrentView(store, dataStore, geoStore) {
 
 const App = observer(({ store, dataStore, geoStore }) => (
   <div className="app">
-    <DevTools />
     <Splitter>
       <Menu store={store} />
       <SplitterContent>
