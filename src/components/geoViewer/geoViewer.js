@@ -2,9 +2,18 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { toJS } from 'mobx';
 import { Fab, BottomToolbar, Page, ToolbarButton, Icon } from 'react-onsenui';
-import JSONTree from 'react-json-tree';
+// import JSONTree from 'react-json-tree';
 import Map from '../map/map';
 import './geoViewer.styl';
+
+/**
+ * A component for debugging geolocation.
+ * Reads GeoStore.geolocation and
+ * renders a <Map /> component with the current location.
+ *
+ * @class GeoViewer
+ * @extends {React.Component}
+ */
 
 @observer
 class GeoViewer extends React.Component {
@@ -14,15 +23,12 @@ class GeoViewer extends React.Component {
     const pos = geo ? [geo.latitude, geo.longitude] : [];
     return (
       <Page className="geoViewer">
-        { /*
-        <div>
-          {
-            store.geolocation
-            && <JSONTree data={toJS(store.geolocation)} />
-          }
-        </div> */ }
         <div className="mapContainer">
-          <Map location={pos} ref={(c) => { this.mapRef = c; }} />
+          <Map
+            followLocation
+            location={pos}
+            ref={(c) => { this.mapRef = c; }}
+          />
         </div>
         {
           pos && pos.length > 1 &&

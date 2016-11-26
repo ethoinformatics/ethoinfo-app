@@ -1,42 +1,50 @@
 import _ from 'lodash';
 import React from 'react';
 import L from 'leaflet';
-import moment from 'moment';
 import raf from 'raf';
 import 'raf/polyfill';
 import 'leaflet/dist/leaflet.css';
 import 'spinkit/css/spinners/5-pulse.css';
 import './map.styl';
 
+
+/**
+ * Map component
+ *
+ * Renders location to a Leaflet map.
+ *
+ * @class Map
+ * @extends {React.Component}
+ */
+
 class Map extends React.Component {
   // componentDidMount() is invoked immediately after a component is mounted.
   // Leaflet requires a DOM node, so we initialize map here:
   componentDidMount() {
     // Create leaflet map
-    // this.mapRef is assigned in render function of this class.
+    // this.mapRef is assigned in the render function of this class.
     this.map = L.map(this.mapRef, { zoomControl: false });
 
-
-    // Set tile layer
+    // Set the tile tile layer.
+    // Using OpenStreetMap now but need to switch to local tiles.
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
 
     // Map doesn't use an explicit size, so we need to invalidate.
-    // A subsequent scroll, zoom, move to location will force a re-render
-    // of map tiles.
+    // Later we force a re-render.
     this.map.invalidateSize();
 
     // componentDidMount is executed before DOM is finished drawing
     // so use requestAnimationFrame to make sure this is executed
-    // after paint
+    // after the map has a chance to paint.
     raf(() => {
       // If location is set, zoom to that spot, otherwise go to center of USA.
       if (this.props.location && this.props.location.length > 1) {
         this.map.setView(this.props.location, this.map.getMaxZoom());
         this.updateLocation();
       } else {
-        this.map.setView([37.0902, -95.7129], 4);
+        this.map.setView([37.0902, -95.7129], 4); // Center USA.
       }
     });
   }
@@ -45,8 +53,9 @@ class Map extends React.Component {
   componentDidUpdate(prevProps) {
     // This won't be called on initial render
     // Skip if location hasn't changed
+
+    // Use lodash isEqual to compare values.
     if (!_.isEqual(prevProps.location, this.props.location)) {
-      console.log(prevProps.location, this.props.location);
       this.updateLocation();
     }
   }
@@ -56,7 +65,6 @@ class Map extends React.Component {
     // When geolocation changes, we remove the existing marker and create
     // a new one.
     const loc = this.props.location;
-
 
     // If our "location" prop is assigned, create a marker
     if (loc && Array.isArray(loc) && loc.length > 1) {
@@ -80,13 +88,19 @@ class Map extends React.Component {
 
       // Move this to a button tap
       // this.map.setView(loc, this.map.getMaxZoom());
-      this.focusCurrentLocation();
+
+      // If map is declared with "followLocation" prop set to true,
+      // focus map on the current location.
+      if (this.props.followLocation === true) {
+        this.focusCurrentLocation();
+      }
     }
   }
 
+  // Set map view to the current location.
   focusCurrentLocation() {
     const { location } = this.props;
-    this.map.stop();
+    this.map.stop(); // Stop any existing map animations.
 
     if (!location || !Array.isArray(location) || location.length < 1) {
       return;
@@ -99,6 +113,8 @@ class Map extends React.Component {
     });
   }
 
+  // Simple render function provides a DOM mount point for leaflet.
+  // We setup leaflet in componentDidMount().
   render() {
     return (
       <div className="map">
@@ -108,7 +124,10 @@ class Map extends React.Component {
   }
 }
 
+// Declare our props:
+// Location is an array of numbers [lat, long]
 Map.propTypes = {
+  followLocation: React.PropTypes.bool,
   location: React.PropTypes.arrayOf(React.PropTypes.number)
 };
 
