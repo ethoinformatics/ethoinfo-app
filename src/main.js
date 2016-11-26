@@ -12,9 +12,6 @@ function start() {
   const geoStore = new GeoStore();
   const appStore = new AppStore(dataStore, geoStore);
 
-  // Tell the geolocation store to start watching position
-  geoStore.watchPosition();
-
   // Start URL routing
   startRouter(appStore);
 

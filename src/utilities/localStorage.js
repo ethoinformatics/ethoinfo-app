@@ -10,18 +10,35 @@ import { KEYS } from '../constants';
  */
 export default {
   getCouchUsername() {
-    return (store.enabled && store.get(KEYS.couchUsername))
-      || config.couchUsername || '';
+    const defaultValue = config[KEYS.couchUsername];
+
+    if (!store.enabled) return defaultValue;
+
+    return store.get(KEYS.couchUsername) || defaultValue;
   },
 
   getCouchUrlBase() {
-    return (store.enabled && store.get(KEYS.couchUrlBase))
-      || config.couchUrlBase || '';
+    const defaultValue = config[KEYS.couchUrlBase];
+
+    if (!store.enabled) return defaultValue;
+
+    return store.get(KEYS.couchUrlBase) || defaultValue;
   },
 
   getCouchPassword() {
-    return (store.enabled && store.get(KEYS.couchPassword))
-      || '';
+    const defaultValue = '';
+
+    if (!store.enabled) return defaultValue;
+
+    return store.get(KEYS.couchPassword) || '';
+  },
+
+  getShouldWatchGeolocation() {
+    const defaultValue = config[KEYS.shouldWatchGeolocation];
+
+    if (!store.enabled) return defaultValue;
+
+    return store.get(KEYS.shouldWatchGeolocation) || defaultValue;
   },
 
   setCouchPassword(password) {
@@ -42,6 +59,13 @@ export default {
     // Persist to localStorage if available
     if (store.enabled) {
       store.set(KEYS.couchUsername, username);
+    }
+  },
+
+  setShouldWatchGeolocation(boolValue) {
+    // Persist to localStorage if available
+    if (store.enabled) {
+      store.set(KEYS.shouldWatchGeolocation, boolValue);
     }
   }
 };

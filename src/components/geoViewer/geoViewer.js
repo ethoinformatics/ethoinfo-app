@@ -1,14 +1,16 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { toJS } from 'mobx';
-import { Fab, BottomToolbar, Page, ToolbarButton, Icon } from 'react-onsenui';
+import { Fab, BottomToolbar, Page, Icon, Switch } from 'react-onsenui';
 // import JSONTree from 'react-json-tree';
 import Map from '../map/map';
 import './geoViewer.styl';
 
 /**
- * A component for debugging geolocation.
- * Reads GeoStore.geolocation and
+ * A component for viewing geolocation and configuring
+ * geo settings.
+ *
+ * Reads from GeoStore and
  * renders a <Map /> component with the current location.
  *
  * @class GeoViewer
@@ -44,9 +46,23 @@ class GeoViewer extends React.Component {
           <Icon icon="md-my-location" />
         </Fab>
         <BottomToolbar>
-          <ToolbarButton onClick={() => this.mapRef.focusCurrentLocation()}>
+          <div className="switchContainer">
+            <Switch
+              modifier="etho"
+              checked={store.shouldWatch} onChange={(event) => {
+                const { value } = event;
+                if (value === true) {
+                  store.watchPosition();
+                } else {
+                  store.cancelWatchPosition();
+                }
+                console.log('Switched:', value);
+              }}
+            />
+          </div>
+          {/* <ToolbarButton onClick={() => this.mapRef.focusCurrentLocation()}>
             <Icon icon="md-gps-fixed" />
-          </ToolbarButton>
+          </ToolbarButton> */}
           {/* <div>{`Watching: ${store.isWatching}`}</div> */}
         </BottomToolbar>
       </Page>

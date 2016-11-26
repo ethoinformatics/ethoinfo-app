@@ -48,6 +48,7 @@ export default class Geolocator {
   // You use this value in tandem with the clearWatch() method
   // to stop watching the user's location.
   watchPosition(callback) {
+    console.log('🌎 Geolocator.watchPosition()');
     if (this.isAvailable === false) {
       console.error('Error: Geolocation unavailable. Cannot watch position.');
       return false;
@@ -57,11 +58,20 @@ export default class Geolocator {
       throw new Error('You\'ve attempted to call watchPosition(callbackFn) without a callback function');
     }
 
-    this.watchID = navigator.geolocation.watchPosition(position => callback(position));
+    const options = {
+      enableHighAccuracy: true,
+      maximumAge: 30000,
+      timeout: 27000
+    };
+
+    this.watchID = navigator.geolocation
+      .watchPosition(position => callback(position), null, options);
+
     return true;
   }
 
   clearWatch() {
+    console.log('🌎 Geolocator.clearWatch()');
     if (this.isAvailable === false || this.watchID === null) {
       return;
     }
