@@ -137,11 +137,14 @@ We run / build our application via scripts defined in package.json:
 
 ### Known issues
 * **sync error**
-    
-    Sometimes you might see the following error when you sync with CouchDB:
+
     ![alt text](http://ethoinfo.s3.amazonaws.com/sync-error.png "Sync error")
 
-    If you see this error, keep retrying and it should eventually work 🤔. This error was present on previous versions of the project (ethoinfo-project-app / ethoinfo-framework). Todo: Investigate whether this is something server-side or the way we are replicating from pouch <==> couch.
+    11/26/16: May be fixed in Couch 2.0 or a CORS issue: https://github.com/pouchdb/pouchdb/issues/5810
+
+    Current config: http://demo.ethoinformatics.org:5984/_utils/config.html
+
+    See: https://pouchdb.com/errors.html
 
 ### Other troubleshooting
 * **npm permissions**
