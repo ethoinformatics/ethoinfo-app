@@ -1,6 +1,14 @@
 import { Router } from 'director';
 import { autorun } from 'mobx';
 
+/**
+ * Exports a function that connects AppStore to
+ * a Director router.
+ *
+ *
+ * @param {any} store
+ */
+
 export default function (store) {
   // update state on url change
   const router = new Router({ // eslint-disable-line no-unused-vars

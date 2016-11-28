@@ -2,12 +2,15 @@ import Promise from 'bluebird';
 import _ from 'lodash';
 
 /**
- * Simple wrapper around geolocation API
- * Constructor is noop if navigator or
- * navigator.geolocation are unavailable (e.g. non-browser environment)
+ * Simple wrapper around geolocation API.
+ *
+ * Constructor sets isAvailable flag
+ * based on availability of navigator.geolocation.
  *
  * Geolocator promisifies the following geolocation API methods:
  * getCurrentPosition()
+ *
+ * All other functions are simple wrappers around the geo API.
  *
  * More information on geolocation:
  * https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation

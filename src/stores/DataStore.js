@@ -8,14 +8,37 @@ import localStorage from '../utilities/localStorage';
 import { KEYS } from '../constants';
 import config from '../config';
 
-PouchDB.plugin(require('pouchdb-find'));
-
-// const diary = require('../schema/diary.yaml');
-
 // Pouch query API uses global namespace in a terrible way
 // https://github.com/pouchdb/pouchdb/issues/4624
-// Using https://github.com/nolanlawson/pouchdb-find
+// We are using https://github.com/nolanlawson/pouchdb-find
 // as recommended by PouchDB maintainer.
+PouchDB.plugin(require('pouchdb-find'));
+
+/**
+ * DataStore contains domain specific state.
+ *
+ * Normally we would compartmentalize state with a separate store
+ * for each domain (e.g. WidgetsStore, TodosStore),
+ * but since we define our domains programmatically via config,
+ * we manage all domain state here.
+ *
+ * All domain state is contained within the @observable property "data",
+ * and keyed by the name of the domain, eg:
+ * data {
+ *  widgets: widgetData,
+ *  todos: todosData
+ * }
+ *
+ * DataStore syncs our local (localStore, pouchDB)
+ * and remote (couchDB)persistence layers
+ * with our in-memory state.
+ *
+ * For more detailed information about general Store design, see
+ * comments in AppStore
+ *
+ * @export
+ * @class DataStore
+ */
 
 export default class DataStore {
   constructor() {
@@ -116,7 +139,7 @@ export default class DataStore {
     });
   }
 
-  // clear local pouch (download)
+  // Clear local pouch data
   @action deletePouch() {
     const dbName = config[KEYS.pouchDbName];
     const db = new PouchDB(dbName);
@@ -153,5 +176,4 @@ export default class DataStore {
       console.log(err);
     });
   }
-
 }

@@ -2,6 +2,13 @@ import _ from 'lodash';
 import moment from 'moment';
 import { action, observable } from 'mobx';
 
+
+/**
+ * Simple class for measuring time.
+ *
+ *
+ * @class Timer
+ */
 export default class Timer {
   @observable elapsed;
   @observable isRunning;

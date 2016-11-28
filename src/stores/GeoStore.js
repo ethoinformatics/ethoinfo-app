@@ -4,7 +4,16 @@ import Geolocator from '../utilities/Geolocator';
 import Timer from '../utilities/Timer';
 import localStorage from '../utilities/localStorage';
 
+// Interval for computing elapsed time since last geo update
 const TIMER_INTERVAL = 1000;
+
+/**
+ * GeoStore manages Geolocation state and business logic.
+ *
+ * See AppStore for more detailed information on general Store design.
+ *
+ * @class GeoStore
+ */
 
 export default class GeoStore {
   @observable geolocator;   // Wraps Geolocation API
@@ -83,28 +92,26 @@ export default class GeoStore {
     if (isWatching) this.timer.run(TIMER_INTERVAL);
   }
 
+  // Stop watching for geolocation updates.
   @action clearWatch() {
     this.geolocator.clearWatch();
     this.isWatching = false;
     this.timer.stop();
   }
 
-  // Reacts to "shouldWatch" changes.
+  // Reacts to user defined geolocation settings (should we watch for updates?),
+  // connecting GeoStore to our Geolocator instance (which wraps Geolocation API calls).
   connectStoreToGeolocator() {
     reaction(
       () => this.shouldWatch,
       (shouldWatch) => {
-        console.log('Should watch:', shouldWatch);
         if (shouldWatch) {
           this.watch();
         } else {
           this.clearWatch();
         }
       },
-      true // fire immediately.
+      true // Fire immediately.
     );
   }
-
-
-
 }
