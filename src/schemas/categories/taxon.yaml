@@ -1,0 +1,14 @@
+---
+# Schema for Taxon category
+name: Taxon
+values:
+  - Alouatta
+  - Aotus
+  - Ateles
+  - Callicebus
+  - Cebuella
+  - Cebus
+  - Lagothrix
+  - Pithecia
+  - Saguinus
+  - Saimiri

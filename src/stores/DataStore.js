@@ -8,6 +8,10 @@ import localStorage from '../utilities/localStorage';
 import { KEYS } from '../constants';
 import config from '../config';
 
+import schemas from '../schemas';
+
+const log = console.log;
+
 // Pouch query API uses global namespace in a terrible way
 // https://github.com/pouchdb/pouchdb/issues/4624
 // We are using https://github.com/nolanlawson/pouchdb-find
@@ -40,6 +44,24 @@ PouchDB.plugin(require('pouchdb-find'));
  * @class DataStore
  */
 
+function loadSchemas() {
+  // Load categories
+  log('Load categories:');
+
+  Object.keys(schemas.categories).forEach((key) => {
+    const { name, values } = schemas.categories[key];
+    log(name, values);
+  });
+
+  // Load categories
+  log('Load models:');
+
+  Object.keys(schemas.models).forEach((key) => {
+    const model = schemas.models[key];
+    log(model);
+  });
+}
+
 export default class DataStore {
   constructor() {
     const dbName = config[KEYS.pouchDbName];
@@ -50,13 +72,16 @@ export default class DataStore {
         fields: ['domainName']
       }
     }).then((result) => {
-      console.log('Created index on "domainName"', result);
+      log('Created index on "domainName"', result);
     }).catch((err) => {
-      console.log('Error creating index on "domainName"', err);
+      log('Error creating index on "domainName"', err);
     });
 
     // Initial data properties
     // this.data.diaries = [];
+
+    // Load schemas
+    loadSchemas();
   }
 
   // Observables
@@ -170,7 +195,7 @@ export default class DataStore {
     db.find({
       selector: { domainName }
     }).then((result) => {
-      console.log(`Loaded ${result.docs.length} docs for domain: ${domainName}`, result.docs.map(doc => toJS(doc)));
+      log(`Loaded ${result.docs.length} docs for domain: ${domainName}`, result.docs.map(doc => toJS(doc)));
       this.data[pluralize(domainName)] = result.docs;
     }).catch((err) => {
       console.log(err);

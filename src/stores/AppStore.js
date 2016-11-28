@@ -83,7 +83,7 @@ export default class AppStore {
     },
     {
       iconClass: 'md-search',
-      name: 'Coded fields',
+      name: 'Code manager',
       action: () => this.showStaticView('codeManager')
     },
     {

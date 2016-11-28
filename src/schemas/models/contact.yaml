@@ -12,10 +12,10 @@ fields:
     type: [PoopSample, PlantSample, TreeMarking]
   - name: markPatches
     type: [MarkPatch]
-refs: 
+refs:
   - name: taxon
     type: Taxon
-  - name: subjectId
+  - name: animalGroup
     type: AnimalGroup
   - name: samplingProtocol
     type: SamplingProtocol
