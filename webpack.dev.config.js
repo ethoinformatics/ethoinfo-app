@@ -65,6 +65,9 @@ module.exports = {
       }
     ]
   },
+  devServer: {
+    historyApiFallback: true
+  },
   postcss: function () {
     return [
       autoprefixer({

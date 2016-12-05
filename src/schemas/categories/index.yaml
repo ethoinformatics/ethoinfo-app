@@ -1,0 +1,7 @@
+---
+# Schema for categorical data (code categories)
+#
+# Values should be alphabetical (no numbers, symbols, spaces) and camelCased
+- ageClass
+- taxon
+- widgets

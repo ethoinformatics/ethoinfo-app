@@ -1,28 +1,60 @@
-import { Router } from 'director';
-import { autorun } from 'mobx';
+import toRegex from 'path-to-regexp';
 
-/**
- * Exports a function that connects AppStore to
- * a Director router.
- *
- *
- * @param {any} store
- */
 
-export default function (store) {
-  // update state on url change
-  const router = new Router({ // eslint-disable-line no-unused-vars
-    '/sync/': () => store.showStaticView('sync')
-  }).configure({
-    notfound: () => store.showStaticView('overview'),
-    html5history: true
-  }).init();
+function decodeParam(val) {
+  if (!(typeof val === 'string' || val.length === 0)) {
+    return val;
+  }
 
-  // update url on state changes
-  autorun(() => {
-    const path = store.currentPath;
-    if (path !== window.location.pathname) {
-      window.history.pushState(null, null, path);
+  try {
+    return decodeURIComponent(val);
+  } catch (err) {
+    if (err instanceof URIError) {
+      err.message = `Failed to decode param '${val}'`;
+      err.status = 400;
     }
-  });
+
+    throw err;
+  }
 }
+
+// Match the provided URL path pattern to an actual URI string. For example:
+//   matchURI({ path: '/posts/:id' }, '/dummy') => null
+//   matchURI({ path: '/posts/:id' }, '/posts/123') => { id: 123 }
+function matchURI(route, path) {
+  const keys = [];
+  const pattern = toRegex(route.path, keys);
+  const match = pattern.exec(path);
+
+  if (!match) {
+    return null;
+  }
+
+  const params = Object.create(null);
+
+  for (let i = 1; i < match.length; i += 1) {
+    params[keys[i - 1].name] = match[i] !== undefined ? decodeParam(match[i]) : undefined;
+  }
+
+  return {
+    name: route.name,
+    title: route.title(params),
+    prevPath: route.prevPath(params),
+    nextPath: route.nextPath(params),
+    params
+  };
+}
+
+function resolve(routes, path) {
+  for (const route of routes) {
+    const params = matchURI(route, path);
+
+    if (params) {
+      return params;
+    }
+  }
+
+  return null;
+}
+
+export default { resolve };

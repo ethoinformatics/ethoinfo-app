@@ -24,15 +24,17 @@
  * and/or define at run-time (e.g. out in the field)
  */
 
-// Todo: automatically glob all files in directory.
-import Taxon from './categories/taxon.yaml';
+// Categories are important from an index file:
+import categories from './categories/index.yaml';
+
+// Import your models individually here:
 import Contact from './models/contact.yaml';
 import Diary from './models/diary.yaml';
 
+
+// Export an object containing all of our schemas:
 export default {
-  categories: {
-    Taxon
-  },
+  categories,
   models: {
     Contact,
     Diary

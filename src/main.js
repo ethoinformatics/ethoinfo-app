@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app/app';
-import AppStore from './stores/AppStore';
+import ViewStore from './stores/ViewStore';
 import DataStore from './stores/DataStore';
 import GeoStore from './stores/GeoStore';
-import startRouter from './router';
+import history from './history';
 
 /**
  * Entrypoint for our app.
@@ -25,19 +25,20 @@ function start() {
   // Initialize our stores
   const dataStore = new DataStore();
   const geoStore = new GeoStore();
+  const viewStore = new ViewStore(dataStore);
 
-  // Pass our domain stores to AppStore so that they can be passed
-  // along the component tree as necessary.
-  const appStore = new AppStore({
-    dataStore, geoStore
-  });
+  const stores = {
+    dataStore, geoStore, viewStore
+  };
 
-  // Start URL routing.
-  startRouter(appStore);
+  // Kickoff history:
+  history.replace('/', {});
+
+  // appStore.showStaticView('overview');
 
   // Render our app into the DOM at the node with id 'root'
   ReactDOM.render(
-    <App store={appStore} dataStore={dataStore} geoStore={geoStore} />,
+    <App stores={stores} />,
     document.getElementById('root')
   );
 }
