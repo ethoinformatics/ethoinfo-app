@@ -1,18 +1,15 @@
-import { action, computed, observable, toJS, map } from 'mobx';
+import { action, computed, observable, map } from 'mobx';
 import _ from 'lodash';
 import url from 'url';
 import PouchDB from 'pouchdb';
 import pluralize from 'pluralize';
+import Promise from 'bluebird';
+import uuid from 'uuid/v4';
 import localStorage from '../utilities/localStorage';
 import { KEYS } from '../constants';
 import config from '../config';
 import schemas from '../schemas';
-import Promise from 'bluebird';
-import uuid from 'uuid/v4';
-
 import validateCategory from '../schemas/categories/validate';
-
-const log = console.log;
 
 // Pouch query API uses global namespace in a terrible way
 // https://github.com/pouchdb/pouchdb/issues/4624
@@ -71,12 +68,9 @@ export default class DataStore {
       });
     });
 
-    // Load models
-    // log('Load models:');
-
     Object.keys(schemas.models).forEach((key) => {
-      const model = schemas.models[key];
-      // log(model);
+      // const model = schemas.models[key];
+      // console.log(model);
     });
   }
 
@@ -89,9 +83,9 @@ export default class DataStore {
         fields: ['domainName']
       }
     }).then((result) => {
-      log('Created index on "domainName"', result);
+      console.log('Created index on "domainName"', result);
     }).catch((err) => {
-      log('Error creating index on "domainName"', err);
+      console.log('Error creating index on "domainName"', err);
     });
 
     // Load schemas
@@ -131,24 +125,38 @@ export default class DataStore {
     localStorage.setCouchPassword(password);
   }
 
-  // Update remote couch URL and persist to local storage
+  /**
+   * Update remote couch URL and persist to local storage
+   *
+   * @param {String} theUrl
+   */
   @action updateCouchUrlBase(theUrl) {
     this.couchUrlBase = theUrl;
     localStorage.setCouchUrlBase(theUrl);
   }
 
-  // Update remote couch username and persist to local storage
+  /**
+   * Update remote couch username and persist to local storage
+   *
+   * @param {String} username
+   */
   @action updateCouchUsername(username) {
     this.couchUsername = username;
     localStorage.setCouchUsername(username);
   }
 
+  /**
+   * Sets the given key to value on our observable data map (this.data)
+   *
+   * @param {String} key
+   * @param {Any} value
+   */
   @action setData(key, value) {
     const pluralizedAndCasedName = pluralize(_.camelCase(key));
     this.data.set(pluralizedAndCasedName, value);
   }
 
-  // Replicate local pouch to remote couch (upload)
+  // Replicate local pouchDB to remote couchDB (upload)
   @action uploadSync() {
     if (this.operationInFlight) {
       return;
@@ -172,13 +180,12 @@ export default class DataStore {
       const docsWritten = info.docs_written;
       this.statusMessage = `Upload success: ${docsWritten} docs written.`;
     }).on('error', (err) => {
-      console.log(err);
       this.operationInFlight = false;
       this.statusMessage = `Upload error: ${err.message}`;
     });
   }
 
-  // Replicate remote couch to local pouch (download)
+  // Replicate remote couchDB to local pouchDB (download)
   @action downloadSync() {
     if (this.operationInFlight) {
       return;
@@ -202,7 +209,7 @@ export default class DataStore {
     });
   }
 
-  // Clear local pouch data
+  // Clear all local pouchDB data
   @action deletePouch() {
     const dbName = config[KEYS.pouchDbName];
     const db = new PouchDB(dbName);
@@ -226,12 +233,11 @@ export default class DataStore {
     this.statusMessage = null;
   }
 
-  getData(domainName) {
-    const collectionName = pluralize(_.camelCase(domainName));
-    return this.data.get(collectionName);
-  }
-
-  loadDomain(domainName) {
+  /**
+   * Load data for a given domain name from pouchDB
+   * @param {String} domainName
+   */
+  @action loadDomain(domainName) {
     const singularName = pluralize(_.camelCase(domainName), 1);
 
     const dbName = config[KEYS.pouchDbName];
@@ -240,14 +246,21 @@ export default class DataStore {
     db.find({
       selector: { domainName: singularName }
     }).then((result) => {
-      log(`Loaded ${result.docs.length} docs for domain: ${singularName}`, result.docs.map(doc => doc));
+      console.log(`Loaded ${result.docs.length} docs for domain: ${singularName}`, result.docs.map(doc => doc));
       this.setData(pluralize(singularName), result.docs.slice());
     }).catch((err) => {
       console.log(err);
     });
   }
 
-  // Todo: validate data before putting
+  /**
+   * Puts a new document to pouchdb,
+   * returning a promise that resolves on success and rejects on error
+   * Todo: validate data before putting
+   *
+   * @param {String} domainName
+   * @param {Object} data
+   */
   @action createDoc(domainName, data) {
     this.operationInFlight = true;
 
@@ -264,18 +277,23 @@ export default class DataStore {
 
     return new Promise((resolve, reject) => {
       db.put(doc)
-      .then((response) => {
+      .then((res) => {
         this.operationInFlight = false;
-        console.log(response);
-        resolve(true);
+        resolve(res);
       }).catch((err) => {
         this.operationInFlight = false;
-        console.log(err);
-        reject(false);
+        reject(err);
       });
     });
   }
 
+  /**
+   * Removes a document from pouchdb,
+   * returning a promise that resolves on success and rejects on error
+   *
+   * @param {String} _id
+   * @param {String} _rev
+   */
   @action deleteDoc(id, rev) {
     this.operationInFlight = true;
 
@@ -284,16 +302,19 @@ export default class DataStore {
 
     return new Promise((resolve, reject) => {
       db.remove(id, rev)
-      .then((response) => {
+      .then((res) => {
         this.operationInFlight = false;
-        console.log(response);
-        resolve(true);
+        resolve(res);
       }).catch((err) => {
         this.operationInFlight = false;
-        console.log(err);
-        reject(false);
+        reject(err);
       });
     });
   }
 
+  // Get data for a domain name from memory (this.data[domainName])
+  getData(domainName) {
+    const collectionName = pluralize(_.camelCase(domainName));
+    return this.data.get(collectionName);
+  }
 }
