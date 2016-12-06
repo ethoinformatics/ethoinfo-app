@@ -2,9 +2,7 @@
 # Schema for a Diary
 name: Diary
 fields:
-  - name: eventDate
+  - name: date
     type: Date
   - name: collections
     type: [PoopSample, PlantSample]
-  - name: markPatches
-    type: [MarkPatch]
