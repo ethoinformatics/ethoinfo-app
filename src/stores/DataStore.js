@@ -10,6 +10,7 @@ import { KEYS } from '../constants';
 import config from '../config';
 import schemas from '../schemas';
 import validateCategory from '../schemas/categories/validate';
+import validateModel from '../schemas/models/validate';
 
 // Pouch query API uses global namespace in a terrible way
 // https://github.com/pouchdb/pouchdb/issues/4624
@@ -25,7 +26,7 @@ PouchDB.plugin(require('pouchdb-find'));
  * but since we define our domains programmatically via config,
  * we manage all domain state here.
  *
- * All domain state is contained within the @observable property "data",
+ * All domain state is contained within the @observable map "data",
  * and keyed by the name of the domain, eg:
  * data {
  *  widgets: widgetData,
@@ -33,47 +34,17 @@ PouchDB.plugin(require('pouchdb-find'));
  * }
  *
  * DataStore syncs our local (localStore, pouchDB)
- * and remote (couchDB)persistence layers
+ * and remote (couchDB) persistence layers
  * with our in-memory state.
  *
  * For more detailed information about general Store design, see
- * comments in AppStore
+ * comments in ViewStore
  *
  * @export
  * @class DataStore
  */
 
-/**
- * Load our schema definitions.
- *
- */
-
 export default class DataStore {
-  loadSchemas() {
-    const categories = schemas.categories.map(key => _.camelCase(key));
-    // Validate category definitions and add them to store if valid
-    Object.keys(categories)
-    .forEach((key) => {
-      const category = categories[key];
-      validateCategory(category)
-      .then((value) => {
-        console.log(`Loaded category definition => ${key}:`, value);
-        this.schemas.categories.push({
-          name: value
-        });
-        this.setData(value, []);
-      })
-      .catch((err) => {
-        console.error(`Bad category definition: "${key}" => ${err}`);
-      });
-    });
-
-    Object.keys(schemas.models).forEach((key) => {
-      // const model = schemas.models[key];
-      // console.log(model);
-    });
-  }
-
   constructor() {
     const dbName = config[KEYS.pouchDbName];
     const db = new PouchDB(dbName);
@@ -228,11 +199,6 @@ export default class DataStore {
     });
   }
 
-  // Clear status message generated from last operation
-  @action clearStatusMessage() {
-    this.statusMessage = null;
-  }
-
   /**
    * Load data for a given domain name from pouchDB
    * @param {String} domainName
@@ -312,9 +278,59 @@ export default class DataStore {
     });
   }
 
+  // Clear status message generated from last operation
+  @action clearStatusMessage() {
+    this.statusMessage = null;
+  }
+
   // Get data for a domain name from memory (this.data[domainName])
   getData(domainName) {
     const collectionName = pluralize(_.camelCase(domainName));
     return this.data.get(collectionName);
+  }
+
+    /**
+   * Load our schema definitions.
+   *
+   */
+
+  loadSchemas() {
+    // Load categories:
+    const categories = schemas.categories.map(key => _.camelCase(key));
+
+    // Validate category definitions and add them to store if valid
+    Object.keys(categories)
+    .forEach((key) => {
+      const category = categories[key];
+
+      validateCategory(category)
+      .then((value) => {
+        console.log(`Loaded category definition => ${key}:`, value);
+        this.schemas.categories.push({
+          name: value
+        });
+        this.setData(value, []);
+      })
+      .catch((err) => {
+        console.error(`Bad category definition: "${key}" => ${err}`);
+      });
+    });
+
+    // Load models:
+    Object.keys(schemas.models).forEach((key) => {
+      console.log('Load model schema:', key);
+      const model = schemas.models[key];
+
+      validateModel(model)
+      .then((value) => {
+        console.log(`Loaded model definition => ${key}:`, value);
+        // this.setData(value, []);
+      })
+      .catch((err) => {
+        console.error(`Bad category definition: "${key}" => ${err}`);
+      });
+
+      // console.log(model);
+    });
   }
 }

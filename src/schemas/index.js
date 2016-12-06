@@ -1,7 +1,7 @@
 /**
  * Point of contact for loading model and category schema
  *
- * Model schema declare the structure of documents in a given domain
+ * Model schema declare the structure of documents in a given domain:
  *
  * Dog
  * - age:   [number]    // default data type
@@ -24,6 +24,8 @@
  * - widgetType => "Crank", "Pulley", "Gear"
  * - ageBracket => "Child", "Juvenile", "Adult"
  *
+ * Schema requirements:
+ * - Model and category names are unique
  */
 
 // Categories are imported from an index file:
