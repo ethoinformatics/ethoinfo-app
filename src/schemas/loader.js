@@ -73,23 +73,23 @@ export default {
     console.log('Loaded valid category types =>', validCategoryTypes);
 
     // Collect our user-defined model types:
-    const allModelTypes = Object.keys(models)
-      .map((key) => {
-        const model = models[key];
+    const allModelTypes = models
+      .map((model) => {
         const validation = validateModel(model);
 
-        if (validation.error) {
+        /* if (validation.error) {
           console.error('Omitting invalid model definition =>', `"${model}"`, validation.error.message);
           // return null;
-        }
+        } */
 
         return {
-          name: key,
+          name: model.name,
           validation
         };
       });
 
-    const firstPassValidatedModels = allModelTypes.filter(model => model.validation.error == null);
+    // const firstPassValidatedModels = allModelTypes.filter(model => model.validation.error == null);
+    const firstPassValidatedModels = allModelTypes;
 
     // Remove duplicate entries
     // Don't need to remove - should have error via Joi
@@ -142,7 +142,8 @@ export default {
     };
 
     const secondPassValidatedModels = firstPassValidatedModels.map((firstPassModel) => {
-      const model = models[firstPassModel.name];
+      // TODO: Better logic.
+      const model = models.find(element => element.name === firstPassModel.name);
 
       const validation = validateModelFields(model);
 
@@ -157,8 +158,6 @@ export default {
         validation
       };
     });
-
-    // console.log(allModelTypes, secondPassValidatedModels);
 
     return {
       categories: allCategoryTypes,

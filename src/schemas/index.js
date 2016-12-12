@@ -33,16 +33,18 @@ import categories from './categories/index.yaml';
 
 // Models are imported individually here:
 // import Contact from './models/contact.yaml';
-import Diary from './models/diary.yaml';
+import PassExample from './models/passExample.yaml';
+import AnotherPassExample from './models/anotherPassExample.yaml';
 import FailExample from './models/failExample.yaml';
 
 // Export an object containing all of our schemas:
 export default {
   categories,
-  models: {
-    Diary,
+  models: [
+    PassExample,
+    AnotherPassExample,
     FailExample
-  }
+  ]
 };
 
 

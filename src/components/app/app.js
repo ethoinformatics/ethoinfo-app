@@ -17,6 +17,7 @@ import Geo from '../geoViewer/geoViewer';
 import Settings from '../settings/settings';
 import Sync from '../sync/sync';
 import Overview from '../overview/overview';
+import OverviewDetail from '../overview/overviewDetail';
 
 // Renders currentView, passing in appropriate state as props.
 function renderCurrentView(stores) {
@@ -47,6 +48,8 @@ function renderCurrentView(stores) {
       return <Geo store={geoStore} />;
     case 'overview':
       return <Overview schemas={dataStore.schemasDebug} />;
+    case 'overviewDetail':
+      return <OverviewDetail schema={dataStore.getDebugSchema(view.params.id)} />;
     case 'settings':
       return <Settings />;
     case 'sync':

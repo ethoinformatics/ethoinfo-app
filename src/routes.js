@@ -9,6 +9,13 @@ export default [
     nextPath: () => null
   },
   {
+    path: '/overview/:id',
+    name: 'overviewDetail',
+    title: params => `Overview: ${_.startCase(params.id)}`,
+    prevPath: () => '/',
+    nextPath: () => null
+  },
+  {
     path: '/categories/:id/new',
     name: 'newCode',
     title: params => `${_.startCase(params.id)} | New code`,

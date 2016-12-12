@@ -1,5 +1,5 @@
 ---
-# Example schema that fails
+# Model schema that fails validation
 name: FailExample
 fields:
   - name: aBadField

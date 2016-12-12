@@ -308,4 +308,11 @@ export default class DataStore {
     const collectionName = pluralize(_.camelCase(domainName));
     return this.data.get(collectionName);
   }
+
+  // Get debug schema with validation information
+  getDebugSchema(id) {
+    let allSchemas = [...this.schemasDebug.categories, ...this.schemasDebug.models];
+    return allSchemas.find(element => element.name === id);
+  }
+
 }

@@ -1,0 +1,16 @@
+---
+# Model schema that passes validation
+name: ManyFieldsExample
+fields:
+  - name: date
+    type: Date # One of two special data types (Date, Geolocation)
+  - name: location
+    type: Geolocation # One of two special data types (Date, Geolocation)
+  - name: cities
+    type: [Geolocation]
+  - name: description
+    type: String
+  - name: favoriteSongs
+    type: [String]
+  - name: friendsCount
+    type: Number
