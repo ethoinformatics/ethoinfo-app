@@ -34,12 +34,14 @@ import categories from './categories/index.yaml';
 // Models are imported individually here:
 // import Contact from './models/contact.yaml';
 import Diary from './models/diary.yaml';
+import FailExample from './models/failExample.yaml';
 
 // Export an object containing all of our schemas:
 export default {
   categories,
   models: {
-    Diary
+    Diary,
+    FailExample
   }
 };
 

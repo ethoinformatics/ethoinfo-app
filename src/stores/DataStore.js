@@ -9,8 +9,6 @@ import localStorage from '../utilities/localStorage';
 import { KEYS } from '../constants';
 import config from '../config';
 import schemas from '../schemas';
-import validateCategory from '../schemas/categories/validate';
-import validateModel from '../schemas/models/validate';
 import schemaLoader from '../schemas/loader';
 
 // Pouch query API uses global namespace in a terrible way
@@ -70,6 +68,11 @@ export default class DataStore {
   @observable couchPassword = localStorage.getCouchPassword();
 
   @observable schemas = {
+    categories: [],
+    models: []
+  }
+
+  @observable schemasDebug = {
     categories: [],
     models: []
   }
@@ -284,19 +287,25 @@ export default class DataStore {
     this.statusMessage = null;
   }
 
-  // Get data for a domain name from memory (this.data[domainName])
-  getData(domainName) {
-    const collectionName = pluralize(_.camelCase(domainName));
-    return this.data.get(collectionName);
-  }
-
     /**
    * Load our schema definitions.
    *
    */
 
-  loadSchemas() {
+  @action loadSchemas() {
     // Load categories:
-    schemaLoader.load(schemas.categories, schemas.models);
+    const result = schemaLoader.load(schemas.categories, schemas.models);
+    this.schemasDebug.categories = [...result.categories];
+    this.schemasDebug.models = [...result.models];
+
+    const validCategories = result.categories.filter(cat => cat.validation.error === null);
+    this.schemas.categories = [...validCategories];
+    console.log(result);
+  }
+
+  // Get data for a domain name from memory (this.data[domainName])
+  getData(domainName) {
+    const collectionName = pluralize(_.camelCase(domainName));
+    return this.data.get(collectionName);
   }
 }

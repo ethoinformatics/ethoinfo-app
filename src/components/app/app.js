@@ -46,7 +46,7 @@ function renderCurrentView(stores) {
     case 'geoViewer':
       return <Geo store={geoStore} />;
     case 'overview':
-      return <Overview diaries={dataStore.data.get('diaries')} />;
+      return <Overview schemas={dataStore.schemasDebug} />;
     case 'settings':
       return <Settings />;
     case 'sync':

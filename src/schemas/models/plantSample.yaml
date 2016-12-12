@@ -1,6 +1,0 @@
----
-# Schema for a plant sample
-name: PlantSample
-fields:
-  - name: location
-    type: String

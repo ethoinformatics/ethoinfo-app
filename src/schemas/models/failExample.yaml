@@ -1,0 +1,6 @@
+---
+# Example schema that fails
+name: FailExample
+fields:
+  - name: aBadField
+    type: UnknownType # We don't have this type defined

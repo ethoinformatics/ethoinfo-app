@@ -53,85 +53,119 @@ export default {
     console.log('Load schema:', categories, models);
 
     // Collect our user-defined category types
-    let categoryTypes = Object.keys(categories)
+    const allCategoryTypes = Object.keys(categories)
       .map((key) => {
         const category = categories[key];
         const validation = validateCategory(category);
 
-        if (validation.error) {
-          console.error('Omitting invalid category definition =>', `"${category}"`, validation.error.message);
-          return null;
-        }
-        // console.log('Loaded category type =>', validation.value);
-        return validation.value;
-      })
-      .filter(res => res !== null);
+        return {
+          name: category,
+          validation
+        };
+      });
 
-    // Unique
-    categoryTypes = [...new Set(categoryTypes)];
-    console.log('Loaded category types =>', categoryTypes);
+    // Valid categories have no validation errors
+    let validCategoryTypes = allCategoryTypes
+      .filter(cat => cat.validation.error == null);
+
+    // Remove duplicate entries
+    validCategoryTypes = [...new Set(validCategoryTypes)];
+    console.log('Loaded valid category types =>', validCategoryTypes);
 
     // Collect our user-defined model types:
-    let modelTypes = Object.keys(models)
+    const allModelTypes = Object.keys(models)
       .map((key) => {
         const model = models[key];
         const validation = validateModel(model);
 
         if (validation.error) {
           console.error('Omitting invalid model definition =>', `"${model}"`, validation.error.message);
-          return null;
+          // return null;
         }
-        // console.log('Loaded category type =>', validation.value);
-        return key;
-      })
-      .filter(res => res !== null);
 
-    // Unique
-    modelTypes = [...new Set(modelTypes)];
-    console.log('Loaded model types =>', modelTypes);
+        return {
+          name: key,
+          validation
+        };
+      });
 
-    /* Object.keys(models).forEach((key) => {
-      console.log('Load model schema:', key);
-      const model = models[key];
+    const firstPassValidatedModels = allModelTypes.filter(model => model.validation.error == null);
 
-      const result = validateModel(model);
-      if (result.error) {
-        console.error(`Error loading model definition => ${key}:`, result.error.message);
-      } else {
-        console.log(`Success loading model definition => ${key}:`, result.value);
-      }
-    }); */
+    // Remove duplicate entries
+    // Don't need to remove - should have error via Joi
+    // modelTypes = _.uniqBy([{ 'x': 1 }, { 'x': 2 }, { 'x': 1 }], 'x')
+    // modelTypes = [...new Set(modelTypes)];
+    // console.log('Loaded model types =>', validModelTypes);
 
-    const userTypes = [...new Set([
-      ...categoryTypes,
-      ...modelTypes
+    const userTypesTmp = [...new Set([
+      ...validCategoryTypes.map(cat => cat.name),
+      ...firstPassValidatedModels.map(model => model.name)
     ])];
 
-    const allTypes = [...new Set([
-      ...userTypes,
+    const allTypesTmp = [...new Set([
+      ...userTypesTmp,
       ...defaultTypes
     ])];
 
-    console.log('Types are:', userTypes);
+    // console.log('Types are:', userTypesTmp);
 
     // Validate individual fields
-    const validateModelFields = (fields) => {
-      const schema = Joi.array().items(
+    const validateModelFields = (model) => {
+      const schema = Joi.object().keys({
+        name: validations.pascalCasedString.required().min(1)
+          .error(new Error('must be a PascalCased string.')),
+        fields: Joi.array().items(
         Joi.object().keys({
           name: validations.alphabeticalString.required().min(1),
           type: Joi.alternatives().try(
-            Joi.array().items(allTypes).required().length(1),
-            Joi.string().only(allTypes).required()
+            Joi.array().items(allTypesTmp).required().length(1),
+            Joi.string().only(allTypesTmp).required()
           ).required()
         })).required()
         .min(1)
-        .unique((a, b) => a.name.toLowerCase() === b.name.toLowerCase());
+        .unique((a, b) => a.name.toLowerCase() === b.name.toLowerCase())
+      });
 
-      return Joi.validate(fields, schema);
+
+      /* const schema = Joi.array().items(
+        Joi.object().keys({
+          name: validations.alphabeticalString.required().min(1),
+          type: Joi.alternatives().try(
+            Joi.array().items(allTypesTmp).required().length(1),
+            Joi.string().only(allTypesTmp).required()
+          ).required()
+        })).required()
+        .min(1)
+        .unique((a, b) => a.name.toLowerCase() === b.name.toLowerCase()); */
+
+      return Joi.validate(model, schema);
     };
 
-    // Validate model definitions:
-    modelTypes.forEach((key) => {
+    const secondPassValidatedModels = firstPassValidatedModels.map((firstPassModel) => {
+      const model = models[firstPassModel.name];
+
+      const validation = validateModelFields(model);
+
+      if (validation.error) {
+        console.error(`Error validating model fields => ${model.name}:`, validation.error.message);
+      } else {
+        console.log(`Success validating model definition => ${model.name}:`, validation.value);
+      }
+
+      return {
+        name: model.name,
+        validation
+      };
+    });
+
+    // console.log(allModelTypes, secondPassValidatedModels);
+
+    return {
+      categories: allCategoryTypes,
+      models: secondPassValidatedModels
+    };
+
+    /* validModelTypes.forEach((key) => {
       const model = models[key];
 
       const validation = validateModelFields(model.fields);
@@ -142,6 +176,6 @@ export default {
       }
 
       console.log(model);
-    });
+    }); */
   }
 };
