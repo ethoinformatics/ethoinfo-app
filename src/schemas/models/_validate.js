@@ -1,5 +1,5 @@
 import Joi from 'joi-browser';
-// import Promise from 'bluebird';
+import Promise from 'bluebird';
 
 const alphabetical = Joi.string().regex(/^[a-zA-Z]+$/, {
   name: 'alphabetical'
@@ -15,7 +15,7 @@ const alphabetical = Joi.string().regex(/^[a-zA-Z]+$/, {
  *
  */
 
-export default function validate(model, typeStrings) {
+export default function validate(model) {
   /**
    * Joi schema is a blueprint of data types and constraints
    * that we use to validate our model definitions:
@@ -43,8 +43,7 @@ export default function validate(model, typeStrings) {
    * resolves with a valid object and
    * rejects with a validation error
    */
-
-  /* return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     Joi.validate(model, schema, (err, value) => {
       if (err) {
         reject(err);
@@ -52,6 +51,5 @@ export default function validate(model, typeStrings) {
         resolve(value);
       }
     });
-  }); */
-  return Joi.validate(model, schema);
+  });
 }

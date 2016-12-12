@@ -11,6 +11,7 @@ import config from '../config';
 import schemas from '../schemas';
 import validateCategory from '../schemas/categories/validate';
 import validateModel from '../schemas/models/validate';
+import schemaLoader from '../schemas/loader';
 
 // Pouch query API uses global namespace in a terrible way
 // https://github.com/pouchdb/pouchdb/issues/4624
@@ -296,41 +297,6 @@ export default class DataStore {
 
   loadSchemas() {
     // Load categories:
-    const categories = schemas.categories.map(key => _.camelCase(key));
-
-    // Validate category definitions and add them to store if valid
-    Object.keys(categories)
-    .forEach((key) => {
-      const category = categories[key];
-
-      validateCategory(category)
-      .then((value) => {
-        console.log(`Loaded category definition => ${key}:`, value);
-        this.schemas.categories.push({
-          name: value
-        });
-        this.setData(value, []);
-      })
-      .catch((err) => {
-        console.error(`Bad category definition: "${key}" => ${err}`);
-      });
-    });
-
-    // Load models:
-    Object.keys(schemas.models).forEach((key) => {
-      console.log('Load model schema:', key);
-      const model = schemas.models[key];
-
-      validateModel(model)
-      .then((value) => {
-        console.log(`Loaded model definition => ${key}:`, value);
-        // this.setData(value, []);
-      })
-      .catch((err) => {
-        console.error(`Bad category definition: "${key}" => ${err}`);
-      });
-
-      // console.log(model);
-    });
+    schemaLoader.load(schemas.categories, schemas.models);
   }
 }

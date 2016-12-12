@@ -1,7 +1,6 @@
 # Schema for categorical data (code categories)
-# Values should be alphabetical (no numbers, symbols, spaces) and camelCased
+# Values should be alphabetical (no numbers, symbols, spaces) and PascalCased
 
 ---
-- ageClass
-- taxon
-- widgets
+- FooCategory
+- BarCategory

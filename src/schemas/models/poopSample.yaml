@@ -1,6 +1,0 @@
----
-# Schema for a poop sample
-name: PoopSample
-fields:
-  - name: location
-    type: String

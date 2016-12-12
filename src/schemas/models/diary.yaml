@@ -4,5 +4,7 @@ name: Diary
 fields:
   - name: date
     type: Date
-  - name: collections
-    type: [PoopSample, PlantSample]
+  - name: foos
+    type: [FooCategory]
+  - name: bars
+    type: [BarCategory]
