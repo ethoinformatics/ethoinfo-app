@@ -34,8 +34,6 @@ function start() {
   // Kickoff history:
   history.replace('/', {});
 
-  // appStore.showStaticView('overview');
-
   // Render our app into the DOM at the node with id 'root'
   ReactDOM.render(
     <App stores={stores} />,

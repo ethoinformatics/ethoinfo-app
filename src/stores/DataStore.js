@@ -219,7 +219,7 @@ export default class DataStore {
       console.log(`Loaded ${result.docs.length} docs for domain: ${singularName}`, result.docs.map(doc => doc));
       this.setData(pluralize(singularName), result.docs.slice());
     }).catch((err) => {
-      console.log(err);
+      console.log('Error loading domain:', err);
     });
   }
 
@@ -300,7 +300,12 @@ export default class DataStore {
 
     const validCategories = result.categories.filter(cat => cat.validation.error === null);
     this.schemas.categories = [...validCategories];
-    console.log(result);
+
+    // Setup observable array entries for each valid schema
+    result.models.forEach((model) => {
+      const singularName = model.name;
+      this.setData(pluralize(singularName), []);
+    });
   }
 
   // Get data for a domain name from memory (this.data[domainName])
@@ -311,7 +316,7 @@ export default class DataStore {
 
   // Get debug schema with validation information
   getDebugSchema(id) {
-    let allSchemas = [...this.schemasDebug.categories, ...this.schemasDebug.models];
+    const allSchemas = [...this.schemasDebug.categories, ...this.schemasDebug.models];
     return allSchemas.find(element => element.name === id);
   }
 

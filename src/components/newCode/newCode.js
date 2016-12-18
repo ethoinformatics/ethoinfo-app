@@ -1,9 +1,6 @@
 import React from 'react';
-import { toJS } from 'mobx';
-import { observer, PropTypes } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { Page, Button } from 'react-onsenui';
-// import history from '../../history';
-
 import './newCode.styl';
 
 @observer

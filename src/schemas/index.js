@@ -33,17 +33,28 @@ import categories from './categories/index.yaml';
 
 // Models are imported individually here:
 // import Contact from './models/contact.yaml';
-import PassExample from './models/passExample.yaml';
-import AnotherPassExample from './models/anotherPassExample.yaml';
-import FailExample from './models/failExample.yaml';
+// import PassExample from './models/passExample.yaml';
+// import AnotherPassExample from './models/anotherPassExample.yaml';
+
+import BiologicalSample from './models/biologicalSample.yaml';
+import Contact from './models/contact.yaml';
+import Diary from './models/diary.yaml';
+import Observer from './models/observer.yaml';
+import PlantSample from './models/plantSample.yaml';
+import Subject from './models/subject.yaml';
+import Taxonomy from './models/taxonomy.yaml';
 
 // Export an object containing all of our schemas:
 export default {
   categories,
   models: [
-    PassExample,
-    AnotherPassExample,
-    FailExample
+    BiologicalSample,
+    Contact,
+    Diary,
+    Observer,
+    PlantSample,
+    Subject,
+    Taxonomy
   ]
 };
 

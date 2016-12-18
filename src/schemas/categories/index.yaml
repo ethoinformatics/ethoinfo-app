@@ -2,6 +2,9 @@
 # Values should be alphabetical (no numbers, symbols, spaces) and PascalCased
 
 ---
-- FooCategory
-- BarCategory
-- badCategory911
+- BiologicalSampleMedium
+- BiologicalSampleType
+- BiologicalSampleContainer
+- PlantParts
+- SampleQuality
+- Sex

@@ -78,6 +78,11 @@ export default class ViewStore {
       action: () => history.push('/categories', {})
     },
     {
+      iconClass: 'md-code',
+      name: 'Schema Viewer',
+      action: () => history.push('/debug', {})
+    },
+    {
       iconClass: 'ion-map',
       name: 'Geolocation viewer',
       action: () => history.push('/geoViewer', {})
@@ -90,6 +95,7 @@ export default class ViewStore {
   // CurrentView can be derived from path:
   // Todo: refactor with router:
   @computed get currentView() {
+    console.log(this.path);
     const view = router.resolve(routes, this.path);
 
     return view || {

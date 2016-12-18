@@ -12,6 +12,10 @@ import Navbar from '../navbar/navbar';
 
 import CategoryList from '../categoryList/categoryList';
 import CodeList from '../codeList/codeList';
+import DebugView from '../debug/debugView';
+import DebugDetail from '../debug/debugDetail';
+import DocumentList from '../documents/documentList';
+import NewDocument from '../documents/newDocument';
 import NewCode from '../newCode/newCode';
 import Geo from '../geoViewer/geoViewer';
 import Settings from '../settings/settings';
@@ -23,7 +27,7 @@ import OverviewDetail from '../overview/overviewDetail';
 function renderCurrentView(stores) {
   const { dataStore, geoStore, viewStore } = stores;
   const view = viewStore.currentView;
-  // console.log('App::renderCurrentView', viewStore.currentView);
+  console.log('App::renderCurrentView', viewStore.currentView);
 
   switch (view.name) {
     case 'categories':
@@ -32,10 +36,10 @@ function renderCurrentView(stores) {
       return (
         <CodeList
           codes={dataStore.getData(view.params.id)}
-          newAction={() => viewStore.navigateTo(`/categories/${view.params.id}/new`)}
-          deleteAction={(id, rev) => dataStore.deleteDoc(id, rev)}
-          deleteSuccessAction={() => {
-            dataStore.loadDomain(view.params.id);
+          actions={{
+            new: () => viewStore.navigateTo(`/categories/${view.params.id}/new`),
+            destroy: (id, rev) => dataStore.deleteDoc(id, rev),
+            onDestroy: () => dataStore.loadDomain(view.params.id)
           }}
         />);
     case 'newCode':
@@ -44,6 +48,23 @@ function renderCurrentView(stores) {
           createAction={data => dataStore.createDoc(view.params.id, data)}
           createSuccessAction={() => viewStore.navigateTo(`/categories/${view.params.id}`)}
         />);
+    case 'debug':
+      return <DebugView schemas={dataStore.schemasDebug} />;
+    case 'debugDetail':
+      return <DebugDetail schema={dataStore.getDebugSchema(view.params.id)} />;
+    case 'documents':
+      return (<DocumentList
+        domain={view.params.id}
+        documents={dataStore.getData(view.params.id)}
+      />);
+    case 'newDocument':
+      return (<NewDocument
+        domain={view.params.id}
+        schema={dataStore.getDebugSchema(view.params.id)}
+        actions={{
+          create: data => dataStore.createDoc(view.params.id, data)
+        }}
+      />);
     case 'geoViewer':
       return <Geo store={geoStore} />;
     case 'overview':

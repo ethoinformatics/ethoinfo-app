@@ -1,0 +1,12 @@
+name: Subject
+fields:
+  - name: subjectName
+    type: String
+  - name: sex
+    type: Sex #coded field {male, female}
+  - name: identification
+    type: Taxonomy
+  #  lookup: true
+  #  required: false
+  - name: levelOfOrganization # Could be "individual animal" or "social group"
+    type: String

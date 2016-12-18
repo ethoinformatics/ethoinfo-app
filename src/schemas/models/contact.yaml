@@ -1,0 +1,31 @@
+name: Contact
+fields:
+  - name: observer
+    type: Observer
+  #  lookup: true
+  #  required: true
+  - name: datetime
+    type: Date
+  #  required: true
+  - name: location
+    type: Geolocation
+  #  required: true
+  - name: subject
+    type: [Subject]
+  #  lookup: true
+  #  required: true
+  - name: comments
+    type: String
+  - name: biologicalSamples
+    type: [BiologicalSample]
+  - name: plantSamples
+    type: [PlantSample]
+  #- name: focalSamples
+  #  type: [FocalSample]
+  #- name: groupScans
+  #  type: [GroupScan]
+  #- name: adLibitums
+  #  type: [AdLibitum]
+  #- name: additionalObservers # think about merging this with the observer as a larger array if possible?
+  #  type: [Observer]
+  #  lookup: true

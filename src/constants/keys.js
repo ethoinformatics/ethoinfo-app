@@ -5,6 +5,5 @@ export default keymirror({
   couchUsername: null,
   couchPassword: null,
   pouchDbName: null,
-
   shouldWatchGeolocation: null
 });
