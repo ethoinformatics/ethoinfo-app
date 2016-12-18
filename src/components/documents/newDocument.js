@@ -1,37 +1,101 @@
 import React from 'react';
 import { Button, Page } from 'react-onsenui';
+import { SingleDatePicker } from 'react-dates';
 import { toJS } from 'mobx';
 import _ from 'lodash';
 
-// Recursive field renderer
-const renderField = (field) => {
-  const { name, type } = field;
-  return (
-    <div>
-      {`${name}, ${type}`}
-    </div>
-  );
-};
+import 'react-dates/lib/css/_datepicker.css';
+import './documentForm.styl';
 
-const NewDocument = ({ domain, schema, actions }) => {
+class NewDocument extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+
+    };
+  }
+
+  // Recursive field renderer
+  renderField(field) {
+    const { name, type } = field;
+
+    let formField = null;
+
+    switch (type) {
+      case 'Date':
+        formField =
+          (<SingleDatePicker
+            date={this.state.date || null}
+            focused={this.state.focused}
+            onDateChange={(date) => { this.setState({ date }); }}
+            onFocusChange={({ focused }) => { this.setState({ focused }); }}
+            numberOfMonths={1}
+            isOutsideRange={() => false}
+            withPortal
+            id={name}
+          />);
+        break;
+      case 'String':
+        formField =
+          (<input
+            disabled={false}
+            type={'text'}
+            defaultValue={''}
+            style={{ width: '100%' }}
+          />);
+        break;
+      default:
+        break;
+    }
+
+    return formField;
+  }
+  render() {
+    const { domain, schema, actions } = this.props;
+    const schemaDef = schema ? toJS(schema) : null;
+    const fields = schemaDef ? schemaDef.validation.value.fields : [];
+    console.log(domain, fields, actions);
+    return (
+      <Page className="newDocument">
+        <ol className="documentForm">
+          {
+            fields.map((field, index) => {
+              return (
+                <li className="field" key={index}>
+                  <label htmlFor={field.name}>{field.name}</label>
+                  { this.renderField(field) }
+                </li>
+              );
+            })
+          }
+        </ol>
+      </Page>
+    );
+  }
+}
+
+/* const NewDocument = ({ domain, schema, actions }) => {
   const schemaDef = schema ? toJS(schema) : null;
   const fields = schemaDef ? schemaDef.validation.value.fields : [];
   // const { create, onCreate } = actions;
   console.log(domain, fields, actions);
   return (
     <Page className="newDocument">
-      {
-        fields.map((field, index) => {
-          return (
-            <div key={index}>
-              { renderField(field) }
-            </div>
-          );
-        })
-      }
+      <ol className="documentForm">
+        {
+          fields.map((field, index) => {
+            return (
+              <li className="field" key={index}>
+                <label htmlFor={field.name}>{field.name}</label>
+                { renderField(field) }
+              </li>
+            );
+          })
+        }
+      </ol>
     </Page>
   );
-};
+}; */
 
 // Use generic "React.PropTypes.object" for now.
 
