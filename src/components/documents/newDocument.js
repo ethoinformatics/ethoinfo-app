@@ -3,6 +3,7 @@ import { Button, Page } from 'react-onsenui';
 import { SingleDatePicker } from 'react-dates';
 import { toJS } from 'mobx';
 import _ from 'lodash';
+import { Types } from '../../schemas/schema';
 
 import 'react-dates/lib/css/_datepicker.css';
 import './documentForm.styl';
@@ -18,11 +19,11 @@ class NewDocument extends React.Component {
   // Recursive field renderer
   renderField(field) {
     const { name, type } = field;
-
+    console.log(type);
     let formField = null;
 
-    switch (type) {
-      case 'Date':
+    switch (type.constructor) {
+      case Types.Date:
         formField =
           (<SingleDatePicker
             date={this.state.date || null}
@@ -35,7 +36,16 @@ class NewDocument extends React.Component {
             id={name}
           />);
         break;
-      case 'String':
+      case Types.String:
+        formField =
+          (<input
+            disabled={false}
+            type={'text'}
+            defaultValue={''}
+            style={{ width: '100%' }}
+          />);
+        break;
+      case Types.Number:
         formField =
           (<input
             disabled={false}
@@ -52,9 +62,10 @@ class NewDocument extends React.Component {
   }
   render() {
     const { domain, schema, actions } = this.props;
-    const schemaDef = schema ? toJS(schema) : null;
-    const fields = schemaDef ? schemaDef.validation.value.fields : [];
-    console.log(domain, fields, actions);
+    // const schemaDef = schema ? toJS(schema) : null;
+    // const fields = schemaDef ? schemaDef.validation.value.fields : [];
+    const { fields } = schema;
+    console.log(fields);
     return (
       <Page className="newDocument">
         <ol className="documentForm">

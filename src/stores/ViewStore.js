@@ -125,7 +125,7 @@ export default class ViewStore {
         /* switch (currentView.name) {
           case 'overview':
             setTimeout(() => {
-              this.dataStore.loadDomain('diary');
+              // this.dataStore.loadDomain('diary');
             }, 400);
             break;
           default:

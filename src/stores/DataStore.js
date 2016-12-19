@@ -10,6 +10,7 @@ import { KEYS } from '../constants';
 import config from '../config';
 import schemas from '../schemas';
 import schemaLoader from '../schemas/loader';
+import { CategorySchema, ModelSchema } from '../schemas/schema';
 
 // Pouch query API uses global namespace in a terrible way
 // https://github.com/pouchdb/pouchdb/issues/4624
@@ -295,11 +296,35 @@ export default class DataStore {
   @action loadSchemas() {
     // Load categories:
     const result = schemaLoader.load(schemas.categories, schemas.models);
-    this.schemasDebug.categories = [...result.categories];
-    this.schemasDebug.models = [...result.models];
+    this.schemasDebug.categories = [...result.categories.slice()];
+    this.schemasDebug.models = [...result.models.slice()];
 
     const validCategories = result.categories.filter(cat => cat.validation.error === null);
-    this.schemas.categories = [...validCategories];
+
+    const categorySchemas = validCategories.map((cat) => {
+      const name = cat.name;
+      return new CategorySchema(name);
+    });
+
+    // console.log('!!! Categories =>', categorySchema);
+
+    const validModels = result.models.filter(model => model.validation.error === null);
+
+    const categoryNames = validCategories.map(cat => cat.name);
+    const modelNames = validModels.map(model => model.name);
+
+    const modelSchemas = validModels.slice().map((model) => {
+      const name = model.name;
+      const fields = model.validation.value.fields;
+      return new ModelSchema(name, fields, {
+        categoryNames, modelNames
+      });
+    });
+
+    this.schemas.models = [...modelSchemas];
+    this.schemas.categories = [...categorySchemas];
+
+    // console.log('!!! Models =>', modelSchema);
 
     // Setup observable array entries for each valid schema
     result.models.forEach((model) => {
@@ -317,6 +342,12 @@ export default class DataStore {
   // Get debug schema with validation information
   getDebugSchema(id) {
     const allSchemas = [...this.schemasDebug.categories, ...this.schemasDebug.models];
+    return allSchemas.find(element => element.name === id);
+  }
+
+  // Get schema
+  getSchema(id) {
+    const allSchemas = [...this.schemas.categories, ...this.schemas.models];
     return allSchemas.find(element => element.name === id);
   }
 

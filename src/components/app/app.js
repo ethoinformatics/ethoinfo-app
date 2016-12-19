@@ -60,7 +60,7 @@ function renderCurrentView(stores) {
     case 'newDocument':
       return (<NewDocument
         domain={view.params.id}
-        schema={dataStore.getDebugSchema(view.params.id)}
+        schema={dataStore.getSchema(view.params.id)}
         actions={{
           create: data => dataStore.createDoc(view.params.id, data)
         }}
@@ -68,9 +68,9 @@ function renderCurrentView(stores) {
     case 'geoViewer':
       return <Geo store={geoStore} />;
     case 'overview':
-      return <Overview schemas={dataStore.schemasDebug} />;
+      return <Overview schemas={dataStore.schemas} />;
     case 'overviewDetail':
-      return <OverviewDetail schema={dataStore.getDebugSchema(view.params.id)} />;
+      return <OverviewDetail schema={dataStore.getSchema(view.params.id)} />;
     case 'settings':
       return <Settings />;
     case 'sync':

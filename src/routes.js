@@ -40,7 +40,7 @@ export default [
   {
     path: '/debug/:id',
     name: 'debugDetail',
-    title: params => `Schema: ${_.startCase(params.id)}`,
+    title: params => `${_.startCase(params.id)}`,
     prevPath: () => '/',
     nextPath: () => null
   },
