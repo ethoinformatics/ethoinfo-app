@@ -131,9 +131,14 @@ export default class ViewStore {
           default:
             break;
         }*/
+
+        // Load data for the current view
         if (currentView.params && currentView.params.id) {
           this.dataStore.loadDomain(currentView.params.id);
         }
+
+        // Load all domains
+        this.dataStore.loadAllDomains();
       },
       true // Fire immediately.
     );

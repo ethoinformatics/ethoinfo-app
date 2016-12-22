@@ -1,4 +1,4 @@
-import { action, computed, observable, map } from 'mobx';
+import { action, computed, observable, map, toJS } from 'mobx';
 import _ from 'lodash';
 import url from 'url';
 import PouchDB from 'pouchdb';
@@ -204,12 +204,50 @@ export default class DataStore {
     });
   }
 
+  @action loadAllDomains() {
+    const dbName = config[KEYS.pouchDbName];
+    const db = new PouchDB(dbName);
+
+    const allSchemas = [
+      ...toJS(this.schemas.categories),
+      ...toJS(this.schemas.models)
+    ];
+
+    const allSchemaNames = allSchemas.map(schema => schema.name);
+
+    // console.log(allSchemaNames);
+
+    db.allDocs({
+      include_docs: true,
+      attachments: true
+    }).then((result) => {
+      const docs = result.rows
+        .map(row => row.doc)
+        .filter((doc) => {
+          // console.log(doc);
+          return allSchemaNames.includes(doc.domainName);
+        });
+
+      allSchemaNames.forEach((name) => {
+        const collectionName = _.camelCase(name);
+        const singularName = pluralize(collectionName, 1);
+
+        const items = docs.filter(doc => doc.domainName === name);
+        this.setData(pluralize(singularName), items);
+      });
+
+      console.log('Loaded all docs', docs);
+    }).catch((err) => {
+      console.log('Error loading all docs', err);
+    });
+  }
+
   /**
    * Load data for a given domain name from pouchDB
    * @param {String} domainName
    */
   @action loadDomain(domainName) {
-    const singularName = pluralize(_.camelCase(domainName), 1);
+    const singularName = pluralize(domainName, 1);
 
     const dbName = config[KEYS.pouchDbName];
     const db = new PouchDB(dbName);
@@ -235,7 +273,7 @@ export default class DataStore {
   @action createDoc(domainName, data) {
     this.operationInFlight = true;
 
-    const singularName = pluralize(_.camelCase(domainName), 1);
+    const singularName = pluralize(domainName, 1);
 
     const dbName = config[KEYS.pouchDbName];
     const db = new PouchDB(dbName);
@@ -306,8 +344,6 @@ export default class DataStore {
       return new CategorySchema(name);
     });
 
-    // console.log('!!! Categories =>', categorySchema);
-
     const validModels = result.models.filter(model => model.validation.error === null);
 
     const categoryNames = validCategories.map(cat => cat.name);
@@ -323,8 +359,6 @@ export default class DataStore {
 
     this.schemas.models = [...modelSchemas];
     this.schemas.categories = [...categorySchemas];
-
-    // console.log('!!! Models =>', modelSchema);
 
     // Setup observable array entries for each valid schema
     result.models.forEach((model) => {

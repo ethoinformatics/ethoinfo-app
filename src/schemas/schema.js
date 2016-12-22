@@ -1,3 +1,6 @@
+import moment from 'moment';
+import { toJS } from 'mobx';
+
 class DataType {}
 class DataTypeString extends DataType {}
 class DataTypeBoolean extends DataType {}
@@ -61,6 +64,8 @@ class Field {
       }
     }
 
+    // console.log('Making field', name, typeString, this.isCollection);
+
     switch (typeString) {
       case 'String':
         this.type = new Types.String();
@@ -92,10 +97,28 @@ class ModelSchema extends Schema {
   constructor(name, fields, customTypes) {
     super(name);
 
+   // console.log('Making schema', name, toJS(fields));
+
     // Map field strings
-    this.fields = fields.map(field =>
+    this.fields = toJS(fields).map(field =>
       new Field(field.name, field.type, customTypes)
     ).filter(field => field.type !== null);
+  }
+
+  getDefaultState() {
+    return Object.assign(...this.fields.map((field) => {
+      let value = null;
+
+      switch (field.type.constructor) {
+        case Types.Date:
+          value = moment.now();
+          break;
+        default:
+          break;
+      }
+
+      return { [field.name]: value };
+    }));
   }
 }
 

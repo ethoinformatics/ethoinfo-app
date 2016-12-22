@@ -59,6 +59,7 @@ function renderCurrentView(stores) {
       />);
     case 'newDocument':
       return (<NewDocument
+        dataStore={dataStore}
         domain={view.params.id}
         schema={dataStore.getSchema(view.params.id)}
         actions={{

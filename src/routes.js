@@ -47,7 +47,7 @@ export default [
   {
     path: '/categories/:id/new',
     name: 'newCode',
-    title: params => `${_.startCase(params.id)} | New code`,
+    title: params => `${_.startCase(params.id)}`,
     prevPath: params => `/categories/${params.id}`,
     nextPath: () => null
   },
