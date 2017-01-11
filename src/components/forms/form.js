@@ -4,8 +4,11 @@ import { toJS } from 'mobx';
 import { Types } from '../../schemas/schema';
 
 // Todo: consolidate export / import
+import SelectField from './fields/select/select';
 import TextInputField from './fields/text/input';
 import DateField from './fields/date/date';
+
+import './form.styl';
 
 @observer
 class Form extends React.Component {
@@ -39,9 +42,13 @@ class Form extends React.Component {
         break;
       case Types.Number:
         break;
-      case Types.Category:
+      case Types.Category: // eslint-disable-line  no-case-declarations
+        const domainName = type.name;
+        const options = [null, ...(dataStore.getData(domainName) || [])];
+        formField = <SelectField options={options} {...props} />;
         break;
       case Types.Model:
+        break;
       default:
         break;
     }
@@ -53,7 +60,7 @@ class Form extends React.Component {
     const { schema } = this.props;
 
     return (
-      <div>
+      <div className="form">
         <ol className="formFields">
           {
             toJS(schema).fields.map((field, index) =>

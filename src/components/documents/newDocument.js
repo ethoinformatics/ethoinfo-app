@@ -37,6 +37,13 @@ class NewDocument extends React.Component {
               });
           }}
         >Save</Button>
+        <Button
+          modifier="large"
+          style={{ backgroundColor: '#666' }}
+          onClick={() => {
+            dataStore.resetFieldsAtPath(path);
+          }}
+        >Reset fields</Button>
       </Page>
     );
   }

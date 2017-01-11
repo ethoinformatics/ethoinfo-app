@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { SingleDatePicker } from 'react-dates';
+import moment from 'moment';
 
 class DateField extends Component {
   constructor() {
@@ -10,10 +11,15 @@ class DateField extends Component {
   render() {
     const { value, onChange } = this.props;
 
+    const date = value ? moment(value) : moment();
+
     return (<SingleDatePicker
-      date={value || null}
+      date={date}
       focused={this.state.focused}
-      onDateChange={(date) => { onChange({ date }); }}
+      onDateChange={(newDate) => {
+        console.log(newDate);
+        onChange(newDate.utc().format());
+      }}
       onFocusChange={({ focused }) => { this.setState({ focused }); }}
       numberOfMonths={1}
       isOutsideRange={() => false}
