@@ -4,6 +4,7 @@ import url from 'url';
 import PouchDB from 'pouchdb';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
+import R from 'ramda';
 import uuid from 'uuid/v4';
 import localStorage from '../utilities/localStorage';
 import { KEYS } from '../constants';
@@ -78,7 +79,17 @@ export default class DataStore {
     models: []
   }
 
+  // Data holds our actual data.
+  // PouchDB serves as the single source of truth, so we only modify data in response.
+  // to Pouch I/O.
+  // We use a map for dynamic keys.
+  // https://mobx.js.org/refguide/map.html
   @observable data = map();
+
+  // Fields holds our transient data input (form fields) state.
+  // We use a map for dynamic keys.
+  // https://mobx.js.org/refguide/map.html
+  @observable fields = map();
 
   // Full URL includes username and password
   @computed get fullCouchUrl() {
@@ -236,7 +247,7 @@ export default class DataStore {
         this.setData(pluralize(singularName), items);
       });
 
-      console.log('Loaded all docs', docs);
+      // console.log('Loaded all docs', docs);
     }).catch((err) => {
       console.log('Error loading all docs', err);
     });
@@ -304,6 +315,7 @@ export default class DataStore {
    * @param {String} _rev
    */
   @action deleteDoc(id, rev) {
+    // Flag operation in flight
     this.operationInFlight = true;
 
     const dbName = config[KEYS.pouchDbName];
@@ -321,7 +333,7 @@ export default class DataStore {
     });
   }
 
-  // Clear status message generated from last operation
+  // Clear status message generated from last operation.
   @action clearStatusMessage() {
     this.statusMessage = null;
   }
@@ -337,6 +349,9 @@ export default class DataStore {
     this.schemasDebug.categories = [...result.categories.slice()];
     this.schemasDebug.models = [...result.models.slice()];
 
+    //--------------------
+
+    // Filter valid categories and contruct CategorySchema from plain javascript object
     const validCategories = result.categories.filter(cat => cat.validation.error === null);
 
     const categorySchemas = validCategories.map((cat) => {
@@ -344,6 +359,9 @@ export default class DataStore {
       return new CategorySchema(name);
     });
 
+    //--------------------
+
+    // Filter valid models and contruct CategorySchema from plain javascript object
     const validModels = result.models.filter(model => model.validation.error === null);
 
     const categoryNames = validCategories.map(cat => cat.name);
@@ -357,6 +375,8 @@ export default class DataStore {
       });
     });
 
+    //--------------------
+    // Assign schemas to our observable object this.schemas
     this.schemas.models = [...modelSchemas];
     this.schemas.categories = [...categorySchemas];
 
@@ -367,22 +387,112 @@ export default class DataStore {
     });
   }
 
-  // Get data for a domain name from memory (this.data[domainName])
+  // Set data input field.
+  // Path is a path into our observable fields map (this.fields)
+  @action setField(path, value) {
+    // console.log('DataStore::setField', path, value);
+    if (path.length < 2) {
+      throw new Error('Trying to set field without a valid path. Requires at least 2 path components, the action (e.g. new or edit, and the domain)');
+    }
+
+    // First component is the key into our observable map
+    const mapKey = path[0];
+
+    // Remaining path components are the update path
+    const updatePath = path.slice(1);
+
+    // Get current value or return a default empty object
+    const treeRoot = this.fields.get(mapKey) || {};
+
+    // Compute new value:
+    const newValue = R.assocPath(updatePath, value, treeRoot);
+
+    // Save to observable map:
+    this.fields.set(mapKey, newValue);
+
+    // console.log('New fields tree:', toJS(this.fields));
+  }
+
+  // Todo: validate object
+  @action saveFieldsAtPath(path) {
+    this.operationInFlight = true;
+
+    if (path.length < 2) {
+      this.operationInFlight = false;
+      return Promise.reject(new Error('Trying to save fields at invalid path. Requires at least 2 path components, the action (e.g. new or edit, and the domain)'));
+    }
+
+    // First component is the key into our observable map
+    const mapKey = path[0];
+
+    // Get tree root from map
+    const treeRoot = this.fields.get(mapKey);
+
+    // Get domain
+    const domainName = path[1];
+
+    if (!treeRoot) {
+      this.operationInFlight = false;
+      return Promise.reject(new Error(`Aborting save. No data exists at path: ${path}`));
+    }
+
+    const data = R.path([domainName], treeRoot);
+
+    if (!data || R.valuesIn(data).length < 1) {
+      this.operationInFlight = false;
+      return Promise.reject(new Error(`Aborting save. No data exists at path: ${path}`));
+    }
+
+    // Valid path and data, save document!
+    return this.createDoc(domainName, data);
+  }
+
+  @action resetFieldsAtPath(path) {
+    if (path.length < 2) {
+      throw new Error('Trying to get field without a valid path. Requires at least 2 path components, the action (e.g. new or edit, and the domain)');
+    }
+
+    // First component is the key into our observable map
+    const mapKey = path[0];
+
+    // Get domain
+    const domainName = path[1];
+
+    this.fields.set(mapKey, { [domainName]: null });
+  }
+
+  // Get data for a domain name (category or model) from memory (this.data[domainName])
   getData(domainName) {
     const collectionName = pluralize(_.camelCase(domainName));
     return this.data.get(collectionName);
   }
 
+  // Get data for a field @path
+  getField(path) {
+    if (path.length < 2) {
+      throw new Error('Trying to get field without a valid path. Requires at least 2 path components, the action (e.g. new or edit, and the domain)');
+    }
+
+    // First component is the key into our observable map
+    const mapKey = path[0];
+
+    const treeRoot = this.fields.get(mapKey);
+
+    // Remaining path components are the update path
+    const valuePath = path.slice(1);
+
+    return R.path(valuePath, treeRoot);
+  }
+
   // Get debug schema with validation information
-  getDebugSchema(id) {
+  getDebugSchema(name) {
     const allSchemas = [...this.schemasDebug.categories, ...this.schemasDebug.models];
-    return allSchemas.find(element => element.name === id);
+    return allSchemas.find(element => element.name === name);
   }
 
   // Get schema
-  getSchema(id) {
+  getSchema(name) {
     const allSchemas = [...this.schemas.categories, ...this.schemas.models];
-    return allSchemas.find(element => element.name === id);
+    return allSchemas.find(element => element.name === name);
   }
-
 }

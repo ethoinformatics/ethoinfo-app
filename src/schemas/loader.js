@@ -1,51 +1,38 @@
-import Joi from 'joi-browser';
+import Joi from 'joi-browser'; // json validation instead?
+import { defaultTypes } from './types';
+import { alphabeticalString, pascalCasedString } from './validations';
 
-const primitiveTypes = [
-  'Boolean',
-  'Number',
-  'String'
-];
-
-const specialTypes = [
-  'Date',
-  'Geolocation'
-];
-
-// Default types are primitive types and special types
-// User-defined types cannot have these type names.
-const defaultTypes = [...primitiveTypes, ...specialTypes];
-
-const validations = {
-  alphabeticalString: Joi.string().regex(/^[a-zA-Z]+$/, 'Alphabetical string'),
-    // .error(new Error('must be an alphabetical string.')),
-
-  pascalCasedString: Joi.string().regex(/^[A-Z]{1,2}[a-z]*(?:[A-Z]{1,2}[a-z]*)*$/, 'PascalCased string')
-    // .error(new Error('must be a PascalCased string.'))
-};
-
-// Validate category definition is simply a PascalCased string
+// Validate category definition:
+// a PascalCased string containing the name of the category
 const validateCategory = (category) => {
-  const schema = validations.pascalCasedString.required()
+  const schema = pascalCasedString.required().min(1)
     .not(defaultTypes);
 
   return Joi.validate(category, schema);
 };
 
-// Validate model definition
-const validateModel = (category) => {
+// Validate model definition:
+// -- "name" is a pascalCasedString containing the name of the model
+// -- "fields" is an array of items with the following shape:
+// ----- "name": an alphabetical string (A-Z) containing the field name
+// ----- "type":
+// -------- Single value: an alphabetical string (A-Z) e.g. "Bool"
+// -------- OR
+// -------- Collection: an array w/ a single alphabetical string (A-Z) e.g. ["Bool"]
+const validateModel = (model) => {
   const schema = Joi.object().keys({
-    name: validations.pascalCasedString.required().min(1)
+    name: pascalCasedString.required().min(1)
       .error(new Error('must be a PascalCased string.')),
     fields: Joi.array().items(Joi.object().keys({
-      name: validations.alphabeticalString.required().min(1),
+      name: alphabeticalString.required().min(1),
       type: Joi.alternatives().try(
-        Joi.array().items(validations.pascalCasedString.required().min(1)).length(1),
-        validations.pascalCasedString.required().min(1)
+        Joi.array().items(pascalCasedString.required().min(1)).length(1),
+        pascalCasedString.required().min(1)
       ).required()
     })).required().min(1)
   });
 
-  return Joi.validate(category, schema);
+  return Joi.validate(model, schema);
 };
 
 export default {
@@ -112,11 +99,11 @@ export default {
     // Validate individual fields
     const validateModelFields = (model) => {
       const schema = Joi.object().keys({
-        name: validations.pascalCasedString.required().min(1)
+        name: pascalCasedString.required().min(1)
           .error(new Error('must be a PascalCased string.')),
         fields: Joi.array().items(
         Joi.object().keys({
-          name: validations.alphabeticalString.required().min(1),
+          name: alphabeticalString.required().min(1),
           type: Joi.alternatives().try(
             Joi.array().items(allTypesTmp).required().length(1),
             Joi.string().only(allTypesTmp).required()
@@ -150,7 +137,7 @@ export default {
       if (validation.error) {
         console.error(`Error validating model fields => ${model.name}:`, validation.error.message);
       } else {
-        console.log(`Success validating model definition => ${model.name}:`, validation.value);
+        // console.log(`Success validating model definition => ${model.name}:`, validation.value);
       }
 
       return {

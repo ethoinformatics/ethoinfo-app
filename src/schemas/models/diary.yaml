@@ -10,9 +10,9 @@ fields:
     type: [Contact]
   #- name: adLibitums
   #  type: [AdLibitum]
-  #- name: biologicalSamples
-  #  type: [BiologicalSample]
-  #- name: plantSamples
-  #  type: [PlantSample]
+  - name: biologicalSamples
+    type: [BiologicalSample]
+  - name: plantSamples
+    type: [PlantSample]
   - name: comments
     type: String

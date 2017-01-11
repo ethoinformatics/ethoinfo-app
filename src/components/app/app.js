@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import 'normalize.css/normalize.css';
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
-// import DevTools from 'mobx-react-devtools';
 import { Page, Splitter, SplitterContent } from 'react-onsenui';
 
 import './app.styl';
@@ -27,7 +26,7 @@ import OverviewDetail from '../overview/overviewDetail';
 function renderCurrentView(stores) {
   const { dataStore, geoStore, viewStore } = stores;
   const view = viewStore.currentView;
-  console.log('App::renderCurrentView', viewStore.currentView);
+  // console.log('App::renderCurrentView', viewStore.currentView);
 
   switch (view.name) {
     case 'categories':
@@ -63,7 +62,7 @@ function renderCurrentView(stores) {
         domain={view.params.id}
         schema={dataStore.getSchema(view.params.id)}
         actions={{
-          create: data => dataStore.createDoc(view.params.id, data)
+          onCreate: () => viewStore.navigateTo(`/documents/${view.params.id}/`)
         }}
       />);
     case 'geoViewer':

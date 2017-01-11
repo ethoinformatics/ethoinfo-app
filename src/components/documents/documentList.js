@@ -2,14 +2,13 @@ import React from 'react';
 import { List, ListItem, Page, ListHeader } from 'react-onsenui';
 import { toJS } from 'mobx';
 import { observer, PropTypes } from 'mobx-react';
-import _ from 'lodash';
-
 import './documentList.styl';
+import history from '../../history';
 
 const DocumentList = observer(({ domain, documents, actions }) => {
   const dataSource = documents ? toJS(documents).slice().sort() : [];
   // const { create, onCreate } = actions;
-  console.log(documents, actions);
+  // console.log(documents, actions);
   return (
     <Page className="documentList">
       <List
