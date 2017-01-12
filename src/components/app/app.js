@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { observer } from 'mobx-react';
 import 'normalize.css/normalize.css';
 import 'onsenui/css/onsenui.css';
@@ -8,6 +9,8 @@ import { Page, Splitter, SplitterContent } from 'react-onsenui';
 import './app.styl';
 import Menu from '../menu/menu';
 import Navbar from '../navbar/navbar';
+
+import { open as openMenu, close as closeMenu } from '../../redux/actions/menu';
 
 import CategoryList from '../categoryList/categoryList';
 import CodeList from '../codeList/codeList';
@@ -94,13 +97,20 @@ function renderCurrentView(stores) {
   }
 }
 
-const App = observer(({ stores }) => {
+const App = observer(({ stores, onOpenMenu, onCloseMenu, views }) => {
   const { viewStore } = stores;
   const { currentView } = viewStore;
+
+  const menuProps = {
+    store: viewStore,
+    isOpen: views.menu.isOpen,
+    onClose: onCloseMenu
+  };
+
   return (
     <div className="app">
       <Splitter>
-        <Menu store={viewStore} />
+        <Menu {...menuProps} />
         <SplitterContent>
           <Page
             renderToolbar={() =>
@@ -110,7 +120,7 @@ const App = observer(({ stores }) => {
                   action: () => viewStore.navigateTo(currentView.prevPath)
                 } : {
                   icon: 'md-menu',
-                  action: () => viewStore.showMenu()
+                  action: () => onOpenMenu()
                 }}
                 rightItem={currentView.nextPath ? {
                   icon: 'md-plus',
@@ -127,4 +137,23 @@ const App = observer(({ stores }) => {
   );
 });
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    docs: state.docs,
+    views: state.views,
+  };
+}
+
+const mapDispatchToProps = dispatch => ({
+  onOpenMenu: () => {
+    dispatch(openMenu());
+  },
+  onCloseMenu: () => {
+    dispatch(closeMenu());
+  },
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

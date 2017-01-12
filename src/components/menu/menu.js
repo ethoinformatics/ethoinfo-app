@@ -4,14 +4,14 @@ import { Icon, Page, SplitterSide } from 'react-onsenui';
 import MenuBar from './menuBar';
 import './menu.styl';
 
-const Menu = observer(({ store }) => (
+const Menu = observer(({ store, isOpen, onClose }) => (
   <SplitterSide
     className={'menu'}
     collapse
-    isOpen={store.menuIsOpen}
+    isOpen={isOpen}
     isSwipeable={false}
-    onClose={() => store.hideMenu()}
-    onOpen={() => store.showMenu()}
+    onClose={() => {}}
+    onOpen={() => {}}
     style={{
       background: '#fff',
       width: '100% !important'
@@ -19,7 +19,7 @@ const Menu = observer(({ store }) => (
   >
     <Page
       renderToolbar={() =>
-        <MenuBar menuAction={() => store.hideMenu()} />}
+        <MenuBar menuAction={() => onClose()} />}
     >
       <ul className="menuItems">
         {store.routes.map(item =>

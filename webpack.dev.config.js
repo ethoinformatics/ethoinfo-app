@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -76,6 +77,11 @@ module.exports = {
     ];
   },
   plugins: [
-    new ProgressBarPlugin()
+    new ProgressBarPlugin(),
+    new webpack.DefinePlugin({
+      // Adding the NODE_ENV key is especially important as React relies
+      // on it to optimize production builds.
+      'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV || "development") }
+    }),
   ]
 };

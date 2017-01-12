@@ -1,10 +1,16 @@
+import 'babel-polyfill';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+
 import App from './components/app/app';
 import ViewStore from './stores/ViewStore';
 import DataStore from './stores/DataStore';
 import GeoStore from './stores/GeoStore';
 import history from './history';
+
+import configureStore from './redux/configureStore';
 
 /**
  * Entrypoint for our app.
@@ -21,6 +27,9 @@ import history from './history';
  * and renders our top-level <App /> React component.
  */
 
+// Create redux store.
+const store = configureStore();
+
 function start() {
   // Initialize our stores
   const dataStore = new DataStore();
@@ -36,7 +45,9 @@ function start() {
 
   // Render our app into the DOM at the node with id 'root'
   ReactDOM.render(
-    <App stores={stores} />,
+    <Provider store={store}>
+      <App stores={stores} />
+    </Provider>,
     document.getElementById('root')
   );
 }
