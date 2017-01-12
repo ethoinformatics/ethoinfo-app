@@ -1,5 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import { toJS } from 'mobx';
 import { Button, Page } from 'react-onsenui';
 import 'react-dates/lib/css/_datepicker.css';
 import './documentForm.styl';
@@ -10,6 +11,8 @@ class EditDocument extends React.Component {
   render() {
     const { dataStore, domain, schema, actions, doc } = this.props;
     const path = ['edit', domain];
+
+    console.log('Edit:', toJS(doc));
 
     return (
       <Page className="newDocument">

@@ -15,7 +15,7 @@ fields:
     #required: false
   - name: identification
     type: Taxonomy
-    #lookup: true
+    lookup: true
     #required: false
   - name: location
     type: Geolocation

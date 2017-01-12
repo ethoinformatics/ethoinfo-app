@@ -10,6 +10,7 @@ import { Types } from '../../schemas/schema';
 import SelectField from './fields/select/select';
 import TextInputField from './fields/text/input';
 import DateField from './fields/date/date';
+import CollectionField from './fields/collection/collection';
 
 import './form.styl';
 
@@ -79,6 +80,7 @@ class Form extends React.Component {
         }
 
         if (isCollection) {
+          formField = <CollectionField domain={type.name} />;
           // console.log(`${name} field is a collection`);
         }
 
