@@ -1,7 +1,12 @@
 name: BiologicalSample # renamed from FecalSample to encompass other similar types of samples (e.g., blood)
+
+# Which field will we use to display instances of this model in our app
+displayField: sampleLabel
+
 fields:
   - name: subjects
     type: [Subject]
+    lookup: true
     #required: false
   - name: sampleLabel
     type: String # might want to think about enforcing format (e.g., ##-###-##)

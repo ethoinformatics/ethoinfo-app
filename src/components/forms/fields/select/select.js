@@ -8,28 +8,28 @@ class Select extends Component {
 
   render() {
     const { value, onChange, options = [] } = this.props;
-
+    const normalizedValue = value ? value._id : '';
     return (
-      <select className="fieldSelect">
+      <select
+        className="fieldSelect"
+        value={normalizedValue}
+        onChange={(e) => {
+          if (e.target.value) {
+            onChange({ _id: e.target.value });
+          } else {
+            onChange(null);
+          }
+        }}
+      >
         {
-          options.map((option, ii) => {
-            const isSelected = value && option && (option._id === value._id);
-
-            return (<option
+          options.map((option, ii) =>
+            <option
               key={`${ii}`}
-              value={option && option.display ? option.display : ''}
-              selected={isSelected}
-              onChange={() => {
-                if (option._id) {
-                  this.onChange({ _id: option._id });
-                } else {
-                  this.onChange(null);
-                }
-              }}
+              value={option && option._id ? option._id : ''}
             >
               {option ? option.name : ''}
-            </option>);
-          })
+            </option>
+          )
         }
       </select>
     );
@@ -37,7 +37,10 @@ class Select extends Component {
 }
 
 Select.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.shape({
+    name: PropTypes.string,
+    _id: PropTypes.string
+  }),
   onChange: PropTypes.func,
   options: PropTypes.arrayOf(
     PropTypes.shape({

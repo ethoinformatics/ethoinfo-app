@@ -1,4 +1,8 @@
 name: Taxonomy
+
+# Which field will we use to display instances of this model in our app
+displayField: scientificName
+
 fields:
   - name: scientificName
     type: String

@@ -1,4 +1,8 @@
 name: PlantSample
+
+# Which field will we use to display instances of this model in our app
+displayField: sampleName
+
 fields:
   - name: sampleName
     type: String # might want to think about enforcing format

@@ -5,8 +5,9 @@ import { observer, PropTypes } from 'mobx-react';
 import './documentList.styl';
 import history from '../../history';
 
-const DocumentList = observer(({ domain, documents, actions }) => {
+const DocumentList = observer(({ domain, documents, schema }) => {
   const dataSource = documents ? toJS(documents).slice().sort() : [];
+
   // const { create, onCreate } = actions;
   // console.log(documents, actions);
   return (
@@ -19,7 +20,10 @@ const DocumentList = observer(({ domain, documents, actions }) => {
           const path = `/documents/${domain}/${_id}`;
           return (
             <ListItem key={index} onClick={() => history.push(path, {})}>
-              {_id}
+              { /* Move this to a helper */ }
+              {
+                (schema && schema.displayField && row[schema.displayField]) ||
+                _id }
             </ListItem>
           );
         }
@@ -38,6 +42,7 @@ DocumentList.propTypes = {
       _rev: React.PropTypes.string.isRequired
     })
   ).isRequired,
+  schema: React.PropTypes.object, // eslint-disable-line react/forbid-prop-types
   actions: React.PropTypes.shape({
     // create: React.PropTypes.func.isRequired,
     // onCreate: React.PropTypes.func.isRequired

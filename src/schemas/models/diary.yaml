@@ -1,7 +1,12 @@
 name: Diary
+
+# Which field will we use to display instances of this model in our app
+displayField: datetime
+
 fields:
   - name: observer
     type: Observer
+    lookup: true
   - name: datetime
     type: Date
   - name: location

@@ -23,12 +23,14 @@ const validateModel = (model) => {
   const schema = Joi.object().keys({
     name: pascalCasedString.required().min(1)
       .error(new Error('must be a PascalCased string.')),
+    displayField: Joi.string().min(1),
     fields: Joi.array().items(Joi.object().keys({
       name: alphabeticalString.required().min(1),
       type: Joi.alternatives().try(
         Joi.array().items(pascalCasedString.required().min(1)).length(1),
         pascalCasedString.required().min(1)
-      ).required()
+      ).required(),
+      lookup: Joi.boolean()
     })).required().min(1)
   });
 
@@ -37,7 +39,7 @@ const validateModel = (model) => {
 
 export default {
   load: (categories, models) => {
-    console.log('Load schema:', categories, models);
+    // console.log('Load schema:', categories, models);
 
     // Collect our user-defined category types
     const allCategoryTypes = Object.keys(categories)
@@ -57,7 +59,7 @@ export default {
 
     // Remove duplicate entries
     validCategoryTypes = [...new Set(validCategoryTypes)];
-    console.log('Loaded valid category types =>', validCategoryTypes);
+    // console.log('Loaded valid category types =>', validCategoryTypes);
 
     // Collect our user-defined model types:
     const allModelTypes = models
@@ -101,13 +103,15 @@ export default {
       const schema = Joi.object().keys({
         name: pascalCasedString.required().min(1)
           .error(new Error('must be a PascalCased string.')),
+        displayField: Joi.string().min(1),
         fields: Joi.array().items(
         Joi.object().keys({
           name: alphabeticalString.required().min(1),
           type: Joi.alternatives().try(
             Joi.array().items(allTypesTmp).required().length(1),
             Joi.string().only(allTypesTmp).required()
-          ).required()
+          ).required(),
+          lookup: Joi.boolean(),
         })).required()
         .min(1)
         .unique((a, b) => a.name.toLowerCase() === b.name.toLowerCase())
@@ -139,7 +143,7 @@ export default {
       } else {
         // console.log(`Success validating model definition => ${model.name}:`, validation.value);
       }
-
+      
       return {
         name: model.name,
         validation

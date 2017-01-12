@@ -1,4 +1,8 @@
 name: Observer
+
+# Which field will we use to display instances of this model in our app
+displayField: email
+
 fields:
   - name: firstName
     type: String

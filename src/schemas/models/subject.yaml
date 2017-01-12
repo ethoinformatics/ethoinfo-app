@@ -1,4 +1,8 @@
 name: Subject
+
+# Which field will we use to display instances of this model in our app
+displayField: subjectName
+
 fields:
   - name: subjectName
     type: String
@@ -6,7 +10,7 @@ fields:
     type: Sex #coded field {male, female}
   - name: identification
     type: Taxonomy
-  #  lookup: true
+    lookup: true
   #  required: false
   - name: levelOfOrganization # Could be "individual animal" or "social group"
     type: String

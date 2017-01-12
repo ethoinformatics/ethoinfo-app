@@ -11,7 +11,7 @@ class DateField extends Component {
   render() {
     const { value, onChange } = this.props;
 
-    const date = value ? moment(value) : moment();
+    const date = value ? moment(value) : null;
 
     return (<SingleDatePicker
       date={date}

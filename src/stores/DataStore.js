@@ -19,6 +19,13 @@ import { CategorySchema, ModelSchema } from '../schemas/schema';
 // as recommended by PouchDB maintainer.
 PouchDB.plugin(require('pouchdb-find'));
 
+// Some issues:
+// https://github.com/nolanlawson/pouchdb-find/issues/238
+// No API for linked docs, so we need to query and link ourselves.
+// This should be performant enough from a user's perspective,
+// but we need to consider another approach if dataset becomes humongous.
+
+
 /**
  * DataStore contains domain specific state.
  *
@@ -318,6 +325,8 @@ export default class DataStore {
     // Flag operation in flight
     this.operationInFlight = true;
 
+    console.log(id, rev);
+
     const dbName = config[KEYS.pouchDbName];
     const db = new PouchDB(dbName);
 
@@ -359,6 +368,8 @@ export default class DataStore {
       return new CategorySchema(name);
     });
 
+    console.log(categorySchemas);
+
     //--------------------
 
     // Filter valid models and contruct CategorySchema from plain javascript object
@@ -370,10 +381,13 @@ export default class DataStore {
     const modelSchemas = validModels.slice().map((model) => {
       const name = model.name;
       const fields = model.validation.value.fields;
-      return new ModelSchema(name, fields, {
+      const displayField = model.validation.value.displayField;
+      return new ModelSchema(name, fields, displayField, {
         categoryNames, modelNames
       });
     });
+
+    console.log(modelSchemas);
 
     //--------------------
     // Assign schemas to our observable object this.schemas
@@ -445,6 +459,60 @@ export default class DataStore {
 
     // Valid path and data, save document!
     return this.createDoc(domainName, data);
+  }
+
+  @action updateDoc(id, path) {
+    this.operationInFlight = true;
+
+    if (path.length < 2) {
+      this.operationInFlight = false;
+      return Promise.reject(new Error('Trying to update fields at invalid path. Requires at least 2 path components, the action (e.g. new or edit, and the domain)'));
+    }
+
+    // DRY this up.
+    // First component is the key into our observable map
+    const mapKey = path[0];
+
+    // Get tree root from map
+    const treeRoot = this.fields.get(mapKey);
+
+    // Get domain
+    const domainName = path[1];
+
+    if (!treeRoot) {
+      this.operationInFlight = false;
+      return Promise.reject(new Error(`Aborting save. No data exists at path: ${path}`));
+    }
+
+    const data = R.path([domainName], treeRoot);
+
+    if (!data || R.valuesIn(data).length < 1) {
+      this.operationInFlight = false;
+      Promise.resolve({});
+      // return Promise.reject(new Error(`Aborting save. No data exists at path: ${path}`));
+    }
+
+    const dbName = config[KEYS.pouchDbName];
+    const db = new PouchDB(dbName);
+
+    // Pouch is our source of truth. Get document and merge new fields.
+    return db.get(id)
+    .then((doc) => {
+      const newDoc = { ...doc, ...data };
+      console.log('New doc is:', newDoc);
+      return db.put(newDoc);
+    })
+    .then((response) => {
+      // console.log('Updated doc:', response);
+      this.operationInFlight = false;
+      // this.statusMessage = 'Document updated!';
+      return response;
+    })
+    .catch((err) => {
+      this.operationInFlight = false;
+      this.statusMessage = 'Error updating doc!';
+      throw new Error(err);
+    });
   }
 
   @action resetFieldsAtPath(path) {

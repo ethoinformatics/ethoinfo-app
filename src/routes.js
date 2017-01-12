@@ -24,6 +24,13 @@ export default [
     nextPath: () => null
   },
   {
+    path: '/documents/:id/:docId',
+    name: 'viewDocument',
+    title: params => `${_.startCase(params.id)}`,
+    prevPath: params => `/documents/${params.id}`,
+    nextPath: () => null
+  },
+  {
     path: '/overview/:id',
     name: 'overviewDetail',
     title: params => `Overview: ${_.startCase(params.id)}`,

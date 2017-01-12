@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { toJS } from 'mobx';
+import R from 'ramda';
 
 class DataType {}
 class DataTypeString extends DataType {}
@@ -49,7 +50,7 @@ class CategorySchema extends Schema {
 }
 
 class Field {
-  constructor(name, typeStringOrArray, customTypes) {
+  constructor(name, isLookup, typeStringOrArray, customTypes) {
     this.name = name;
     this.isCollection = false;
 
@@ -82,6 +83,7 @@ class Field {
       default:
         if (customTypes.modelNames.includes(typeString)) {
           this.type = new Types.Model(typeString);
+          this.isLookup = isLookup || false;
           break;
         } else if (customTypes.categoryNames.includes(typeString)) {
           this.type = new Types.Category(typeString);
@@ -94,14 +96,25 @@ class Field {
 }
 
 class ModelSchema extends Schema {
-  constructor(name, fields, customTypes) {
+  constructor(name, fields, displayFieldName, customTypes) {
     super(name);
+
+    // const fieldNames = fields.map(field => field.name);
+    // const displayFieldExists = displayField && fieldNames.includes(displayField);
+
+    const displayField = R.find(R.propEq('name', displayFieldName))(fields);
+
+    if (displayField) {
+      this.displayField = displayField.name;
+    } else {
+      this.displayField = '_id';
+    }
 
    // console.log('Making schema', name, toJS(fields));
 
     // Map field strings
     this.fields = toJS(fields).map(field =>
-      new Field(field.name, field.type, customTypes)
+      new Field(field.name, field.lookup || false, field.type, customTypes)
     ).filter(field => field.type !== null);
   }
 

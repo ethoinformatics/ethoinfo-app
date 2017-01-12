@@ -14,6 +14,7 @@ import CodeList from '../codeList/codeList';
 import DebugView from '../debug/debugView';
 import DebugDetail from '../debug/debugDetail';
 import DocumentList from '../documents/documentList';
+import EditDocument from '../documents/editDocument';
 import NewDocument from '../documents/newDocument';
 import NewCode from '../newCode/newCode';
 import Geo from '../geoViewer/geoViewer';
@@ -55,6 +56,7 @@ function renderCurrentView(stores) {
       return (<DocumentList
         domain={view.params.id}
         documents={dataStore.getData(view.params.id)}
+        schema={dataStore.getSchema(view.params.id)}
       />);
     case 'newDocument':
       return (<NewDocument
@@ -63,6 +65,18 @@ function renderCurrentView(stores) {
         schema={dataStore.getSchema(view.params.id)}
         actions={{
           onCreate: () => viewStore.navigateTo(`/documents/${view.params.id}/`)
+        }}
+      />);
+    case 'viewDocument':
+      // Reset form state.
+      dataStore.resetFieldsAtPath(['edit', view.params.id]);
+      return (<EditDocument
+        dataStore={dataStore}
+        domain={view.params.id}
+        schema={dataStore.getSchema(view.params.id)}
+        doc={dataStore.getData(view.params.id).find(doc => doc._id === view.params.docId)}
+        actions={{
+          onUpdate: () => viewStore.navigateTo(`/documents/${view.params.id}/`)
         }}
       />);
     case 'geoViewer':

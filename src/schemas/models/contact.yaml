@@ -1,8 +1,12 @@
 name: Contact
+
+# Which field will we use to display instances of this model in our app
+displayField: datetime
+
 fields:
   - name: observer
     type: Observer
-  #  lookup: true
+    lookup: true
   #  required: true
   - name: datetime
     type: Date
@@ -12,7 +16,7 @@ fields:
   #  required: true
   - name: subject
     type: [Subject]
-  #  lookup: true
+    lookup: true
   #  required: true
   - name: comments
     type: String
