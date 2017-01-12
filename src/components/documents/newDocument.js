@@ -9,11 +9,32 @@ import Form from '../forms/form';
 class NewDocument extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    // Bind context so we can pass function to event handlers.
+    this.saveFields = this.saveFields.bind(this);
+    this.resetFields = this.resetFields.bind(this);
+  }
+
+  resetFields() {
+    const { dataStore, domain } = this.props;
+    const path = ['edit', domain];
+    dataStore.resetFieldsAtPath(path);
+  }
+
+  saveFields() {
+    const { dataStore, domain, actions } = this.props;
+    const path = ['new', domain];
+    dataStore.saveFieldsAtPath(path)
+      .then(() => {
+        dataStore.resetFieldsAtPath(path);
+        actions.onCreate();
+      })
+      .catch((err) => {
+        console.log(`Error creating code: ${name} =>`, err);
+      });
   }
 
   render() {
-    const { dataStore, domain, schema, actions } = this.props;
+    const { dataStore, domain, schema } = this.props;
     const path = ['new', domain];
 
     return (
@@ -23,42 +44,20 @@ class NewDocument extends React.Component {
           schema={schema}
           dataStore={dataStore}
         />
-        <Button
-          modifier="large"
-          onClick={() => {
-            dataStore.saveFieldsAtPath(path)
-              .then(() => {
-                console.log(`Success creating document: ${name}`);
-                dataStore.resetFieldsAtPath(path);
-                actions.onCreate();
-              })
-              .catch((err) => {
-                console.log(`Error creating code: ${name} =>`, err);
-              });
-          }}
-        >Save</Button>
-        <Button
-          modifier="large"
-          style={{ backgroundColor: '#666' }}
-          onClick={() => {
-            dataStore.resetFieldsAtPath(path);
-          }}
-        >Reset fields</Button>
+        <Button modifier="large" onClick={this.saveFields}>Save</Button>
+        <Button modifier="large" onClick={this.resetFields}>Reset fields</Button>
       </Page>
     );
   }
-
 }
-// Use generic "React.PropTypes.object" for now.
 
 /* eslint-disable react/no-unused-prop-types */
 NewDocument.propTypes = {
-  dataStore: React.PropTypes.object, // eslint-disable-line  react/forbid-prop-types
+  dataStore: React.PropTypes.object,
   domain: React.PropTypes.string,
-  schema: React.PropTypes.object, // eslint-disable-line  react/forbid-prop-types
+  schema: React.PropTypes.object,
   actions: React.PropTypes.shape({
     onCreate: React.PropTypes.func.isRequired,
-    // onCreate: React.PropTypes.func.isRequired
   })
 };
 /* eslint-enable react/no-unused-prop-types */

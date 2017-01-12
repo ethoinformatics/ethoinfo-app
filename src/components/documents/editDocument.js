@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { observer } from 'mobx-react';
-import { toJS } from 'mobx';
 import { Button, Page } from 'react-onsenui';
 import 'react-dates/lib/css/_datepicker.css';
 import './documentForm.styl';
@@ -8,57 +7,61 @@ import Form from '../forms/form';
 
 @observer
 class EditDocument extends React.Component {
-  render() {
-    const { dataStore, domain, schema, actions, doc } = this.props;
+  constructor() {
+    super();
+    // Bind context so we can pass function to event handlers.
+    this.updateDoc = this.updateDoc.bind(this);
+    this.resetFields = this.resetFields.bind(this);
+    this.deleteDoc = this.deleteDoc.bind(this);
+  }
+
+  deleteDoc() {
+    const { actions, dataStore, doc, domain } = this.props;
+    const path = ['edit', domain];
+    dataStore.deleteDoc(doc._id, doc._rev)
+      .then(() => {
+        dataStore.resetFieldsAtPath(path);
+        actions.onUpdate();
+      })
+      .catch(err => console.log(`Error deleting doc: ${name} =>`, err));
+  }
+
+  resetFields() {
+    const { dataStore, domain } = this.props;
+    const path = ['edit', domain];
+    dataStore.resetFieldsAtPath(path);
+  }
+
+  updateDoc() {
+    const { actions, dataStore, doc, domain } = this.props;
     const path = ['edit', domain];
 
-    console.log('Edit:', toJS(doc));
+    dataStore.updateDoc(doc._id, path)
+    .then(() => {
+      // console.log(`Success updating document: ${name}`);
+      dataStore.resetFieldsAtPath(path);
+      actions.onUpdate();
+    })
+    .catch(err => console.log(`Error updating doc: ${name} =>`, err));
+  }
+
+  render() {
+    const { dataStore, domain, schema, doc } = this.props;
+    const path = ['edit', domain];
+
+    const formProps = {
+      dataStore,
+      path,
+      schema,
+      initialValues: doc
+    };
 
     return (
       <Page className="newDocument">
-        <Form
-          path={path}
-          schema={schema}
-          initialValues={doc}
-          dataStore={dataStore}
-        />
-        <Button
-          modifier="large"
-          onClick={() => {
-            // console.log(doc._id, path);
-            dataStore.updateDoc(doc._id, path)
-              .then(() => {
-                console.log(`Success updating document: ${name}`);
-                dataStore.resetFieldsAtPath(path);
-                actions.onUpdate();
-              })
-              .catch((err) => {
-                console.log(`Error updating doc: ${name} =>`, err);
-              });
-          }}
-        >Save</Button>
-        <Button
-          modifier="large"
-          style={{ backgroundColor: '#666' }}
-          onClick={() => {
-            dataStore.resetFieldsAtPath(path);
-          }}
-        >Reset fields</Button>
-        <Button
-          modifier="large"
-          style={{ backgroundColor: '#FF5722' }}
-          onClick={() => {
-            dataStore.deleteDoc(doc._id, doc._rev)
-            .then(() => {
-              console.log(`Success updating document: ${name}`);
-              dataStore.resetFieldsAtPath(path);
-              actions.onUpdate();
-            })
-            .catch((err) => {
-              console.log(`Error updating doc: ${name} =>`, err);
-            });
-          }}
-        >Delete</Button>
+        <Form {...formProps} />
+        <Button modifier="large" onClick={this.updateDoc}>Save</Button>
+        <Button modifier="large" onClick={this.resetFields}>Reset fields</Button>
+        <Button modifier="large" onClick={this.deleteDoc}>Delete</Button>
       </Page>
     );
   }
@@ -66,12 +69,12 @@ class EditDocument extends React.Component {
 
 /* eslint-disable react/no-unused-prop-types */
 EditDocument.propTypes = {
-  dataStore: React.PropTypes.object,
-  doc: React.PropTypes.object,
-  domain: React.PropTypes.string,
-  schema: React.PropTypes.object,
-  actions: React.PropTypes.shape({
-    onUpdate: React.PropTypes.func.isRequired
+  dataStore: PropTypes.object,
+  doc: PropTypes.object,
+  domain: PropTypes.string,
+  schema: PropTypes.object,
+  actions: PropTypes.shape({
+    onUpdate: PropTypes.func.isRequired
   })
 };
 /* eslint-enable react/no-unused-prop-types */

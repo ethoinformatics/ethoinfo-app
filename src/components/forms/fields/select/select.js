@@ -36,6 +36,7 @@ class Select extends Component {
   }
 }
 
+/* eslint-disable react/no-unused-prop-types */
 Select.propTypes = {
   value: PropTypes.shape({
     name: PropTypes.string,
@@ -49,5 +50,6 @@ Select.propTypes = {
     })
   )
 };
+/* eslint-enable react/no-unused-prop-types */
 
 export default Select;
