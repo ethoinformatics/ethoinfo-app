@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { observer } from 'mobx-react';
 import 'normalize.css/normalize.css';
@@ -6,11 +6,15 @@ import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
 import { Page, Splitter, SplitterContent } from 'react-onsenui';
 
+import config from '../../config/index';
+
 import './app.styl';
 import Menu from '../menu/menu';
 import Navbar from '../navbar/navbar';
 
 import { open as openMenu, close as closeMenu } from '../../redux/actions/menu';
+
+import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
 
 import CategoryList from '../categoryList/categoryList';
 import CodeList from '../codeList/codeList';
@@ -97,45 +101,55 @@ function renderCurrentView(stores) {
   }
 }
 
-const App = observer(({ stores, onOpenMenu, onCloseMenu, views }) => {
-  const { viewStore } = stores;
-  const { currentView } = viewStore;
+@observer
+class App extends Component {
 
-  const menuProps = {
-    store: viewStore,
-    isOpen: views.menu.isOpen,
-    onClose: onCloseMenu
-  };
+  componentDidMount() {
+    this.props.fetchAllDocuments();
+  }
 
-  return (
-    <div className="app">
-      <Splitter>
-        <Menu {...menuProps} />
-        <SplitterContent>
-          <Page
-            renderToolbar={() =>
-              <Navbar
-                leftItem={currentView.prevPath ? {
-                  icon: 'md-chevron-left',
-                  action: () => viewStore.navigateTo(currentView.prevPath)
-                } : {
-                  icon: 'md-menu',
-                  action: () => onOpenMenu()
-                }}
-                rightItem={currentView.nextPath ? {
-                  icon: 'md-plus',
-                  action: () => viewStore.navigateTo(currentView.nextPath)
-                } : null}
-                title={currentView.title}
-              />}
-          >
-            { renderCurrentView(stores) }
-          </Page>
-        </SplitterContent>
-      </Splitter>
-    </div>
-  );
-});
+  render() {
+    const { stores, onOpenMenu, onCloseMenu, views } = this.props;
+
+    const { viewStore } = stores;
+    const { currentView } = viewStore;
+
+    const menuProps = {
+      items: config.views.menu.items,
+      isOpen: views.menu.isOpen,
+      onClose: onCloseMenu
+    };
+
+    return (
+      <div className="app">
+        <Splitter>
+          <Menu {...menuProps} />
+          <SplitterContent>
+            <Page
+              renderToolbar={() =>
+                <Navbar
+                  leftItem={currentView.prevPath ? {
+                    icon: 'md-chevron-left',
+                    action: () => viewStore.navigateTo(currentView.prevPath)
+                  } : {
+                    icon: 'md-menu',
+                    action: () => onOpenMenu()
+                  }}
+                  rightItem={currentView.nextPath ? {
+                    icon: 'md-plus',
+                    action: () => viewStore.navigateTo(currentView.nextPath)
+                  } : null}
+                  title={currentView.title}
+                />}
+            >
+              { renderCurrentView(stores) }
+            </Page>
+          </SplitterContent>
+        </Splitter>
+      </div>
+    );
+  }
+}
 
 function mapStateToProps(state) {
   return {
@@ -151,6 +165,9 @@ const mapDispatchToProps = dispatch => ({
   onCloseMenu: () => {
     dispatch(closeMenu());
   },
+  fetchAllDocuments: () => {
+    dispatch(fetchAllDocuments());
+  }
 });
 
 export default connect(

@@ -1,8 +1,16 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
+import PouchDB from 'pouchdb';
+import thunk from 'redux-thunk';
+
+import { KEYS } from '../constants';
+import config from '../config';
+
 import { watchOnHistoryChange } from './sagas';
 import reducer from './reducers';
+
+const dbName = config[KEYS.pouchDbName];
+const pouchdb = new PouchDB(dbName);
 
 function configureStore(initialState) {
   // create the saga middleware
@@ -17,11 +25,11 @@ function configureStore(initialState) {
       // Todo: pass a preconfigured pouchdb instance which can be used to fetch data
       // @see https://github.com/gaearon/redux-thunk
 
-      /* thunk.withExtraArgument({
+      thunk.withExtraArgument({
         pouchdb
-      }), */
+      }),
 
-      thunk.withExtraArgument({}),
+      // thunk.withExtraArgument({}),
       sagaMiddleware
     ),
     // Redux Dev Tools store enhancer.

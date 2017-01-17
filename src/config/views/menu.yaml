@@ -1,0 +1,22 @@
+---
+items:
+
+  - name:   Overview
+    icon:   md-home
+    route:  /
+
+  - name:   Settings
+    icon:   md-settings
+    route:  /settings
+  
+  - name:   Data sync
+    icon:   md-refresh-sync
+    route:  /sync
+
+  - name:   Code manager
+    icon:   md-search
+    route:  /categories
+
+  - name:   Geolocation viewer
+    icon:   ion-map
+    route:  /geoViewer
