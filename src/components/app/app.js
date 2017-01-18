@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { observer } from 'mobx-react';
 import 'normalize.css/normalize.css';
@@ -29,6 +29,7 @@ import Settings from '../settings/settings';
 import Sync from '../sync/sync';
 import Overview from '../overview/overview';
 import OverviewDetail from '../overview/overviewDetail';
+import AllDocs from '../documents/allDocuments';
 
 // Renders currentView, passing in appropriate state as props.
 function renderCurrentView(stores) {
@@ -89,7 +90,8 @@ function renderCurrentView(stores) {
     case 'geoViewer':
       return <Geo store={geoStore} />;
     case 'overview':
-      return <Overview schemas={dataStore.schemas} />;
+      /* return <Overview schemas={dataStore.schemas} />; */
+      return <AllDocs />;
     case 'overviewDetail':
       return <OverviewDetail schema={dataStore.getSchema(view.params.id)} />;
     case 'settings':
@@ -150,6 +152,12 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  onOpenMenu: PropTypes.func,
+  onCloseMenu: PropTypes.func,
+  fetchAllDocuments: PropTypes.func
+};
 
 function mapStateToProps(state) {
   return {
