@@ -31,7 +31,9 @@ import Overview from '../overview/overview';
 import OverviewDetail from '../overview/overviewDetail';
 import AllDocs from '../documents/allDocuments';
 
-import main from '../../schemas/main';
+import { categories, models } from '../../schemas/main';
+
+console.log(categories, models);
 
 // Renders currentView, passing in appropriate state as props.
 function renderCurrentView(stores) {

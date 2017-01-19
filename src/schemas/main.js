@@ -36,10 +36,6 @@ const makeCategory = name => new CategorySchema(name);
 const validatedModelShape = def =>
   validations.validateModelShape(def);
 
-/* return new ModelSchema(name, fields, displayField, {
-        categoryNames, modelNames
-}); */
-
 // -----------------------------------------------------------------------------
 // Parse and export categories
 
@@ -66,6 +62,7 @@ const filterModelShape = R.pipe(
 // Candidate models fit expected shape and can be considered valid types
 const candidateModels = filterModelShape(modelDefinitions);
 
+// Collect model names
 const categoryNames = categories.map(getName);
 const modelNames = candidateModels.map(getName);
 
@@ -77,10 +74,8 @@ const types = R.uniq([
 ]);
 
 // Map models
- // TODO: cleanup model constructor.
 export const models = candidateModels
-  .map(modelDef => validations.validateModelShape(modelDef, types))
+  .map(modelDef => validations.validateModel(modelDef, types))
   .filter(withoutErrorPredicate)
   .map(getValue)
-  .map(ok =>
-    new ModelSchema(ok.name, ok.fields, ok.displayField, { categoryNames, modelNames }));
+  .map(ok => new ModelSchema(ok, { categoryNames, modelNames }));

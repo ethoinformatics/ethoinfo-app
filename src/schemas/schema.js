@@ -96,7 +96,8 @@ class Field {
 }
 
 class ModelSchema extends Schema {
-  constructor(name, fields, displayFieldName, customTypes) {
+  constructor(def, types) {
+    const { name, fields, displayFieldName } = def;
     super(name);
 
     // Make sure the "displayField" actually exists as a field name on model
@@ -108,7 +109,7 @@ class ModelSchema extends Schema {
 
     // Map field strings
     this.fields = toJS(fields).map(field =>
-      new Field(field.name, field.lookup || false, field.type, customTypes)
+      new Field(field.name, field.lookup || false, field.type, types)
     ).filter(field => field.type !== null);
   }
 

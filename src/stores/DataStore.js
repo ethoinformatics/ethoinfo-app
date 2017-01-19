@@ -382,7 +382,7 @@ export default class DataStore {
       const name = model.name;
       const fields = model.validation.value.fields;
       const displayField = model.validation.value.displayField;
-      return new ModelSchema(name, fields, displayField, {
+      return new ModelSchema(model.validation.value, {
         categoryNames, modelNames
       });
     });
