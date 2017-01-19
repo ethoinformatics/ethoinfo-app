@@ -1,0 +1,10 @@
+# Schema for categorical data (code categories)
+# Values should be alphabetical (no numbers, symbols, spaces) and PascalCased
+
+---
+- BiologicalSampleMedium
+- BiologicalSampleType
+- BiologicalSampleContainer
+- PlantParts
+- SampleQuality
+- Sex

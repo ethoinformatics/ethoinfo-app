@@ -99,18 +99,12 @@ class ModelSchema extends Schema {
   constructor(name, fields, displayFieldName, customTypes) {
     super(name);
 
-    // const fieldNames = fields.map(field => field.name);
-    // const displayFieldExists = displayField && fieldNames.includes(displayField);
-
+    // Make sure the "displayField" actually exists as a field name on model
     const displayField = R.find(R.propEq('name', displayFieldName))(fields);
 
-    if (displayField) {
-      this.displayField = displayField.name;
-    } else {
-      this.displayField = '_id';
-    }
+    // Need to check that displayField type is a string!
 
-   // console.log('Making schema', name, toJS(fields));
+    this.displayField = displayField ? displayField.name : '_id';
 
     // Map field strings
     this.fields = toJS(fields).map(field =>

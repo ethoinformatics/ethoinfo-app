@@ -1,0 +1,26 @@
+name: PlantSample
+
+# Which field will we use to display instances of this model in our app
+displayField: sampleName
+
+fields:
+  - name: sampleName
+    type: String # might want to think about enforcing format
+    #required: true
+  - name: datetime
+    type: Date
+    #required: true
+  - name: tag
+    type: String # might want to think about enforcing format (e.g., ##-###-##)
+    #required: false
+  - name: identification
+    type: Taxonomy
+    lookup: true
+    #required: false
+  - name: location
+    type: Geolocation
+    #required: true
+  - name: identificationAssignedBy
+    type: [Observer]
+  - name: materialsCollected
+    type: [PlantParts] # coded field: seed, leaves, root, stem, flower, etc.
