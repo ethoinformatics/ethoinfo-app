@@ -12,7 +12,7 @@ const defaultState = {};
 function byId(state = defaultState, action) {
   switch (action.type) {
     case LOAD_ALL_DOCS_SUCCESS:
-      // Reduce array to a "data table" (object)
+      // Reduce array to a "data table"
       // with the IDs of the docs as keys and the docs themselves as the values.
       return action.payload
         .reduce((acc, val) => R.assoc(val._id, val, acc), {});

@@ -6,7 +6,7 @@ import history from './history';
 // -----------------------------------------------------------------------------
 // REDUCER
 
-const ui = combineReducers({
+const views = combineReducers({
   menu,
   history
 });
@@ -14,4 +14,4 @@ const ui = combineReducers({
 // -----------------------------------------------------------------------------
 // REDUCER EXPORT
 
-export default ui;
+export default views;

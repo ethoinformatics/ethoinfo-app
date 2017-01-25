@@ -66,7 +66,7 @@ export const validateModelShape = (model) => {
 
 export const validateModel = (model, validFieldTypeNames = []) => {
 
-  console.log('validating with types:', validFieldTypeNames);
+  // console.log('validating with types:', validFieldTypeNames);
 
   const schema = Joi.object().keys({
 

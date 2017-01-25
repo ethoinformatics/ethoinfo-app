@@ -3,21 +3,28 @@
 import { combineReducers } from 'redux';
 import docs, * as FromDocuments from './documents';
 import views from './views';
+import fields from './fields';
 
 // -----------------------------------------------------------------------------
 // REDUCER
 
 const rootReducer = combineReducers({
   docs,
+  fields,
   views
 });
 
 // -----------------------------------------------------------------------------
 // EXPORTED SELECTORS
 
-export function getDocumentById(state, id) {
-  return FromDocuments.getById(state.documents, id);
+export function getDocById(state, id) {
+  return FromDocuments.getById(state.docs, id);
 }
+
+export function getDocsByDomain(state, domain) {
+  return FromDocuments.getByDomain(state.docs, domain);
+}
+
 
 // -----------------------------------------------------------------------------
 // REDUCER EXPORT

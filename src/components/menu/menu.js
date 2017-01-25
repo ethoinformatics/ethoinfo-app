@@ -18,8 +18,8 @@ const Menu = (props) => {
   const renderToolbar = () =>
     <MenuBar menuAction={() => onClose()} />;
 
-  const MenuLink = ({ icon, name, to }) => // eslint-disable-line react/prop-types
-    <button onClick={() => history.push(to, {})}>
+  const MenuLink = ({ icon, name, route }) => // eslint-disable-line react/prop-types
+    <button onClick={() => history.push(route, {})}>
       <Icon icon={icon} />
       <span className="menuItemLabel">
         {name}

@@ -97,15 +97,17 @@ class Field {
 
 class ModelSchema extends Schema {
   constructor(def, types) {
-    const { name, fields, displayFieldName } = def;
+    const { name, fields, displayField } = def;
     super(name);
 
     // Make sure the "displayField" actually exists as a field name on model
-    const displayField = R.find(R.propEq('name', displayFieldName))(fields);
-
-    // Need to check that displayField type is a string!
-
-    this.displayField = displayField ? displayField.name : '_id';
+    const displayFieldValue = R.find(R.propEq('name', displayField))(fields);
+    console.log(displayFieldValue);
+    // Validate that displayField exists and is a string, or assign default _id
+    this.displayField =
+      displayFieldValue &&
+      (displayFieldValue.type === 'String' || displayFieldValue.type === 'Date')
+      ? displayFieldValue.name : '_id';
 
     // Map field strings
     this.fields = toJS(fields).map(field =>

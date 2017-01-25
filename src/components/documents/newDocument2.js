@@ -1,11 +1,21 @@
 import React from 'react';
-import { observer } from 'mobx-react';
 import { Button, Page } from 'react-onsenui';
 import 'react-dates/lib/css/_datepicker.css';
+import { connect } from 'react-redux';
 import './documentForm.styl';
-import Form from '../forms/form';
+import Form from '../forms/form2';
 
-@observer
+// import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
+
+import { getSchema } from '../../schemas/main';
+import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
+
+const mapStateToProps = (state, ownProps) =>
+  ({
+    docs: state.docs,
+    fieldValues: getFieldsByPath(state.fields, ['new', ownProps.domain])
+  });
+
 class NewDocument extends React.Component {
   constructor() {
     super();
@@ -15,34 +25,42 @@ class NewDocument extends React.Component {
   }
 
   resetFields() {
-    const { dataStore, domain } = this.props;
-    const path = ['new', domain];
-    dataStore.resetFieldsAtPath(path);
+    const { domain } = this.props;
+    const path = ['edit', domain];
+    // dataStore.resetFieldsAtPath(path);
   }
 
   saveFields() {
-    const { dataStore, domain, actions } = this.props;
+    const { domain, actions } = this.props;
     const path = ['new', domain];
-    dataStore.saveFieldsAtPath(path)
+
+    console.log('>>> Should save fields >>>');
+    console.log(path);
+    console.log('<<<');
+
+    /* dataStore.saveFieldsAtPath(path)
       .then(() => {
         dataStore.resetFieldsAtPath(path);
         actions.onCreate();
       })
       .catch((err) => {
         console.log(`Error creating code: ${name} =>`, err);
-      });
+      }); */
   }
 
   render() {
-    const { dataStore, domain, schema } = this.props;
+    const { domain, fieldValues } = this.props;
+    const schema = getSchema(domain);
     const path = ['new', domain];
+    console.log('FORM VALUES:');
+    console.log(this.props.fieldValues);
 
     return (
       <Page className="newDocument">
         <Form
           path={path}
+          fieldValues={fieldValues}
           schema={schema}
-          dataStore={dataStore}
         />
         <Button modifier="large" onClick={this.saveFields}>Save</Button>
         <Button modifier="large" onClick={this.resetFields}>Reset fields</Button>
@@ -53,13 +71,12 @@ class NewDocument extends React.Component {
 
 /* eslint-disable react/no-unused-prop-types */
 NewDocument.propTypes = {
-  dataStore: React.PropTypes.object,
   domain: React.PropTypes.string,
-  schema: React.PropTypes.object,
   actions: React.PropTypes.shape({
     onCreate: React.PropTypes.func.isRequired,
   })
 };
-/* eslint-enable react/no-unused-prop-types */
 
-export default NewDocument;
+export default connect(
+  mapStateToProps
+)(NewDocument);

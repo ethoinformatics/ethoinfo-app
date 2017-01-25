@@ -79,3 +79,6 @@ export const models = candidateModels
   .filter(withoutErrorPredicate)
   .map(getValue)
   .map(ok => new ModelSchema(ok, { categoryNames, modelNames }));
+
+export const getSchema = domainName =>
+  [...categories, ...models].find(schema => schema.name === domainName);

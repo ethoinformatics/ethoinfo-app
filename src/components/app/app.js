@@ -29,6 +29,11 @@ import Settings from '../settings/settings';
 import Sync from '../sync/sync';
 import Overview from '../overview/overview';
 import OverviewDetail from '../overview/overviewDetail';
+
+import ModelList from '../models/modelList';
+import DocumentList2 from '../documents/documentList2';
+import NewDocument2 from '../documents/newDocument2';
+
 import AllDocs from '../documents/allDocuments';
 
 import { categories, models } from '../../schemas/main';
@@ -65,20 +70,30 @@ function renderCurrentView(stores) {
     case 'debugDetail':
       return <DebugDetail schema={dataStore.getDebugSchema(view.params.id)} />;
     case 'documents':
-      return (<DocumentList
+      return <DocumentList2 domain={view.params.id} />;
+      /* return (<DocumentList
         domain={view.params.id}
         documents={dataStore.getData(view.params.id)}
         schema={dataStore.getSchema(view.params.id)}
-      />);
+      />); */
     case 'newDocument':
-      return (<NewDocument
+      return (
+        <NewDocument2
+          domain={view.params.id}
+          actions={{
+            onCreate: () =>
+              viewStore.navigateTo(`/documents/${view.params.id}/`)
+          }}
+        />
+      );
+      /* return (<NewDocument
         dataStore={dataStore}
         domain={view.params.id}
         schema={dataStore.getSchema(view.params.id)}
         actions={{
           onCreate: () => viewStore.navigateTo(`/documents/${view.params.id}/`)
         }}
-      />);
+      />); */
     case 'viewDocument':
       // Reset form state.
       dataStore.resetFieldsAtPath(['edit', view.params.id]);
@@ -94,8 +109,9 @@ function renderCurrentView(stores) {
     case 'geoViewer':
       return <Geo store={geoStore} />;
     case 'overview':
+      return <ModelList schemas={models} />;
       /* return <Overview schemas={dataStore.schemas} />; */
-      return <AllDocs />;
+      /* return <AllDocs />; */
     case 'overviewDetail':
       return <OverviewDetail schema={dataStore.getSchema(view.params.id)} />;
     case 'settings':

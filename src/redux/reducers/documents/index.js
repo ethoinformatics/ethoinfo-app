@@ -23,7 +23,11 @@ export function getById(state, id) {
 export function getAll(state) {
   return FromAll
     .getAll(state.all)
-    .map(id => getById(state, id));
+    .map(id => getById(state.byId, id));
+}
+
+export function getByDomain(state, domain) {
+  return getAll(state).filter(doc => doc.domainName === domain);
 }
 
 // -----------------------------------------------------------------------------

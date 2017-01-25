@@ -11,7 +11,7 @@ const defaultState = [];
 function all(state = defaultState, action) {
   switch (action.type) {
     case LOAD_ALL_DOCS_SUCCESS:
-      return action.payload;
+      return action.payload.map(doc => doc._id);
     default:
       break;
   }
