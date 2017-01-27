@@ -102,17 +102,38 @@ class ModelSchema extends Schema {
 
     // Make sure the "displayField" actually exists as a field name on model
     const displayFieldValue = R.find(R.propEq('name', displayField))(fields);
-    console.log(displayFieldValue);
+
+    console.log('%%%', displayFieldValue);
+
     // Validate that displayField exists and is a string, or assign default _id
     this.displayField =
       displayFieldValue &&
       (displayFieldValue.type === 'String' || displayFieldValue.type === 'Date')
       ? displayFieldValue.name : '_id';
 
+    console.log(this.displayField);
+
     // Map field strings
     this.fields = toJS(fields).map(field =>
       new Field(field.name, field.lookup || false, field.type, types)
     ).filter(field => field.type !== null);
+  }
+
+  // Get user friendly string representation of model
+  // for display in the application.
+  // This string value is based on the "displayField" set on the model schema,
+  // which pulls from one of the model's fields.
+  getFriendlyString(document) {
+    const fieldToDisplay = this.fields.find(field => field.name === this.displayField);
+
+    if (!fieldToDisplay) { return document._id; }
+
+    switch (fieldToDisplay.type.constructor) {
+      case Types.Date:
+        return document[fieldToDisplay.name];
+      default:
+        return document._id;
+    }
   }
 
   getDefaultState() {

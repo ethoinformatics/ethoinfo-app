@@ -7,10 +7,13 @@ import history from '../../history';
 import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
 import { getDocsByDomain } from '../../redux/reducers';
 
+import { getSchema } from '../../schemas/main';
+
 // Map state to props
 const mapStateToProps = (state, { domain }) =>
   ({
-    docs: getDocsByDomain(state, domain)
+    docs: getDocsByDomain(state, domain),
+    schema: getSchema(domain)
   });
 
 // Map dispatch to props
@@ -29,12 +32,17 @@ class DocumentList extends Component {
 
   renderDocumentListItem(doc, index) {
     const { _id } = doc;
-    const { domain } = this.props;
+    const { domain, schema } = this.props;
+    const { displayField } = schema;
     const path = `/documents/${domain}/${_id}`;
+
+    const fieldToDisplay = schema.fields.find(field => field.name === displayField);
+    console.log(schema.fields);
+    console.log(fieldToDisplay);
 
     return (
       <ListItem key={index} onClick={() => history.push(path, {})}>
-        { _id }
+        { doc[displayField] || _id }
       </ListItem>
     );
   }
@@ -58,7 +66,8 @@ DocumentList.propTypes = {
   docs: PropTypes.arrayOf(
     PropTypes.object
   ).isRequired,
-  fetchAllDocuments: PropTypes.func.isRequired
+  fetchAllDocuments: PropTypes.func.isRequired,
+  schema: PropTypes.object.isRequired
 };
 
 export default connect(
