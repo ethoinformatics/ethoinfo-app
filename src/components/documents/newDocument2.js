@@ -4,7 +4,7 @@ import 'react-dates/lib/css/_datepicker.css';
 import { connect } from 'react-redux';
 import './documentForm.styl';
 import Form from '../forms/form2';
-
+import { create as createDoc } from '../../redux/actions/documents';
 // import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
 
 import { getSchema } from '../../schemas/main';
@@ -31,12 +31,20 @@ class NewDocument extends React.Component {
   }
 
   saveFields() {
-    const { domain, actions } = this.props;
+    const { actions, domain, fieldValues } = this.props;
     const path = ['new', domain];
 
     console.log('>>> Should save fields >>>');
-    console.log(path);
+    console.log(fieldValues);
     console.log('<<<');
+
+    createDoc(fieldValues)
+    .then((doc) => {
+      console.log('Save success in component:', doc);
+    })
+    .catch((err) => {
+      console.log('Save error in component:', err);
+    });
 
     /* dataStore.saveFieldsAtPath(path)
       .then(() => {
