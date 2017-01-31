@@ -1,5 +1,5 @@
 import R from 'ramda';
-import { LOAD_ALL_DOCS_SUCCESS } from '../../actions/documents';
+import { DOCS_LOAD_ALL_SUCCESS } from '../../actions/documents';
 
 // -----------------------------------------------------------------------------
 // PRIVATES
@@ -11,7 +11,7 @@ const defaultState = {};
 
 function byId(state = defaultState, action) {
   switch (action.type) {
-    case LOAD_ALL_DOCS_SUCCESS:
+    case DOCS_LOAD_ALL_SUCCESS:
       // Reduce array to a "data table"
       // with the IDs of the docs as keys and the docs themselves as the values.
       return action.payload

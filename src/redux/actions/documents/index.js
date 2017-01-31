@@ -65,14 +65,17 @@ export function create(doc, schema) {
       ...doc
     };
 
-    console.log('Creating doc:', newDoc);
-
-    return pouchdb.put(doc)
+    return pouchdb.put(newDoc)
       .then((res) => {
-        console.log(res);
-        dispatch(createDocSuccess(res));
+        if (res.error) {
+          throw res;
+        } else {
+          dispatch(createDocSuccess(res));
+          return res;
+        }
       }).catch((err) => {
         dispatch(createDocError(err));
+        throw err;
       });
   };
 }

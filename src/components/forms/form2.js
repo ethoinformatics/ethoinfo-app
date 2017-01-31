@@ -32,7 +32,6 @@ class Form extends React.Component {
   // Path is a string or an array on nested objects
   onFieldChange(name, value) {
     const { path, setField } = this.props;
-    console.log(path, name, value);
     setField([...path, name], value);
   }
 

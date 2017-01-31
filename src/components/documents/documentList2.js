@@ -8,6 +8,7 @@ import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
 import { getDocsByDomain } from '../../redux/reducers';
 
 import { getSchema } from '../../schemas/main';
+import { Types } from '../../schemas/schema';
 
 // Map state to props
 const mapStateToProps = (state, { domain }) =>
@@ -27,22 +28,18 @@ class DocumentList extends Component {
   componentDidMount() {
     // Async thunk call goes here
     this.props.fetchAllDocuments();
-    console.log('Rendering document list 2', this.props);
   }
 
   renderDocumentListItem(doc, index) {
     const { _id } = doc;
     const { domain, schema } = this.props;
-    const { displayField } = schema;
     const path = `/documents/${domain}/${_id}`;
 
-    const fieldToDisplay = schema.fields.find(field => field.name === displayField);
-    console.log(schema.fields);
-    console.log(fieldToDisplay);
+    const displayValue = schema.getFriendlyString(doc);
 
     return (
       <ListItem key={index} onClick={() => history.push(path, {})}>
-        { doc[displayField] || _id }
+        { displayValue }
       </ListItem>
     );
   }

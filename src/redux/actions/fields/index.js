@@ -1,12 +1,15 @@
-export const SET_FIELD = 'SET_FIELD';
-export const RESET_FIELDS = 'RESET_FIELDS';
-export const SAVE_FIELDS = 'SAVE_FIELDS';
+export const FIELD_SET = 'SET_FIELD';
+export const FIELDS_RESET = 'RESET_FIELDS';
+
+
+// -----------------------------------------------------------------------------
+// EXPORTED ACTION CREATORS
 
 // Set data input field.
 // Path is pathway to some state value
 export function setField(path, value) {
   return {
-    type: SET_FIELD,
+    type: FIELD_SET,
     payload: {
       path,
       value
@@ -16,7 +19,7 @@ export function setField(path, value) {
 
 export function resetFields(path) {
   return {
-    type: RESET_FIELDS,
+    type: FIELDS_RESET,
     payload: { path }
   };
 }

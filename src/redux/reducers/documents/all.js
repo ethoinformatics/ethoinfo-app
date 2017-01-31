@@ -1,4 +1,4 @@
-import { LOAD_ALL_DOCS_SUCCESS } from '../../actions/documents';
+import { DOCS_LOAD_ALL_SUCCESS } from '../../actions/documents';
 
 // -----------------------------------------------------------------------------
 // PRIVATES
@@ -10,7 +10,7 @@ const defaultState = [];
 
 function all(state = defaultState, action) {
   switch (action.type) {
-    case LOAD_ALL_DOCS_SUCCESS:
+    case DOCS_LOAD_ALL_SUCCESS:
       return action.payload.map(doc => doc._id);
     default:
       break;

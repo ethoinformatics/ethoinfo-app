@@ -122,23 +122,13 @@ export default class ViewStore {
     reaction(
       () => this.currentView,
       (currentView) => {
-        /* switch (currentView.name) {
-          case 'overview':
-            setTimeout(() => {
-              // this.dataStore.loadDomain('diary');
-            }, 400);
-            break;
-          default:
-            break;
-        }*/
-
         // Load data for the current view
-        if (currentView.params && currentView.params.id) {
+        /* if (currentView.params && currentView.params.id) {
           this.dataStore.loadDomain(currentView.params.id);
         }
 
         // Load all domains
-        this.dataStore.loadAllDomains();
+        this.dataStore.loadAllDomains(); */
       },
       true // Fire immediately.
     );

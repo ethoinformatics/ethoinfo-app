@@ -103,15 +103,11 @@ class ModelSchema extends Schema {
     // Make sure the "displayField" actually exists as a field name on model
     const displayFieldValue = R.find(R.propEq('name', displayField))(fields);
 
-    console.log('%%%', displayFieldValue);
-
     // Validate that displayField exists and is a string, or assign default _id
     this.displayField =
       displayFieldValue &&
       (displayFieldValue.type === 'String' || displayFieldValue.type === 'Date')
       ? displayFieldValue.name : '_id';
-
-    console.log(this.displayField);
 
     // Map field strings
     this.fields = toJS(fields).map(field =>
@@ -125,14 +121,18 @@ class ModelSchema extends Schema {
   // which pulls from one of the model's fields.
   getFriendlyString(document) {
     const fieldToDisplay = this.fields.find(field => field.name === this.displayField);
-
     if (!fieldToDisplay) { return document._id; }
+
+    const displayValue = document[fieldToDisplay.name];
 
     switch (fieldToDisplay.type.constructor) {
       case Types.Date:
-        return document[fieldToDisplay.name];
+        // https://momentjs.com/
+        return moment(displayValue).format('lll');
+      case Types.String:
+        return displayValue;
       default:
-        return document._id;
+        return displayValue;
     }
   }
 

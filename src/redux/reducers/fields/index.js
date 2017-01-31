@@ -1,8 +1,8 @@
 import R from 'ramda';
 
 import {
-  SET_FIELD,
-  RESET_FIELDS,
+  FIELD_SET,
+  FIELDS_RESET,
 } from '../../actions/fields';
 
 // -----------------------------------------------------------------------------
@@ -16,14 +16,13 @@ const defaultState = {
 
 function fields(state = defaultState, action) {
   switch (action.type) {
-    case SET_FIELD:
-      console.log(action.payload);
+    case FIELD_SET:
       return R.assocPath(
         action.payload.path,
         action.payload.value,
         state
       );
-    case RESET_FIELDS:
+    case FIELDS_RESET:
       return R.dissocPath(
         action.payload.path,
         state
@@ -39,8 +38,6 @@ function fields(state = defaultState, action) {
 // EXPORTED SELECTORS
 
 export function getByPath(state, path) {
-  console.log('Get by path:', state, path);
-  console.log(R.path(path, state));
   return R.path(path, state);
 }
 
