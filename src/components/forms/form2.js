@@ -61,7 +61,6 @@ class Form extends React.Component {
     const { initialValues = {}, fieldValues = {} } = this.props;
     const { name, type, isCollection = false, isLookup = false } = field;
     const value = fieldValues[name] || initialValues[name] || null;
-
     let formField = null;
 
     const props = {

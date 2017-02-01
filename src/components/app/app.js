@@ -33,6 +33,7 @@ import OverviewDetail from '../overview/overviewDetail';
 import ModelList from '../models/modelList';
 import DocumentList2 from '../documents/documentList2';
 import NewDocument2 from '../documents/newDocument2';
+import EditDocument2 from '../documents/editDocument2';
 
 import AllDocs from '../documents/allDocuments';
 
@@ -96,12 +97,10 @@ function renderCurrentView(stores) {
       />); */
     case 'viewDocument':
       // Reset form state.
-      dataStore.resetFieldsAtPath(['edit', view.params.id]);
-      return (<EditDocument
-        dataStore={dataStore}
+      dataStore.resetFieldsAtPath(['edit', view.params.docId]);
+      return (<EditDocument2
+        id={view.params.docId}
         domain={view.params.id}
-        schema={dataStore.getSchema(view.params.id)}
-        doc={dataStore.getData(view.params.id).find(doc => doc._id === view.params.docId)}
         actions={{
           onUpdate: () => viewStore.navigateTo(`/documents/${view.params.id}/`)
         }}
