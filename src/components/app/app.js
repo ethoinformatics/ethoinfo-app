@@ -13,39 +13,28 @@ import Menu from '../menu/menu';
 import Navbar from '../navbar/navbar';
 
 import { open as openMenu, close as closeMenu } from '../../redux/actions/menu';
-
 import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
 
+// import AllDocs from '../documents/allDocuments';
 import CategoryList from '../categoryList/categoryList';
 import CodeList from '../codeList/codeList';
-import DebugView from '../debug/debugView';
 import DebugDetail from '../debug/debugDetail';
+import DebugView from '../debug/debugView';
 import DocumentList from '../documents/documentList';
 import EditDocument from '../documents/editDocument';
-import NewDocument from '../documents/newDocument';
-import NewCode from '../newCode/newCode';
 import Geo from '../geoViewer/geoViewer';
+import ModelList from '../models/modelList';
+import NewCode from '../newCode/newCode';
+import NewDocument from '../documents/newDocument';
 import Settings from '../settings/settings';
 import Sync from '../sync/sync';
-import Overview from '../overview/overview';
-import OverviewDetail from '../overview/overviewDetail';
 
-import ModelList from '../models/modelList';
-import DocumentList2 from '../documents/documentList2';
-import NewDocument2 from '../documents/newDocument2';
-import EditDocument2 from '../documents/editDocument2';
-
-import AllDocs from '../documents/allDocuments';
-
-import { categories, models } from '../../schemas/main';
-
-console.log(categories, models);
+import { models } from '../../schemas/main';
 
 // Renders currentView, passing in appropriate state as props.
 function renderCurrentView(stores) {
   const { dataStore, geoStore, viewStore } = stores;
   const view = viewStore.currentView;
-  // console.log('App::renderCurrentView', viewStore.currentView);
 
   switch (view.name) {
     case 'categories':
@@ -71,15 +60,10 @@ function renderCurrentView(stores) {
     case 'debugDetail':
       return <DebugDetail schema={dataStore.getDebugSchema(view.params.id)} />;
     case 'documents':
-      return <DocumentList2 domain={view.params.id} />;
-      /* return (<DocumentList
-        domain={view.params.id}
-        documents={dataStore.getData(view.params.id)}
-        schema={dataStore.getSchema(view.params.id)}
-      />); */
+      return <DocumentList domain={view.params.id} />;
     case 'newDocument':
       return (
-        <NewDocument2
+        <NewDocument
           domain={view.params.id}
           actions={{
             onCreate: () =>
@@ -87,18 +71,10 @@ function renderCurrentView(stores) {
           }}
         />
       );
-      /* return (<NewDocument
-        dataStore={dataStore}
-        domain={view.params.id}
-        schema={dataStore.getSchema(view.params.id)}
-        actions={{
-          onCreate: () => viewStore.navigateTo(`/documents/${view.params.id}/`)
-        }}
-      />); */
     case 'viewDocument':
       // Reset form state.
-      dataStore.resetFieldsAtPath(['edit', view.params.docId]);
-      return (<EditDocument2
+      // dataStore.resetFieldsAtPath(['edit', view.params.docId]);
+      return (<EditDocument
         id={view.params.docId}
         domain={view.params.id}
         actions={{
@@ -109,10 +85,6 @@ function renderCurrentView(stores) {
       return <Geo store={geoStore} />;
     case 'overview':
       return <ModelList schemas={models} />;
-      /* return <Overview schemas={dataStore.schemas} />; */
-      /* return <AllDocs />; */
-    case 'overviewDetail':
-      return <OverviewDetail schema={dataStore.getSchema(view.params.id)} />;
     case 'settings':
       return <Settings />;
     case 'sync':

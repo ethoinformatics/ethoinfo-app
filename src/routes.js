@@ -31,13 +31,6 @@ export default [
     nextPath: () => null
   },
   {
-    path: '/overview/:id',
-    name: 'overviewDetail',
-    title: params => `Overview: ${_.startCase(params.id)}`,
-    prevPath: () => '/',
-    nextPath: () => null
-  },
-  {
     path: '/debug',
     name: 'debug',
     title: () => 'Schema Viewer',
