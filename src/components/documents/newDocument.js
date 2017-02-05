@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Page } from 'react-onsenui';
+import { Button, Page, Modal } from 'react-onsenui';
 import 'react-dates/lib/css/_datepicker.css';
 import { connect } from 'react-redux';
 import './documentForm.styl';
@@ -63,6 +63,9 @@ class NewDocument extends React.Component {
           fieldValues={fieldValues}
           schema={schema}
         />
+        <Modal isOpen>
+          asiodjioasjdioajs adoisjsaoijd oiasjdoiasjd oiasjdas oiajsdoias aosidjoisa dasjdoiasj disaasdoih asdoij asdoij asd asidasd oasjd asdoijaso
+        </Modal>
         <Button modifier="large" onClick={this.saveFields}>Save</Button>
         <Button modifier="large" onClick={this.resetFields}>Reset fields</Button>
       </Page>

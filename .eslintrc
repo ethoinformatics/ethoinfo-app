@@ -15,6 +15,7 @@
     "import/namespace": 0,
     "import/no-unresolved": 0,
     "import/no-named-as-default": 2,
+    "linebreak-style": ["error", "unix"],
     "comma-dangle": 0,  // not sure why airbnb turned this on. gross!
     "no-underscore-dangle": 0, // Disable since pouch/couch use _id
     "react/forbid-prop-types": 0, // Disable since we have dynamic models

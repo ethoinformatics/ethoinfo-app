@@ -10,7 +10,6 @@ const TextInput = ({ value, onChange, ...rest }) =>
     }
     }
     style={{ width: '100%' }}
-    {...rest}
   />;
 
 TextInput.propTypes = {
