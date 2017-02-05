@@ -36,8 +36,8 @@ class CollectionField extends Component {
   }
 
   render() {
-    const { type, value, path, onPushModal } = this.props;
-    console.log('Collection field path:', path);
+    const { type, value, path, onChange, onPushModal } = this.props;
+    console.log('Collection field path:', path, value);
 
     return (
       <div className="collection-field">
@@ -72,7 +72,15 @@ class CollectionField extends Component {
         <Button
           modifier="outline"
           onClick={() => {
-            onPushModal('foobar', { aFakeProp: 'hello' });
+            // Push a new value to the end of collection
+            onChange([...value, null]);
+
+            // View modal with new value
+            onPushModal('foobar', {
+              type,
+              value: R.last(value),
+              onChange: val => this.onItemChange(value.length - 1, val)
+            });
             // dataStore.resetFieldsAtPath(path);
           }}
         >New</Button>
@@ -83,6 +91,7 @@ class CollectionField extends Component {
 
 CollectionField.propTypes = {
   // domain: PropTypes.string,
+  onPushModal: PropTypes.func,
   onChange: PropTypes.func,
   type: PropTypes.object.isRequired,
   value: PropTypes.array.isRequired,

@@ -4,7 +4,15 @@ import { Page } from 'react-onsenui';
 import { pop as popModal } from '../../redux/actions/modals';
 import './modal.styl';
 
+import { MODAL_TYPE_FIELD } from '../../redux/constants/modals';
+
 import Navbar from '../navbar/navbar';
+
+import Field from '../forms/field';
+
+const MODAL_COMPONENTS = {
+  [MODAL_TYPE_FIELD]: Field
+};
 
 function mapStateToProps() {
   return {
@@ -17,8 +25,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   }
 });
 
-const Modal = props =>
-  (
+const Modal = (props) => {
+  const ModalComponent = MODAL_COMPONENTS[MODAL_TYPE_FIELD] || null;
+  
+  return (
     <Page
       className="modal"
       renderToolbar={() =>
@@ -31,19 +41,15 @@ const Modal = props =>
         />
       }
     >
-      { props.children }
+      <ModalComponent {...props} />
     </Page>
   );
-
-Modal.defaultProps = {
-  children: []
 };
 
 /* eslint-disable react/no-unused-prop-types */
 Modal.propTypes = {
   id: React.PropTypes.string.isRequired,
   pop: React.PropTypes.func.isRequired,
-  children: React.PropTypes.node
 };
 /* eslint-enable react/no-unused-prop-types */
 

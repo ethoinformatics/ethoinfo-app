@@ -106,7 +106,6 @@ class App extends Component {
 
   render() {
     const { stores, onOpenMenu, onCloseMenu, views, modals } = this.props;
-    console.log('MODALS ARE:', modals);
     const { viewStore } = stores;
     const { currentView } = viewStore;
 

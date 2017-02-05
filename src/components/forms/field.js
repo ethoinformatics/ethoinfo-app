@@ -47,13 +47,15 @@ const Field = (props) => {
     isLookup
   };
 
+  // console.log('Rendering field props:', fieldProps);
+
   if (isCollection) {
     // Make sure value is an array or set to empty array.
     normalizedValue = Array.isArray(value) ? value : [];
 
     // Push an empty value to the end of the array
-    normalizedValue = normalizedValue.filter(v => v !== null);
-    normalizedValue = [...normalizedValue, null];
+    // normalizedValue = normalizedValue.filter(v => v !== null);
+    // normalizedValue = [...normalizedValue, null];
     // console.log('value:', normalizedValue);
 
     fieldProps = {
