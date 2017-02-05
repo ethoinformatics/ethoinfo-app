@@ -14,6 +14,9 @@ import Navbar from '../navbar/navbar';
 
 import { open as openMenu, close as closeMenu } from '../../redux/actions/menu';
 import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
+import { getAllModals } from '../../redux/reducers';
+
+import Modal from '../modal/modal';
 
 // import AllDocs from '../documents/allDocuments';
 import CategoryList from '../categoryList/categoryList';
@@ -102,8 +105,8 @@ class App extends Component {
   }
 
   render() {
-    const { stores, onOpenMenu, onCloseMenu, views } = this.props;
-
+    const { stores, onOpenMenu, onCloseMenu, views, modals } = this.props;
+    console.log('MODALS ARE:', modals);
     const { viewStore } = stores;
     const { currentView } = viewStore;
 
@@ -118,6 +121,12 @@ class App extends Component {
         <Splitter>
           <Menu {...menuProps} />
           <SplitterContent>
+            {
+              modals.map(modal =>
+                <Modal key={modal.id} id={modal.id} {...modal.props} />
+              )
+            }
+
             <Page
               renderToolbar={() =>
                 <Navbar
@@ -154,6 +163,7 @@ function mapStateToProps(state) {
   return {
     docs: state.docs,
     views: state.views,
+    modals: getAllModals(state)
   };
 }
 

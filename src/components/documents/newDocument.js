@@ -63,9 +63,6 @@ class NewDocument extends React.Component {
           fieldValues={fieldValues}
           schema={schema}
         />
-        <Modal isOpen>
-          asiodjioasjdioajs adoisjsaoijd oiasjdoiasjd oiasjdas oiajsdoias aosidjoisa dasjdoiasj disaasdoih asdoij asdoij asd asidasd oasjd asdoijaso
-        </Modal>
         <Button modifier="large" onClick={this.saveFields}>Save</Button>
         <Button modifier="large" onClick={this.resetFields}>Reset fields</Button>
       </Page>

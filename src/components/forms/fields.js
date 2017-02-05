@@ -65,7 +65,9 @@ class Fields extends React.Component {
   renderField(field) {
     const { initialValues = {}, fieldValues = {} } = this.props;
     const { name, type, isCollection = false, isLookup = false } = field;
-    const value = fieldValues[name] || initialValues[name] || null;
+    const isEditing = !_.isNil(fieldValues[name]);
+    console.log('Is editing:', isEditing);
+    const value = isEditing ? fieldValues[name] : initialValues[name] || null;
     let formField = null;
 
     const props = {
@@ -127,15 +129,15 @@ class Fields extends React.Component {
           {
             schema.fields.map((field, index) => {
               const { name, isCollection = false, isLookup = false, type } = field;
-              const fieldValue = fieldValues[name] || initialValues[name] || null;
-
+              const isEditing = !_.isNil(fieldValues[name]);
+              const fieldValue = isEditing ? fieldValues[name] : initialValues[name] || null;
               const subpath = [...path, name];
-              // console.log('subpath is', subpath, field);
               return (<li className="field" key={index}>
                 { /* <label htmlFor={field.name}>{_.startCase(field.name)}</label> */}
                 { /* this.renderField(field) */ }
                 <Field
                   value={fieldValue}
+                  name={name}
                   path={subpath}
                   type={type}
                   isCollection={isCollection}

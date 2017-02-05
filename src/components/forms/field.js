@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { getAll as getAllDocs } from '../../redux/reducers/documents';
 import { setField as setFieldAction } from '../../redux/actions/fields';
@@ -27,6 +28,7 @@ const Field = (props) => {
     value,
     path,
     type,
+    name,
     isCollection,
     isLookup,
     onChange
@@ -39,6 +41,7 @@ const Field = (props) => {
 
   let fieldProps = {
     value: value || initialValue || null,
+    path,
     type,
     onChange,
     isLookup
@@ -93,8 +96,10 @@ const Field = (props) => {
     }
   }
 
+
   return (
     <div>
+      <label htmlFor={name}>{_.startCase(name)}</label>
       <div>{path ? path.join(',') : 'No path specified'}</div>
       <div>{fieldComponent}</div>
     </div>
@@ -108,10 +113,9 @@ Field.propTypes = {
   path: PropTypes.arrayOf( // Update path in state.fields
     PropTypes.string
   ),
-  initialValue: PropTypes.object, // Values from model
   isCollection: PropTypes.bool,
   isLookup: PropTypes.bool,
-  // value: PropTypes.object, // Transient form values
+  value: PropTypes.any, // Transient form values
   setField: PropTypes.func,
   onChange: PropTypes.func,
 };

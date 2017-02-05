@@ -6,9 +6,7 @@ import history from '../../history';
 
 import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
 import { getDocsByDomain } from '../../redux/reducers';
-
 import { getSchema } from '../../schemas/main';
-import { Types } from '../../schemas/schema';
 
 // Map state to props
 const mapStateToProps = (state, { domain }) =>

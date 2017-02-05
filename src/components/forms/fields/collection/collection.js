@@ -1,9 +1,23 @@
 import React, { Component, PropTypes } from 'react';
-import { Button } from 'react-onsenui';
+import { connect } from 'react-redux';
+import { Button, List, ListItem, Page, Toolbar } from 'react-onsenui';
 import R from 'ramda';
 import './collection.styl';
 
+import { push as pushModal } from '../../../../redux/actions/modals';
+
 import Field from '../../field';
+
+function mapStateToProps() {
+  return {
+  };
+}
+
+const mapDispatchToProps = dispatch => ({
+  onPushModal: (id, props) => {
+    dispatch(pushModal(id, props));
+  }
+});
 
 class CollectionField extends Component {
   constructor() {
@@ -22,14 +36,8 @@ class CollectionField extends Component {
   }
 
   render() {
-    const {
-      type,
-      value,
-      onChange,
-      ...rest
-    } = this.props;
-
-    console.log('CollectionField props:', this.props);
+    const { type, value, path, onPushModal } = this.props;
+    console.log('Collection field path:', path);
 
     return (
       <div className="collection-field">
@@ -37,13 +45,24 @@ class CollectionField extends Component {
           {
             /* Existing items */
             value.map((item, index) =>
-              <Field
-                key={index}
-                type={type}
-                value={item}
-                onChange={val => this.onItemChange(index, val)}
-              />
+              <div key={index}>
+                <Field
+                  key={index}
+                  type={type}
+                  value={item}
+                  onChange={val => this.onItemChange(index, val)}
+                />
+              </div>
             )
+          }
+          {
+            <List
+              className="list"
+              dataSource={value}
+              renderRow={(row, index) =>
+                <ListItem key={index}>Hello</ListItem>
+              }
+            />
           }
           {
             /* New item */
@@ -53,6 +72,7 @@ class CollectionField extends Component {
         <Button
           modifier="outline"
           onClick={() => {
+            onPushModal('foobar', { aFakeProp: 'hello' });
             // dataStore.resetFieldsAtPath(path);
           }}
         >New</Button>
@@ -62,9 +82,13 @@ class CollectionField extends Component {
 }
 
 CollectionField.propTypes = {
-  domain: PropTypes.string,
-  value: PropTypes.array,
-  onChange: PropTypes.func
+  // domain: PropTypes.string,
+  onChange: PropTypes.func,
+  type: PropTypes.object.isRequired,
+  value: PropTypes.array.isRequired,
 };
 
-export default CollectionField;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CollectionField);

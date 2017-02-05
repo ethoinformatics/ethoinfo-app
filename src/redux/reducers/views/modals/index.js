@@ -1,28 +1,30 @@
 import { combineReducers } from 'redux';
-import history from './history';
-import menu from './menu';
-import modals, * as FromByModals from './modals';
+
+import all, * as FromAll from './all';
+import byId, * as FromById from './byId';
 
 // -----------------------------------------------------------------------------
 // REDUCER
 
-const views = combineReducers({
-  menu,
-  modals,
-  history
+const modals = combineReducers({
+  all,
+  byId,
 });
-
-
 
 // -----------------------------------------------------------------------------
 // EXPORTED SELECTORS
 
-export function getAllModals(state) {
-  return FromByModals
-    .getAll(state.modals);
+export function getById(state, id) {
+  return FromById.getById(state, id);
+}
+
+export function getAll(state) {
+  return FromAll
+    .getAll(state.all)
+    .map(id => getById(state.byId, id));
 }
 
 // -----------------------------------------------------------------------------
 // REDUCER EXPORT
 
-export default views;
+export default modals;

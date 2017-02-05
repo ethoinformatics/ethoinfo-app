@@ -5,7 +5,7 @@ import history from '../../history';
 import './modelList.styl';
 
 const ModelList = ({ schemas = [] }) =>
-  <Page className="overview">
+  <Page className="modelList">
     <List
       dataSource={schemas}
       renderHeader={() => <ListHeader>Documents</ListHeader>}

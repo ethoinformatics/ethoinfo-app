@@ -2,7 +2,7 @@
 
 import { combineReducers } from 'redux';
 import docs, * as FromDocuments from './documents';
-import views from './views';
+import views, * as FromViews from './views';
 import fields from './fields';
 
 // -----------------------------------------------------------------------------
@@ -25,6 +25,10 @@ export function getDocsByDomain(state, domain) {
   return FromDocuments.getByDomain(state.docs, domain);
 }
 
+export function getAllModals(state) {
+  return FromViews
+    .getAllModals(state.views);
+}
 
 // -----------------------------------------------------------------------------
 // REDUCER EXPORT
