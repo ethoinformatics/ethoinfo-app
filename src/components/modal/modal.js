@@ -27,7 +27,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 const Modal = (props) => {
   const ModalComponent = MODAL_COMPONENTS[MODAL_TYPE_FIELD] || null;
-  
+
   return (
     <Page
       className="modal"
@@ -35,7 +35,10 @@ const Modal = (props) => {
         <Navbar
           leftItem={{
             icon: 'md-chevron-left',
-            action: () => props.pop()
+            action: () => {
+              props.pop();
+              props.onClose();
+            }
           }}
           title={props.id}
         />
@@ -46,10 +49,15 @@ const Modal = (props) => {
   );
 };
 
+Modal.defaultProps = {
+  onClose: () => {} // noop if we don't pass in a callback
+};
+
 /* eslint-disable react/no-unused-prop-types */
 Modal.propTypes = {
   id: React.PropTypes.string.isRequired,
   pop: React.PropTypes.func.isRequired,
+  onClose: React.PropTypes.func
 };
 /* eslint-enable react/no-unused-prop-types */
 

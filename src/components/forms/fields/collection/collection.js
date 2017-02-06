@@ -2,11 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Button, List, ListItem, Page, Toolbar } from 'react-onsenui';
 import R from 'ramda';
+import _ from 'lodash';
 import './collection.styl';
 
 import { push as pushModal } from '../../../../redux/actions/modals';
 
-import Field from '../../field';
+// import Field from '../../field';
 
 function mapStateToProps() {
   return {
@@ -27,6 +28,7 @@ class CollectionField extends Component {
     };
 
     this.onItemChange = this.onItemChange.bind(this);
+    this.removeNulls = this.removeNulls.bind(this);
   }
 
   onItemChange(index, val) {
@@ -35,16 +37,21 @@ class CollectionField extends Component {
     onChange(newValue);
   }
 
+  removeNulls() {
+    const { value, onChange } = this.props;
+    const newValue = value.filter(item => !_.isNil(item)); // Merge at index
+    onChange(newValue);
+  }
+
   render() {
     const { type, value, path, onChange, onPushModal } = this.props;
-    console.log('Collection field path:', path, value);
 
     return (
       <div className="collection-field">
         <div className="accordian">
           {
             /* Existing items */
-            value.map((item, index) =>
+            /* value.map((item, index) =>
               <div key={index}>
                 <Field
                   key={index}
@@ -53,7 +60,7 @@ class CollectionField extends Component {
                   onChange={val => this.onItemChange(index, val)}
                 />
               </div>
-            )
+            )*/
           }
           {
             <List
@@ -73,13 +80,25 @@ class CollectionField extends Component {
           modifier="outline"
           onClick={() => {
             // Push a new value to the end of collection
-            onChange([...value, null]);
+            const newValue = [...value, null];
+            onChange(newValue);
+
+            // Index of new item is last array index
+            const newIndex = newValue.length - 1;
+
+            // Append index to path
+            const newPath = [...path, newIndex];
+
+            // Make an id string from path components
+            const modalId = newPath.join('/');
 
             // View modal with new value
-            onPushModal('foobar', {
+            onPushModal(modalId, {
+              path: newPath,
               type,
               value: R.last(value),
-              onChange: val => this.onItemChange(value.length - 1, val)
+              onChange: val => this.onItemChange(newIndex, val),
+              onClose: () => { this.removeNulls(); }
             });
             // dataStore.resetFieldsAtPath(path);
           }}
@@ -95,6 +114,7 @@ CollectionField.propTypes = {
   onChange: PropTypes.func,
   type: PropTypes.object.isRequired,
   value: PropTypes.array.isRequired,
+  path: PropTypes.array.isRequired
 };
 
 export default connect(

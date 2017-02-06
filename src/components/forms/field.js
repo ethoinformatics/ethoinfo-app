@@ -5,16 +5,21 @@ import { getAll as getAllDocs } from '../../redux/reducers/documents';
 import { setField as setFieldAction } from '../../redux/actions/fields';
 import { Types } from '../../schemas/schema';
 
+import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
+
 // import SelectField from './fields/select/select';
 import TextInputField from './fields/text/input';
 import DateField from './fields/date/date';
 import CollectionField from './fields/collection/collection';
 
-const mapStateToProps = state =>
-  ({
+const mapStateToProps = (state, ownProps) => {
+  console.log('Mapping state to props', ownProps.path);
+  return ({
     docs: getAllDocs(state.docs),
-    fields: state.fields
+    fields: state.fields,
+    fieldValue: getFieldsByPath(state.fields, ownProps.path)
   });
+};
 
 const mapDispatchToProps = dispatch => ({
   setField: (path, value) => {
@@ -31,7 +36,8 @@ const Field = (props) => {
     name,
     isCollection,
     isLookup,
-    onChange
+    onChange,
+    fieldValue
   } = props;
 
   // console.log('Field Props', name, props);
@@ -40,7 +46,7 @@ const Field = (props) => {
   let normalizedValue = value;
 
   let fieldProps = {
-    value: value || initialValue || null,
+    value: fieldValue || initialValue || null,
     path,
     type,
     onChange,
@@ -112,9 +118,10 @@ Field.propTypes = {
   docs: PropTypes.arrayOf(
     PropTypes.object
   ).isRequired,
-  path: PropTypes.arrayOf( // Update path in state.fields
+  /* path: PropTypes.arrayOf( // Update path in state.fields
     PropTypes.string
-  ),
+  ), */
+  path: PropTypes.array,
   isCollection: PropTypes.bool,
   isLookup: PropTypes.bool,
   value: PropTypes.any, // Transient form values
