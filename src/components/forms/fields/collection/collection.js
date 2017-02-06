@@ -1,20 +1,26 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Button, List, ListItem } from 'react-onsenui';
+import { Button, Icon, List, ListItem } from 'react-onsenui';
 import R from 'ramda';
 import _ from 'lodash';
+import moment from 'moment';
 import pluralize from 'pluralize';
 import './collection.styl';
 
-import { resetFields as resetFieldsAtPath } from '../../../../redux/actions/fields';
+
+import { resetFields } from '../../../../redux/actions/fields';
 import { push as pushModal, pop as popModal } from '../../../../redux/actions/modals';
 
-// import Field from '../../field';
+import { Types } from '../../../../schemas/schema';
+import { getSchema } from '../../../../schemas/main';
+import { getAll as getAllDocs } from '../../../../redux/reducers/documents';
 
-function mapStateToProps() {
-  return {
-  };
-}
+// Map state to props
+const mapStateToProps = (state, { domain }) =>
+  ({
+    docs: getAllDocs(state.docs),
+    schema: getSchema(domain)
+  });
 
 const mapDispatchToProps = dispatch => ({
   onPopModal: (id) => {
@@ -23,18 +29,21 @@ const mapDispatchToProps = dispatch => ({
   onPushModal: (id, props) => {
     dispatch(pushModal(id, props));
   },
-  onResetFieldsAtPath: (path) => {
-    dispatch(resetFieldsAtPath(path));
+  onResetFields: (path) => {
+    dispatch(resetFields(path));
   }
 });
 
 class CollectionField extends Component {
   constructor() {
     super();
+
+    // Accordion state
     this.state = {
-      isExpanded: false
+      isExpanded: true
     };
 
+    // Bind context
     this.onItemChange = this.onItemChange.bind(this);
     this.removeNulls = this.removeNulls.bind(this);
   }
@@ -43,6 +52,52 @@ class CollectionField extends Component {
     const { value, onChange } = this.props;
     const newValue = R.adjust(() => val, index, value); // Merge at index
     onChange(newValue);
+  }
+
+  onItemReset(index) {
+    const { value, onChange, initialValue } = this.props;
+    const newValue = R.adjust(() => (initialValue ? initialValue[index] : null), index, value);
+    onChange(newValue);
+  }
+
+  // How is the value represented?
+  // Todo extract to another module.
+  getDisplayText = (value, type) => {
+    const { docs } = this.props;
+    if (_.isNil(value)) {
+      return null;
+    }
+
+    switch (type.constructor) {
+      case Types.Date:
+        return value ? moment(value) : null;
+
+      case Types.String:
+        return value;
+
+      case Types.Number:
+        return value;
+
+      case Types.Category:
+        return value;
+
+      case Types.Model: {
+        const { name: domainName } = type;
+        const schema = getSchema(domainName);
+        if (!schema) { return null; }
+
+        const id = value._id;
+        if (!id) { return null; }
+
+        const doc = docs.find(instance => instance._id === id);
+        if (!doc) { return null; }
+
+        return doc[schema.displayField] || doc._id;
+      }
+
+      default:
+        return null;
+    }
   }
 
   removeNulls() {
@@ -59,16 +114,45 @@ class CollectionField extends Component {
 
   render() {
     const {
-      type, value, name, path, onChange, onPushModal, onPopModal, isLookup, onResetFieldsAtPath
+      type,
+      value,
+      name,
+      path,
+      onChange,
+      onPushModal,
+      onPopModal,
+      isLookup,
+      onResetFields,
+      initialValue
     } = this.props;
+
+    const { isExpanded } = this.state;
 
     // Header is name of field and number of items in collection
     const header = `${_.startCase(name)} (${value.length})`;
 
+    // Accordion icon depends on state.isExpanded
+    const accordionIcon = isExpanded ? 'md-chevron-down' : 'md-chevron-right';
+    console.log('Rendering collection:', name, this.props);
     return (
-      <div className="collection-field">
-        <label htmlFor={name}>{header}</label>
-        <div className="accordian">
+      <div className="collectionField">
+        <button
+          className="collectionHeader"
+          onClick={() => this.setState({ isExpanded: !isExpanded })}
+        >
+          <label htmlFor={name}>{header}</label>
+          { /* Only show accordion button if we have items */ }
+          {
+            value && value.length > 0 &&
+              <div
+                className="accordionIcon"
+              >
+                <Icon icon={accordionIcon} />
+              </div>
+          }
+        </button>
+
+        <div className={`accordion ${isExpanded ? 'isExpanded' : ''}`}>
           {
             <List
               className="list"
@@ -89,17 +173,19 @@ class CollectionField extends Component {
                       name: title,
                       title,
                       isLookup,
-                      value: R.last(value),
+                      initialValue: initialValue[index],
+                      value: value[index],
                       onChange: val => this.onItemChange(index, val),
                       onClose: () => {
-                        onResetFieldsAtPath(itemPath);
+                        this.onItemReset(index);
+                        // onResetFields(itemPath);
                       },
                       actions: [
                         {
                           title: 'Done',
                           callback: () => {
                             onPopModal(modalId);
-                            this.removeNulls();
+                            // this.removeNulls();
                           }
                         },
                         {
@@ -113,14 +199,10 @@ class CollectionField extends Component {
                     });
                   }}
                 >
-                  Hello
+                  { this.getDisplayText(value[index], type) }
                 </ListItem>
               }
             />
-          }
-          {
-            /* New item */
-            /* <Field type={type} value={null} /> */
           }
         </div>
         <Button
@@ -152,8 +234,9 @@ class CollectionField extends Component {
               value: null,
               onChange: val => this.onItemChange(newIndex, val),
               onClose: () => {
+                this.onItemReset(newIndex);
                 this.removeNulls();
-                onResetFieldsAtPath(newPath);
+                // onResetFields(newPath);
               },
               actions: [
                 {
@@ -172,10 +255,16 @@ class CollectionField extends Component {
   }
 }
 
+CollectionField.defaultProps = {
+  docs: []
+};
+
 CollectionField.propTypes = {
-  // domain: PropTypes.string,
   name: PropTypes.string,
+  docs: PropTypes.array,
   onPushModal: PropTypes.func,
+  onPopModal: PropTypes.func,
+  onResetFields: PropTypes.func,
   onChange: PropTypes.func,
   type: PropTypes.object.isRequired,
   isLookup: PropTypes.bool,

@@ -2,12 +2,10 @@ import React, { PropTypes } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { getAll as getAllDocs } from '../../redux/reducers/documents';
-import { setField as setFieldAction } from '../../redux/actions/fields';
 import { Types } from '../../schemas/schema';
 
 import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
 
-// import SelectField from './fields/select/select';
 import Fields from './fields';
 import TextInputField from './fields/text/input';
 import DateField from './fields/date/date';
@@ -16,42 +14,38 @@ import SelectField from './fields/select/select';
 
 import { getSchema } from '../../schemas/main';
 
-const mapStateToProps = (state, ownProps) => {
-  return ({
+const mapStateToProps = (state, ownProps) =>
+  ({
     docs: getAllDocs(state.docs),
     fields: state.fields,
     fieldValue: getFieldsByPath(state.fields, ownProps.path)
   });
-};
 
-const mapDispatchToProps = dispatch => ({
-  setField: (path, value) => {
-    dispatch(setFieldAction(path, value));
-  }
+const mapDispatchToProps = () => ({
 });
 
 const Field = (props) => {
-  console.log('Rendering field:', props);
+  console.log('Render field:', props);
   const {
     docs,
-    initialValue,
-    value,
+    // value,
     path,
     type,
     name,
     isCollection,
     isLookup,
     onChange,
+    initialValue,
     fieldValue
   } = props;
 
-  // console.log('Field Props', name, props);
-
   let fieldComponent = null;
-  let normalizedValue = value;
+  let normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
 
   let fieldProps = {
-    value: fieldValue || value || null,
+    // value,
+    value: normalizedValue,
+    initialValue,
     path,
     name,
     type,
@@ -59,16 +53,9 @@ const Field = (props) => {
     isLookup
   };
 
-  // console.log('Rendering field props:', fieldProps);
-
   if (isCollection) {
     // Make sure value is an array or set to empty array.
-    normalizedValue = Array.isArray(value) ? value : [];
-
-    // Push an empty value to the end of the array
-    // normalizedValue = normalizedValue.filter(v => v !== null);
-    // normalizedValue = [...normalizedValue, null];
-    // console.log('value:', normalizedValue);
+    normalizedValue = Array.isArray(fieldProps.value) ? fieldProps.value : [];
 
     fieldProps = {
       ...fieldProps,
@@ -87,6 +74,7 @@ const Field = (props) => {
         break;
 
       case Types.Number:
+        fieldComponent = <TextInputField {...fieldProps} />;
         break;
 
       case Types.Category:
@@ -126,8 +114,6 @@ const Field = (props) => {
 
   return (
     <div className="field">
-      {/* <label htmlFor={name}>{_.startCase(name)}</label> */}
-      {/* <div>{path ? path.join(',') : 'No path specified'}</div>*/}
       <div>{fieldComponent}</div>
     </div>
   );
@@ -144,7 +130,6 @@ Field.propTypes = {
   isCollection: PropTypes.bool,
   isLookup: PropTypes.bool,
   value: PropTypes.any, // Transient form values
-  setField: PropTypes.func,
   onChange: PropTypes.func,
 };
 

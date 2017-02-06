@@ -1,4 +1,37 @@
-.collection-field
-  .accordian
-    padding-top 0.25em
-    padding-bottom 0.25em
+.collectionField
+  .accordion
+    padding-top 0
+    padding-bottom 0.5em
+
+.collectionHeader
+  position relative
+  width 100%
+  outline none
+  border none
+  text-align left
+  background #eee
+  height 44px
+  line-height 44px
+  &:hover
+    background #ddd
+
+.accordionIcon
+  text-align center
+  background transparent
+  border none
+  outline none
+  width 44px
+  height 44px
+  font-size 24px
+  position absolute
+  top 0
+  right 0
+
+.accordion
+  .list
+    height 0
+    background blue
+
+  &.isExpanded
+    .list
+      height auto

@@ -133,20 +133,21 @@ class Fields extends React.Component {
           {
             schema.fields.map((field, index) => {
               const { name, isCollection = false, isLookup = false, type } = field;
-              console.log('Rendering a field:', field);
               const isEditing = !_.isNil(fieldValues[name]);
               const fieldValue = fieldValues[name];
               const initialValue = initialValues ? initialValues[name] || null : null;
 
               const value = isEditing ? fieldValue : initialValue;
-
+              console.log('Field value:', name, value);
               const subpath = [...path, name];
 
               return (<li className="field" key={index}>
                 { /* <label htmlFor={field.name}>{_.startCase(field.name)}</label> */}
                 { /* this.renderField(field) */ }
                 <Field
-                  value={value}
+                  initialValue={initialValue}
+                  fieldValue={fieldValue}
+                  // value={value}
                   name={name}
                   path={subpath}
                   type={type}

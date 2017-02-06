@@ -22,5 +22,6 @@ fields:
     #required: true
   - name: identificationAssignedBy
     type: [Observer]
+    lookup: true
   - name: materialsCollected
     type: [PlantParts] # coded field: seed, leaves, root, stem, flower, etc.
