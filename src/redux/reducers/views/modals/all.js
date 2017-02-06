@@ -17,14 +17,12 @@ function all(state = defaultState, action) {
   switch (action.type) {
     case MODAL_PUSH: {
       // Remove duplicates and push modal id to end of array
-      const { id, props } = action.payload;
-      console.log('MODAL_PUSH', id, props);
+      const { id } = action.payload;
       return [...state.filter(_id => _id !== id), id];
     }
     case MODAL_POP: {
       // Remove modal from array
-      const { id, props } = action.payload;
-      console.log('MODAL_POP', id, props);
+      const { id } = action.payload;
       return state.filter(_id => _id !== id);
     }
     default:

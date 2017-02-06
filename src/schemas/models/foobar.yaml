@@ -4,9 +4,9 @@ name: Foobar
 displayField: sampleLabel
 
 fields:
-  #- name: observers
-  #  type: [Observer]
-  #  lookup: true
+  - name: observers
+    type: [Observer]
+    lookup: true
   
   - name: colors
     type: [String]

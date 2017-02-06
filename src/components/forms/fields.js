@@ -65,9 +65,13 @@ class Fields extends React.Component {
   renderField(field) {
     const { initialValues = {}, fieldValues = {} } = this.props;
     const { name, type, isCollection = false, isLookup = false } = field;
+
     const isEditing = !_.isNil(fieldValues[name]);
-    console.log('Is editing:', isEditing);
-    const value = isEditing ? fieldValues[name] : initialValues[name] || null;
+
+    const fieldValue = fieldValues[name];
+    const initialValue = initialValues ? initialValues[name] || null : null;
+
+    const value = isEditing ? fieldValue : initialValue;
     let formField = null;
 
     const props = {
@@ -124,19 +128,25 @@ class Fields extends React.Component {
     // let formField = null;
 
     return (
-      <div className="fields">
-        <ol className="formFields">
+      <div>
+        <ol className="fields">
           {
             schema.fields.map((field, index) => {
               const { name, isCollection = false, isLookup = false, type } = field;
+
               const isEditing = !_.isNil(fieldValues[name]);
-              const fieldValue = isEditing ? fieldValues[name] : initialValues[name] || null;
+              const fieldValue = fieldValues[name];
+              const initialValue = initialValues ? initialValues[name] || null : null;
+
+              const value = isEditing ? fieldValue : initialValue;
+
               const subpath = [...path, name];
+
               return (<li className="field" key={index}>
                 { /* <label htmlFor={field.name}>{_.startCase(field.name)}</label> */}
                 { /* this.renderField(field) */ }
                 <Field
-                  value={fieldValue}
+                  value={value}
                   name={name}
                   path={subpath}
                   type={type}
@@ -157,9 +167,10 @@ Fields.propTypes = {
   docs: PropTypes.arrayOf(
     PropTypes.object
   ).isRequired,
-  path: PropTypes.arrayOf( // Update path in state.fields
+  /* path: PropTypes.arrayOf( // Update path in state.fields
     PropTypes.string
-  ).isRequired,
+  ).isRequired, */
+  path: PropTypes.array,
   initialValues: PropTypes.object, // Values from model
   fieldValues: PropTypes.object, // Transient form values
   schema: PropTypes.object.isRequired,

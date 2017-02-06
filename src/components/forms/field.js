@@ -8,12 +8,15 @@ import { Types } from '../../schemas/schema';
 import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
 
 // import SelectField from './fields/select/select';
+import Fields from './fields';
 import TextInputField from './fields/text/input';
 import DateField from './fields/date/date';
 import CollectionField from './fields/collection/collection';
+import SelectField from './fields/select/select';
+
+import { getSchema } from '../../schemas/main';
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('Mapping state to props', ownProps.path);
   return ({
     docs: getAllDocs(state.docs),
     fields: state.fields,
@@ -28,7 +31,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const Field = (props) => {
+  console.log('Rendering field:', props);
   const {
+    docs,
     initialValue,
     value,
     path,
@@ -46,8 +51,9 @@ const Field = (props) => {
   let normalizedValue = value;
 
   let fieldProps = {
-    value: fieldValue || initialValue || null,
+    value: fieldValue || value || null,
     path,
+    name,
     type,
     onChange,
     isLookup
@@ -87,18 +93,31 @@ const Field = (props) => {
         // fieldComponent = this.makeSelect(field, fieldProps);
         break;
 
-      case Types.Model:
-        /* if (isLookup) {
-          fieldComponent = this.makeSelect(field, props);
-          break;
+      case Types.Model: {
+        const { name: domainName } = type;
+        const schema = getSchema(domainName);
+        if (!schema) { return null; }
+
+        if (isLookup) {
+          const options = docs
+          .filter(doc => doc.domainName === domainName)
+          .map(doc => ({
+            _id: doc._id,
+            name: doc[schema.displayField] || doc.name || doc._id
+          }));
+
+          return <SelectField options={[null, ...options]} {...fieldProps} />;
         }
 
-        if (isCollection) {
-          console.log('Rendering collection');
-          fieldComponent = <CollectionField domain={type.name} />;
-        }*/
+        return (
+          <Fields
+            path={path}
+            schema={schema}
+            initialValues={fieldProps.value}
+          />
+        );
+      }
 
-        break;
       default:
         break;
     }
@@ -106,9 +125,9 @@ const Field = (props) => {
 
 
   return (
-    <div>
-      <label htmlFor={name}>{_.startCase(name)}</label>
-      <div>{path ? path.join(',') : 'No path specified'}</div>
+    <div className="field">
+      {/* <label htmlFor={name}>{_.startCase(name)}</label> */}
+      {/* <div>{path ? path.join(',') : 'No path specified'}</div>*/}
       <div>{fieldComponent}</div>
     </div>
   );

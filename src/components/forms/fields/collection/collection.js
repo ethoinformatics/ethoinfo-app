@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Button, List, ListItem, Page, Toolbar } from 'react-onsenui';
+import { Button, List, ListItem } from 'react-onsenui';
 import R from 'ramda';
 import _ from 'lodash';
 import './collection.styl';
@@ -44,10 +44,16 @@ class CollectionField extends Component {
   }
 
   render() {
-    const { type, value, path, onChange, onPushModal } = this.props;
+    const {
+      type, value, name, path, onChange, onPushModal, isLookup
+    } = this.props;
+
+    // Header is name of field and number of items in collection
+    const header = `${_.startCase(name)} (${value.length})`;
 
     return (
       <div className="collection-field">
+        <label htmlFor={name}>{header}</label>
         <div className="accordian">
           {
             /* Existing items */
@@ -67,7 +73,24 @@ class CollectionField extends Component {
               className="list"
               dataSource={value}
               renderRow={(row, index) =>
-                <ListItem key={index}>Hello</ListItem>
+                <ListItem
+                  key={index}
+                  onClick={() => {
+                    const itemPath = [...path, index];
+                    const modalId = itemPath.join('/');
+
+                    // View modal with new value
+                    onPushModal(modalId, {
+                      path: itemPath,
+                      type,
+                      isLookup,
+                      value: R.last(value),
+                      onChange: val => this.onItemChange(index, val)
+                    });
+                  }}
+                >
+                  Hello
+                </ListItem>
               }
             />
           }
@@ -96,11 +119,11 @@ class CollectionField extends Component {
             onPushModal(modalId, {
               path: newPath,
               type,
-              value: R.last(value),
+              isLookup,
+              value: null,
               onChange: val => this.onItemChange(newIndex, val),
               onClose: () => { this.removeNulls(); }
             });
-            // dataStore.resetFieldsAtPath(path);
           }}
         >New</Button>
       </div>
@@ -110,9 +133,11 @@ class CollectionField extends Component {
 
 CollectionField.propTypes = {
   // domain: PropTypes.string,
+  name: PropTypes.string,
   onPushModal: PropTypes.func,
   onChange: PropTypes.func,
   type: PropTypes.object.isRequired,
+  isLookup: PropTypes.bool,
   value: PropTypes.array.isRequired,
   path: PropTypes.array.isRequired
 };

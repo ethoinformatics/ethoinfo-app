@@ -19,7 +19,7 @@ fields:
     lookup: true
   #  required: true
   - name: comments
-    type: String
+    type: [String]
   - name: biologicalSamples
     type: [BiologicalSample]
   - name: plantSamples

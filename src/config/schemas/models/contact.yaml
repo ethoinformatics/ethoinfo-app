@@ -14,7 +14,7 @@ fields:
   - name: location
     type: Geolocation
   #  required: true
-  - name: subject
+  - name: subjects
     type: [Subject]
     lookup: true
   #  required: true

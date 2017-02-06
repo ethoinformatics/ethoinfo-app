@@ -20,4 +20,4 @@ fields:
   - name: plantSamples
     type: [PlantSample]
   - name: comments
-    type: String
+    type: [String]
