@@ -1,12 +1,14 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import _ from 'lodash';
+import { toJS } from 'mobx';
+import { observer, PropTypes } from 'mobx-react';
 import { List, ListItem, Page, ListHeader } from 'react-onsenui';
 import history from '../../history';
 
 import './categoryList.styl';
 
-const CategoryList = (({ categories }) => {
-  const dataSource = categories.sort();
+const CategoryList = observer(({ categories }) => {
+  const dataSource = categories ? toJS(categories).slice().sort() : [];
 
   return (
     <Page className="categoryList">
@@ -30,7 +32,7 @@ const CategoryList = (({ categories }) => {
 
 /* eslint-disable react/no-unused-prop-types */
 CategoryList.propTypes = {
-  categories: PropTypes.arrayOf(
+  categories: PropTypes.observableArrayOf(
     React.PropTypes.shape({
       name: React.PropTypes.string.isRequired,
       // values: PropTypes.observableArrayOf(React.PropTypes.string).isRequired

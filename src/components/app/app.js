@@ -32,7 +32,7 @@ import NewDocument from '../documents/newDocument';
 import Settings from '../settings/settings';
 import Sync from '../sync/sync';
 
-import { models } from '../../schemas/main';
+import { models, categories } from '../../schemas/main';
 
 // Renders currentView, passing in appropriate state as props.
 function renderCurrentView(stores) {
@@ -41,11 +41,11 @@ function renderCurrentView(stores) {
 
   switch (view.name) {
     case 'categories':
-      return <CategoryList categories={dataStore.schemas.categories} />;
+      return <CategoryList categories={categories} />;
     case 'codes':
       return (
         <CodeList
-          codes={dataStore.getData(view.params.id)}
+          domain={view.params.id}
           actions={{
             new: () => viewStore.navigateTo(`/categories/${view.params.id}/new`),
             destroy: (id, rev) => dataStore.deleteDoc(id, rev),
