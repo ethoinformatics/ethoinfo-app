@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 import { Button, List, ListItem } from 'react-onsenui';
 import R from 'ramda';
 import _ from 'lodash';
+import pluralize from 'pluralize';
 import './collection.styl';
 
-import { push as pushModal } from '../../../../redux/actions/modals';
+import { resetFields as resetFieldsAtPath } from '../../../../redux/actions/fields';
+import { push as pushModal, pop as popModal } from '../../../../redux/actions/modals';
 
 // import Field from '../../field';
 
@@ -15,8 +17,14 @@ function mapStateToProps() {
 }
 
 const mapDispatchToProps = dispatch => ({
+  onPopModal: (id) => {
+    dispatch(popModal(id));
+  },
   onPushModal: (id, props) => {
     dispatch(pushModal(id, props));
+  },
+  onResetFieldsAtPath: (path) => {
+    dispatch(resetFieldsAtPath(path));
   }
 });
 
@@ -43,9 +51,15 @@ class CollectionField extends Component {
     onChange(newValue);
   }
 
+  removeAtIndex(index) {
+    const { value, onChange } = this.props;
+    const newValue = R.remove(index, 1, value); // Remove item at index
+    onChange(newValue);
+  }
+
   render() {
     const {
-      type, value, name, path, onChange, onPushModal, isLookup
+      type, value, name, path, onChange, onPushModal, onPopModal, isLookup, onResetFieldsAtPath
     } = this.props;
 
     // Header is name of field and number of items in collection
@@ -55,19 +69,6 @@ class CollectionField extends Component {
       <div className="collection-field">
         <label htmlFor={name}>{header}</label>
         <div className="accordian">
-          {
-            /* Existing items */
-            /* value.map((item, index) =>
-              <div key={index}>
-                <Field
-                  key={index}
-                  type={type}
-                  value={item}
-                  onChange={val => this.onItemChange(index, val)}
-                />
-              </div>
-            )*/
-          }
           {
             <List
               className="list"
@@ -79,13 +80,36 @@ class CollectionField extends Component {
                     const itemPath = [...path, index];
                     const modalId = itemPath.join('/');
 
+                    const title = _.startCase(pluralize(name, 1));
+
                     // View modal with new value
                     onPushModal(modalId, {
                       path: itemPath,
                       type,
+                      name: title,
+                      title,
                       isLookup,
                       value: R.last(value),
-                      onChange: val => this.onItemChange(index, val)
+                      onChange: val => this.onItemChange(index, val),
+                      onClose: () => {
+                        onResetFieldsAtPath(itemPath);
+                      },
+                      actions: [
+                        {
+                          title: 'Done',
+                          callback: () => {
+                            onPopModal(modalId);
+                            this.removeNulls();
+                          }
+                        },
+                        {
+                          title: 'Remove',
+                          callback: () => {
+                            onPopModal(modalId);
+                            this.removeAtIndex(index);
+                          }
+                        }
+                      ]
                     });
                   }}
                 >
@@ -115,14 +139,31 @@ class CollectionField extends Component {
             // Make an id string from path components
             const modalId = newPath.join('/');
 
+            // const title = type.name;
+            const title = _.startCase(pluralize(name, 1));
+
             // View modal with new value
             onPushModal(modalId, {
               path: newPath,
               type,
+              title,
+              name: title,
               isLookup,
               value: null,
               onChange: val => this.onItemChange(newIndex, val),
-              onClose: () => { this.removeNulls(); }
+              onClose: () => {
+                this.removeNulls();
+                onResetFieldsAtPath(newPath);
+              },
+              actions: [
+                {
+                  title: 'Done',
+                  callback: () => {
+                    onPopModal(modalId);
+                    this.removeNulls();
+                  }
+                }
+              ]
             });
           }}
         >New</Button>

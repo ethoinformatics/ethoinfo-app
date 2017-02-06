@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Page } from 'react-onsenui';
+import { Button, Page } from 'react-onsenui';
 import { pop as popModal } from '../../redux/actions/modals';
 import './modal.styl';
 
@@ -28,6 +28,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 const Modal = (props) => {
   const ModalComponent = MODAL_COMPONENTS[MODAL_TYPE_FIELD] || null;
 
+  const { actions, title, onClose, pop } = props;
+
   return (
     <Page
       className="modal"
@@ -36,26 +38,42 @@ const Modal = (props) => {
           leftItem={{
             icon: 'md-chevron-left',
             action: () => {
-              props.pop();
-              props.onClose();
+              pop();
+              onClose();
             }
           }}
-          title={props.id}
+          title={title}
         />
       }
     >
       <ModalComponent {...props} />
+      <div className="modalActions">
+        {
+          actions.map((action, index) =>
+            <Button key={index} modifier="large" onClick={action.callback}>{action.title}</Button>
+          )
+        }
+      </div>
     </Page>
   );
 };
 
 Modal.defaultProps = {
-  onClose: () => {} // noop if we don't pass in a callback
+  actions: [],
+  onClose: () => {}, // noop if we don't pass in a callback
+  title: ''
 };
 
 /* eslint-disable react/no-unused-prop-types */
 Modal.propTypes = {
-  id: React.PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  actions: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      callback: PropTypes.func
+    })
+  ),
   pop: React.PropTypes.func.isRequired,
   onClose: React.PropTypes.func
 };

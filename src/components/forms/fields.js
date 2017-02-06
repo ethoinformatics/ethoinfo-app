@@ -133,7 +133,7 @@ class Fields extends React.Component {
           {
             schema.fields.map((field, index) => {
               const { name, isCollection = false, isLookup = false, type } = field;
-
+              console.log('Rendering a field:', field);
               const isEditing = !_.isNil(fieldValues[name]);
               const fieldValue = fieldValues[name];
               const initialValue = initialValues ? initialValues[name] || null : null;
