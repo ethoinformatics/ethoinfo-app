@@ -56,8 +56,22 @@ class CollectionField extends Component {
 
   onItemReset(index) {
     const { value, onChange, initialValue } = this.props;
-    const newValue = R.adjust(() => (initialValue ? initialValue[index] : null), index, value);
-    onChange(newValue);
+    const initialItemValue = initialValue[index];
+
+    if (_.isNil(initialItemValue)) {
+      console.log('Is nil');
+      // Initial value did not exist, so remove:
+      this.removeAtIndex(index);
+    } else {
+      // Reset to initial value
+      let newValue = R.adjust(() => (
+      initialValue ? initialItemValue || null : null),
+      index, value);
+
+      // Remove nulls
+      newValue = newValue.filter(item => !_.isNil(item));
+      onChange(newValue);
+    }
   }
 
   // How is the value represented?
@@ -78,11 +92,9 @@ class CollectionField extends Component {
       case Types.Number:
         return value;
 
-      case Types.Category:
-        return value;
-
-      case Types.Model: {
+      case Types.Category: {
         const { name: domainName } = type;
+
         const schema = getSchema(domainName);
         if (!schema) { return null; }
 
@@ -92,7 +104,23 @@ class CollectionField extends Component {
         const doc = docs.find(instance => instance._id === id);
         if (!doc) { return null; }
 
-        return doc[schema.displayField] || doc._id;
+        return doc.name;
+        // return value;
+      }
+
+      case Types.Model: {
+        const { name: domainName } = type;
+
+        const schema = getSchema(domainName);
+        if (!schema) { return null; }
+
+        const id = value._id;
+        if (!id) { return value[schema.displayField] || null; }
+
+        const doc = docs.find(instance => instance._id === id);
+        if (!doc) { return null; }
+
+        return doc[schema.displayField] || id;
       }
 
       default:
@@ -126,6 +154,8 @@ class CollectionField extends Component {
       initialValue
     } = this.props;
 
+    // console.log('Render collection:', this.props);
+
     const { isExpanded } = this.state;
 
     // Header is name of field and number of items in collection
@@ -133,7 +163,6 @@ class CollectionField extends Component {
 
     // Accordion icon depends on state.isExpanded
     const accordionIcon = isExpanded ? 'md-chevron-down' : 'md-chevron-right';
-    console.log('Rendering collection:', name, this.props);
     return (
       <div className="collectionField">
         <button
@@ -235,7 +264,7 @@ class CollectionField extends Component {
               onChange: val => this.onItemChange(newIndex, val),
               onClose: () => {
                 this.onItemReset(newIndex);
-                this.removeNulls();
+                // this.removeNulls();
                 // onResetFields(newPath);
               },
               actions: [
@@ -243,7 +272,7 @@ class CollectionField extends Component {
                   title: 'Done',
                   callback: () => {
                     onPopModal(modalId);
-                    this.removeNulls();
+                    // this.removeNulls();
                   }
                 }
               ]
@@ -256,7 +285,8 @@ class CollectionField extends Component {
 }
 
 CollectionField.defaultProps = {
-  docs: []
+  docs: [],
+  initialValue: []
 };
 
 CollectionField.propTypes = {
@@ -268,6 +298,7 @@ CollectionField.propTypes = {
   onChange: PropTypes.func,
   type: PropTypes.object.isRequired,
   isLookup: PropTypes.bool,
+  initialValue: PropTypes.array,
   value: PropTypes.array.isRequired,
   path: PropTypes.array.isRequired
 };

@@ -102,8 +102,8 @@ class Fields extends React.Component {
         }
 
         if (isCollection) {
-          console.log('Rendering collection');
           formField = <CollectionField domain={type.name} />;
+          break;
         }
 
         break;
@@ -122,40 +122,33 @@ class Fields extends React.Component {
       path,
     } = this.props;
 
-    // const { initialValues = {}, fieldValues = {} } = this.props;
-    // const { name, type, isCollection = false, isLookup = false } = field;
-    // const value = fieldValues[name] || initialValues[name] || null;
-    // let formField = null;
-
     return (
       <div>
         <ol className="fields">
           {
             schema.fields.map((field, index) => {
               const { name, isCollection = false, isLookup = false, type } = field;
-              const isEditing = !_.isNil(fieldValues[name]);
+
               const fieldValue = fieldValues[name];
               const initialValue = initialValues ? initialValues[name] || null : null;
 
-              const value = isEditing ? fieldValue : initialValue;
-              console.log('Field value:', name, value);
               const subpath = [...path, name];
 
-              return (<li className="field" key={index}>
-                { /* <label htmlFor={field.name}>{_.startCase(field.name)}</label> */}
-                { /* this.renderField(field) */ }
-                <Field
-                  initialValue={initialValue}
-                  fieldValue={fieldValue}
-                  // value={value}
-                  name={name}
-                  path={subpath}
-                  type={type}
-                  isCollection={isCollection}
-                  isLookup={isLookup}
-                  onChange={val => this.onFieldChange(name, val)}
-                />
-              </li>);
+              return (
+                <li className="field" key={index}>
+                  <Field
+                    initialValue={initialValue}
+                    fieldValue={fieldValue}
+                    // value={value}
+                    name={name}
+                    path={subpath}
+                    type={type}
+                    isCollection={isCollection}
+                    isLookup={isLookup}
+                    onChange={val => this.onFieldChange(name, val)}
+                  />
+                </li>
+              );
             })
           }
         </ol>

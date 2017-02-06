@@ -25,7 +25,6 @@ const mapDispatchToProps = () => ({
 });
 
 const Field = (props) => {
-  console.log('Render field:', props);
   const {
     docs,
     // value,
@@ -40,7 +39,7 @@ const Field = (props) => {
   } = props;
 
   let fieldComponent = null;
-  let normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
+  const normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
 
   let fieldProps = {
     // value,
@@ -53,13 +52,15 @@ const Field = (props) => {
     isLookup
   };
 
+  // console.log('>> Inside render field:', name, initialValue);
+
   if (isCollection) {
     // Make sure value is an array or set to empty array.
-    normalizedValue = Array.isArray(fieldProps.value) ? fieldProps.value : [];
 
     fieldProps = {
       ...fieldProps,
-      value: normalizedValue,
+      value: Array.isArray(normalizedValue) ? normalizedValue : [],
+      initialValue: Array.isArray(initialValue) ? initialValue : []
     };
 
     fieldComponent = <CollectionField {...fieldProps} />;
@@ -77,9 +78,20 @@ const Field = (props) => {
         fieldComponent = <TextInputField {...fieldProps} />;
         break;
 
-      case Types.Category:
-        // fieldComponent = this.makeSelect(field, fieldProps);
-        break;
+      case Types.Category: {
+        const { name: domainName } = type;
+        const schema = getSchema(domainName);
+        if (!schema) { return null; }
+
+        const options = docs
+          .filter(doc => doc.domainName === domainName)
+          .map(doc => ({
+            _id: doc._id,
+            name: doc[schema.displayField] || doc.name || doc._id
+          }));
+
+        return <SelectField options={[null, ...options]} {...fieldProps} />;
+      }
 
       case Types.Model: {
         const { name: domainName } = type;
@@ -111,7 +123,6 @@ const Field = (props) => {
     }
   }
 
-
   return (
     <div className="field">
       <div>{fieldComponent}</div>
@@ -132,8 +143,6 @@ Field.propTypes = {
   value: PropTypes.any, // Transient form values
   onChange: PropTypes.func,
 };
-
-
 
 export default connect(
   mapStateToProps,

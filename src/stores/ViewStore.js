@@ -123,12 +123,12 @@ export default class ViewStore {
       () => this.currentView,
       (currentView) => {
         // Load data for the current view
-        /* if (currentView.params && currentView.params.id) {
+        if (currentView.params && currentView.params.id) {
           this.dataStore.loadDomain(currentView.params.id);
         }
 
         // Load all domains
-        this.dataStore.loadAllDomains(); */
+        this.dataStore.loadAllDomains();
       },
       true // Fire immediately.
     );
