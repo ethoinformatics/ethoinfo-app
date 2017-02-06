@@ -1,6 +1,0 @@
----
-# Model schema that fails validation
-name: FailExample
-fields:
-  - name: aBadField
-    type: UnknownType # We don't have this type defined

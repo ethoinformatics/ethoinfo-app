@@ -87,7 +87,7 @@ function renderCurrentView(stores) {
     case 'geoViewer':
       return <Geo store={geoStore} />;
     case 'overview':
-      return <ModelList schemas={models} />;
+      return <ModelList schemas={models} visibleItems={config.views.models.visibleItems} />;
     case 'settings':
       return <Settings />;
     case 'sync':

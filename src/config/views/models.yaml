@@ -1,0 +1,9 @@
+# Which model document types should be accessible directly?
+# These should only be root level doc types.
+# Exclude child (e.g. nested) documents that users can only reach through a parent.
+---
+visibleItems:
+  - Diary
+  - Observer
+  - Subject
+  - Taxonomy

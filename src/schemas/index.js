@@ -33,8 +33,6 @@ import categories from './categories/index.yaml';
 
 // Models are imported individually here:
 // import Contact from './models/contact.yaml';
-// import PassExample from './models/passExample.yaml';
-// import AnotherPassExample from './models/anotherPassExample.yaml';
 
 import BiologicalSample from './models/biologicalSample.yaml';
 import Contact from './models/contact.yaml';

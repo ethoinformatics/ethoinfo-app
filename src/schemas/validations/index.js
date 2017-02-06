@@ -65,9 +65,6 @@ export const validateModelShape = (model) => {
 };
 
 export const validateModel = (model, validFieldTypeNames = []) => {
-
-  // console.log('validating with types:', validFieldTypeNames);
-
   const schema = Joi.object().keys({
 
     name: pascalCasedString.required().min(1)
@@ -82,13 +79,15 @@ export const validateModel = (model, validFieldTypeNames = []) => {
       type: Joi.alternatives().try(
         Joi.array()
           .items(
-            pascalCasedString.required()
-              .allow(validFieldTypeNames)
+            pascalCasedString
+              .required()
+              .valid(validFieldTypeNames)
               .min(1)
               .length(1)
           ),
-          pascalCasedString.required()
-            .allow(validFieldTypeNames)
+          pascalCasedString
+            .required()
+            .valid(validFieldTypeNames)
             .min(1)
       ).required(),
 
