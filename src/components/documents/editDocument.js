@@ -77,6 +77,8 @@ class EditDocument extends React.Component {
     const schema = getSchema(domain);
     const path = ['edit', id];
 
+    console.log('Rendering edit doc:', doc);
+
     return (
       <Page className="newDocument">
         <Form

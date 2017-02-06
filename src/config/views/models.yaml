@@ -3,7 +3,11 @@
 # Exclude child (e.g. nested) documents that users can only reach through a parent.
 ---
 visibleItems:
+  # - BiologicalSample    # Only accessible via a diary
+  # - Contact             # Only accessible via a diary
   - Diary
   - Observer
+  # - PlantSample         # Only accessible via a diary
   - Subject
   - Taxonomy
+  

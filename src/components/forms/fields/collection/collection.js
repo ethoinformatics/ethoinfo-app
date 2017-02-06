@@ -59,7 +59,6 @@ class CollectionField extends Component {
     const initialItemValue = initialValue[index];
 
     if (_.isNil(initialItemValue)) {
-      console.log('Is nil');
       // Initial value did not exist, so remove:
       this.removeAtIndex(index);
     } else {
@@ -110,17 +109,18 @@ class CollectionField extends Component {
 
       case Types.Model: {
         const { name: domainName } = type;
-
         const schema = getSchema(domainName);
         if (!schema) { return null; }
 
         const id = value._id;
-        if (!id) { return value[schema.displayField] || null; }
+        if (!id) { return schema.getFriendlyString(value) || value[schema.displayField]; }
 
         const doc = docs.find(instance => instance._id === id);
-        if (!doc) { return null; }
+        if (!doc) { return schema.getFriendlyString(value) || value[schema.displayField]; }
 
-        return doc[schema.displayField] || id;
+        // Nested docs won't have an id
+        return schema.getFriendlyString(doc) || value[schema.displayField];
+        // return schema.getFriendlyString(doc) || id;
       }
 
       default:

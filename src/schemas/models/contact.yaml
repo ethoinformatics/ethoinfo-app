@@ -5,7 +5,7 @@ displayField: datetime
 
 fields:
   - name: observer
-    type: Observer
+    type: [Observer]
     lookup: true
   #  required: true
   - name: datetime

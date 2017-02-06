@@ -22,17 +22,15 @@ function fields(state = defaultState, action) {
         action.payload.value,
         state
       );
-    case FIELDS_RESET:
-      console.log('Reset path:', action.payload.path, state);
-
+    case FIELDS_RESET: {
       const newState = R.dissocPath(
         action.payload.path,
         state
       );
 
-      console.log('Post reset:', newState);
-
       return newState;
+    }
+
     default:
       break;
   }

@@ -11,7 +11,6 @@ class DateField extends Component {
 
   render() {
     const { value, name, onChange } = this.props;
-
     const date = value ? moment(value) : null;
 
     return (
@@ -21,7 +20,6 @@ class DateField extends Component {
           date={date}
           focused={this.state.focused}
           onDateChange={(newDate) => {
-            console.log(newDate);
             onChange(newDate.utc().format());
           }}
           onFocusChange={({ focused }) => { this.setState({ focused }); }}
