@@ -24,4 +24,4 @@ fields:
     type: [Observer]
     lookup: true
   - name: materialsCollected
-    type: [PlantParts] # coded field: seed, leaves, root, stem, flower, etc.
+    type: [PlantPart] # coded field: seed, leaves, root, stem, flower, etc.

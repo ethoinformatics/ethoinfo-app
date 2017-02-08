@@ -119,7 +119,7 @@ export default class ViewStore {
 
   // React to route changes, loading necessary data
   connectToDataStore() {
-    reaction(
+    /* reaction(
       () => this.currentView,
       (currentView) => {
         // Load data for the current view
@@ -131,7 +131,7 @@ export default class ViewStore {
         this.dataStore.loadAllDomains();
       },
       true // Fire immediately.
-    );
+    ); */
   }
 
 }

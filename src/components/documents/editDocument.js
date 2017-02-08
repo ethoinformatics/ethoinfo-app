@@ -48,7 +48,7 @@ class EditDocument extends React.Component {
       resetFields(path);
     })
     .catch((err) => {
-      console.log('Error saving new document:', err);
+      console.log('Error editing document:', err);
     });
   }
 
@@ -76,8 +76,6 @@ class EditDocument extends React.Component {
     const { id, doc, domain, fieldValues } = this.props;
     const schema = getSchema(domain);
     const path = ['edit', id];
-
-    console.log('Rendering edit doc:', doc);
 
     return (
       <Page className="newDocument">

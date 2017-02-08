@@ -4,7 +4,11 @@ import { List, ListHeader, Page } from 'react-onsenui';
 import CodeListItem from './codeListItem';
 import './codeList.styl';
 
-import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
+import {
+  fetchAll as fetchAllDocuments,
+  deleteDoc
+} from '../../redux/actions/documents';
+
 import { getDocsByDomain } from '../../redux/reducers';
 import { getSchema } from '../../schemas/main';
 
@@ -28,11 +32,11 @@ const mapStateToProps = (state, { domain }) =>
     schema: getSchema(domain)
   });
 
+
 // Map dispatch to props
 const mapDispatchToProps = dispatch => ({
-  fetchAllDocuments: () => {
-    dispatch(fetchAllDocuments());
-  }
+  fetchAllDocuments: () => dispatch(fetchAllDocuments()),
+  deleteDoc: (id, rev) => dispatch(deleteDoc(id, rev)),
 });
 
 class CodeList extends Component {
@@ -42,13 +46,8 @@ class CodeList extends Component {
   }
 
   render() {
-    const { actions, codes = [] } = this.props;
-    console.log('>>>', codes);
-    const dataSource = codes.sort(sortFn);
-
-    // Todo: follow approach of document list
-    const itemActions = {
-    };
+    const { codes = [] } = this.props;
+    const dataSource = codes.sort(sortFn); // Todo: sort at selector
 
     return (
       <Page className="codeList">
@@ -58,7 +57,11 @@ class CodeList extends Component {
             dataSource={dataSource}
             renderHeader={() => <ListHeader>Codes</ListHeader>}
             renderRow={(code, index) =>
-              <CodeListItem item={code} actions={actions} key={index} />}
+              <CodeListItem
+                item={code}
+                deleteAction={() => this.props.deleteDoc(code._id, code._rev)}
+                key={index}
+              />}
           />
         </div>
       </Page>
@@ -76,6 +79,7 @@ CodeList.propTypes = {
       _rev: PropTypes.string.isRequired
     })
   ),
+  deleteDoc: PropTypes.func.isRequired,
   actions: PropTypes.shape({
     new: PropTypes.func.isRequired,
     destroy: PropTypes.func.isRequired,

@@ -13,8 +13,8 @@ export const DOC_UPDATE_SUCCESS = 'DOC_UPDATE_SUCCESS';
 export const DOC_UPDATE_ERROR = 'DOC_UPDATE_ERROR';
 
 export const DOC_DELETE = 'DOC_DELETE';
-export const DOC_DELETE_SUCCESS = 'DOC_UPDATE_SUCCESS';
-export const DOC_DELETE_ERROR = 'DOC_UPDATE_ERROR';
+export const DOC_DELETE_SUCCESS = 'DOC_DELETE_SUCCESS';
+export const DOC_DELETE_ERROR = 'DOC_DELETE_ERROR';
 
 // -----------------------------------------------------------------------------
 // PRIVATE ACTION CREATORS

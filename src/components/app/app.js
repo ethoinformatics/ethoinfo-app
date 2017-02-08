@@ -21,8 +21,6 @@ import Modal from '../modal/modal';
 // import AllDocs from '../documents/allDocuments';
 import CategoryList from '../categoryList/categoryList';
 import CodeList from '../codeList/codeList';
-import DebugDetail from '../debug/debugDetail';
-import DebugView from '../debug/debugView';
 import DocumentList from '../documents/documentList';
 import EditDocument from '../documents/editDocument';
 import Geo from '../geoViewer/geoViewer';
@@ -44,24 +42,13 @@ function renderCurrentView(stores) {
       return <CategoryList categories={categories} />;
     case 'codes':
       return (
-        <CodeList
-          domain={view.params.id}
-          actions={{
-            new: () => viewStore.navigateTo(`/categories/${view.params.id}/new`),
-            destroy: (id, rev) => dataStore.deleteDoc(id, rev),
-            onDestroy: () => dataStore.loadDomain(view.params.id)
-          }}
-        />);
+        <CodeList domain={view.params.id} />);
     case 'newCode':
       return (
         <NewCode
           createAction={data => dataStore.createDoc(view.params.id, data)}
           createSuccessAction={() => viewStore.navigateTo(`/categories/${view.params.id}`)}
         />);
-    case 'debug':
-      return <DebugView schemas={dataStore.schemasDebug} />;
-    case 'debugDetail':
-      return <DebugDetail schema={dataStore.getDebugSchema(view.params.id)} />;
     case 'documents':
       return <DocumentList domain={view.params.id} />;
     case 'newDocument':
@@ -87,7 +74,12 @@ function renderCurrentView(stores) {
     case 'geoViewer':
       return <Geo store={geoStore} />;
     case 'overview':
-      return <ModelList schemas={models} visibleItems={config.views.models.visibleItems} />;
+      return (
+        <ModelList
+          schemas={models}
+          visibleItems={config.views.models.visibleItems}
+        />
+      );
     case 'settings':
       return <Settings />;
     case 'sync':
@@ -99,15 +91,41 @@ function renderCurrentView(stores) {
 
 @observer
 class App extends Component {
+  constructor() {
+    super();
+    // Bind context
+    this.renderNavbar = this.renderNavbar.bind(this);
+  }
 
   componentDidMount() {
     this.props.fetchAllDocuments();
   }
 
-  render() {
-    const { stores, onOpenMenu, onCloseMenu, views, modals } = this.props;
+  renderNavbar() {
+    const { stores, onOpenMenu } = this.props;
     const { viewStore } = stores;
     const { currentView } = viewStore;
+
+    return (
+      <Navbar
+        leftItem={currentView.prevPath ? {
+          icon: 'md-chevron-left',
+          action: () => viewStore.navigateTo(currentView.prevPath)
+        } : {
+          icon: 'md-menu',
+          action: () => onOpenMenu()
+        }}
+        rightItem={currentView.nextPath ? {
+          icon: 'md-plus',
+          action: () => viewStore.navigateTo(currentView.nextPath)
+        } : null}
+        title={currentView.title}
+      />
+    );
+  }
+
+  render() {
+    const { stores, onCloseMenu, views, modals } = this.props;
 
     const menuProps = {
       items: config.views.menu.items,
@@ -120,29 +138,13 @@ class App extends Component {
         <Splitter>
           <Menu {...menuProps} />
           <SplitterContent>
-            {
-              modals.map(modal =>
-                <Modal key={modal.id} id={modal.id} {...modal.props} />
-              )
-            }
+            {/* Modal components */}
+            { modals.map(modal =>
+              <Modal key={modal.id} id={modal.id} {...modal.props} />
+            )}
 
-            <Page
-              renderToolbar={() =>
-                <Navbar
-                  leftItem={currentView.prevPath ? {
-                    icon: 'md-chevron-left',
-                    action: () => viewStore.navigateTo(currentView.prevPath)
-                  } : {
-                    icon: 'md-menu',
-                    action: () => onOpenMenu()
-                  }}
-                  rightItem={currentView.nextPath ? {
-                    icon: 'md-plus',
-                    action: () => viewStore.navigateTo(currentView.nextPath)
-                  } : null}
-                  title={currentView.title}
-                />}
-            >
+            {/* Main page */}
+            <Page renderToolbar={this.renderNavbar}>
               { renderCurrentView(stores) }
             </Page>
           </SplitterContent>
@@ -155,7 +157,10 @@ class App extends Component {
 App.propTypes = {
   onOpenMenu: PropTypes.func,
   onCloseMenu: PropTypes.func,
-  fetchAllDocuments: PropTypes.func
+  fetchAllDocuments: PropTypes.func,
+  views: PropTypes.object, // Todo: shape
+  stores: PropTypes.object, // Todo: shape
+  modals: PropTypes.array, // Todo: shape
 };
 
 function mapStateToProps(state) {
