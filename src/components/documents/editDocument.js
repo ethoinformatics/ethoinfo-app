@@ -4,6 +4,7 @@ import 'react-dates/lib/css/_datepicker.css';
 import { connect } from 'react-redux';
 import './documentForm.styl';
 import Form from '../forms/form';
+import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import { update, deleteDoc as _deleteDoc } from '../../redux/actions/documents';
 import { resetFields as resetFieldsAtPath } from '../../redux/actions/fields';
 import { getSchema } from '../../schemas/main';
@@ -79,6 +80,7 @@ class EditDocument extends React.Component {
 
     return (
       <Page className="newDocument">
+        <Breadcrumbs path={path} />
         <Form
           path={path}
           initialValues={doc}

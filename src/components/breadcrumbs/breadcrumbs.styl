@@ -1,0 +1,77 @@
+.breadcrumbs
+  position relative
+  display block
+  min-height 44px
+  line-height 44px
+  margin-bottom 1em
+  clear both
+
+.breadcrumbComponent
+  position relative
+  // display inline-block
+  height 44px
+  padding-left 0.5em
+  padding-right 0.5em
+  background #ccc
+  float left
+  padding-left 22px
+  margin-top 4px
+
+.breadcrumbSlash
+  display inline-block
+  height 44px
+  font-size 1.5em
+  margin 0
+  vertical-align top
+  background red
+  display: none
+
+.breadcrumbPath
+  background none
+  border none
+  outline none
+  height 44px
+  line-height 44px
+  vertical-align top
+  display block
+  margin 0
+  margin-left 0.5em
+  padding 0
+  float left
+
+.breadcrumbComponent::after
+  content " "
+  display block
+  width 0
+  height 0
+  border-top 22px solid transparent /* Go big on the size, and let overflow hide */
+  border-bottom 22px solid transparent
+  border-left 16px solid #ccc
+  position absolute
+  top 50%
+  margin-top -22px
+  left 100%
+  z-index 2
+
+.breadcrumbsSpacer
+  clear both
+
+
+.breadcrumbComponent:nth-child(odd) {
+  background #ddd
+}
+
+.breadcrumbComponent:nth-child(odd)::after
+  content " "
+  display block
+  width 0
+  height 0
+  border-top 22px solid transparent /* Go big on the size, and let overflow hide */
+  border-bottom 22px solid transparent
+  border-left 16px solid #ddd
+  position absolute
+  top 50%
+  margin-top -22px
+  left 100%
+  z-index 2
+

@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Button, Page } from 'react-onsenui';
+import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import { pop as popModal } from '../../redux/actions/modals';
 import './modal.styl';
 
@@ -28,7 +29,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 const Modal = (props) => {
   const ModalComponent = MODAL_COMPONENTS[MODAL_TYPE_FIELD] || null;
 
-  const { actions, title, onClose, pop } = props;
+  const { actions, title, onClose, path, pop } = props;
 
   return (
     <Page
@@ -46,6 +47,7 @@ const Modal = (props) => {
         />
       }
     >
+      <Breadcrumbs path={path} />
       <ModalComponent {...props} />
       <div className="modalActions">
         {
@@ -60,6 +62,7 @@ const Modal = (props) => {
 
 Modal.defaultProps = {
   actions: [],
+  path: [],
   onClose: () => {}, // noop if we don't pass in a callback
   title: ''
 };
@@ -74,6 +77,7 @@ Modal.propTypes = {
       callback: PropTypes.func
     })
   ),
+  path: PropTypes.array,
   pop: React.PropTypes.func.isRequired,
   onClose: React.PropTypes.func
 };

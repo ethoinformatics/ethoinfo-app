@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { List, ListItem, Page, ListHeader } from 'react-onsenui';
 import './documentList.styl';
 import history from '../../history';
+import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 
 import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
 import { getDocsByDomain } from '../../redux/reducers';
@@ -44,8 +45,11 @@ class DocumentList extends Component {
 
   render() {
     const { docs } = this.props;
+    const { domain } = this.props;
+    const path = ['documents', domain];
 
     return (<Page className="documentList">
+      {/* <Breadcrumbs path={path} /> */}
       <List
         dataSource={docs}
         renderHeader={() => <ListHeader>Documents</ListHeader>}
