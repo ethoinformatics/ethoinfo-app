@@ -140,7 +140,37 @@ class CollectionField extends Component {
     onChange(newValue);
   }
 
-  render() {
+  renderHeader() {
+    const { value, name } = this.props;
+    const { isExpanded } = this.state;
+
+    // Header text is name of field and number of items in collection
+    const text = `${_.startCase(name)} (${value.length})`;
+
+    // Accordion icon depends on state.isExpanded
+    const accordionIcon = isExpanded ? 'md-chevron-down' : 'md-chevron-right';
+
+    return (
+      <button
+        className="collectionHeader"
+        onClick={() => this.setState({ isExpanded: !isExpanded })}
+      >
+        { /* Only show accordion button if we have items */ }
+        {
+          value && value.length > 0 &&
+            <div
+              className="accordionIcon"
+            >
+              <Icon icon={accordionIcon} />
+            </div>
+        }
+        <div className="collectionHeaderLabel">{text}</div>
+        {this.renderNewButton()}
+      </button>
+    );
+  }
+
+  renderNewButton() {
     const {
       type,
       value,
@@ -149,37 +179,76 @@ class CollectionField extends Component {
       onChange,
       onPushModal,
       onPopModal,
+      isLookup
+    } = this.props;
+
+    return (
+      <Button
+        className="newHeaderButton"
+        modifier="quiet"
+        onClick={() => {
+          // Push a new value to the end of collection
+          const newValue = [...value, null];
+          onChange(newValue);
+
+          // Index of new item is last array index
+          const newIndex = newValue.length - 1;
+
+          // Append index to path
+          const newPath = [...path, newIndex];
+
+          // Make an id string from path components
+          const modalId = newPath.join('/');
+
+          // const title = type.name;
+          const title = _.startCase(pluralize(name, 1));
+
+          // View modal with new value
+          onPushModal(modalId, {
+            path: newPath,
+            type,
+            title,
+            name: title,
+            isLookup,
+            value: null,
+            onChange: val => this.onItemChange(newIndex, val),
+            onClose: () => {
+              this.onItemReset(newIndex);
+              // this.removeNulls();
+              // onResetFields(newPath);
+            },
+            actions: [
+              {
+                title: 'Done',
+                callback: () => {
+                  onPopModal(modalId);
+                  // this.removeNulls();
+                }
+              }
+            ]
+          });
+        }}
+      ><Icon icon="md-plus" /></Button>
+    );
+  }
+
+  render() {
+    const {
+      type,
+      value,
+      name,
+      path,
+      onPushModal,
+      onPopModal,
       isLookup,
-      onResetFields,
       initialValue
     } = this.props;
 
-    // console.log('Render collection:', this.props);
-
     const { isExpanded } = this.state;
 
-    // Header is name of field and number of items in collection
-    const header = `${_.startCase(name)} (${value.length})`;
-
-    // Accordion icon depends on state.isExpanded
-    const accordionIcon = isExpanded ? 'md-chevron-down' : 'md-chevron-right';
     return (
       <div className="collectionField">
-        <button
-          className="collectionHeader"
-          onClick={() => this.setState({ isExpanded: !isExpanded })}
-        >
-          <label htmlFor={name}>{header}</label>
-          { /* Only show accordion button if we have items */ }
-          {
-            value && value.length > 0 &&
-              <div
-                className="accordionIcon"
-              >
-                <Icon icon={accordionIcon} />
-              </div>
-          }
-        </button>
+        {this.renderHeader()}
 
         <div className={`accordion ${isExpanded ? 'isExpanded' : ''}`}>
           {
@@ -234,51 +303,6 @@ class CollectionField extends Component {
             />
           }
         </div>
-        <Button
-          modifier="outline"
-          onClick={() => {
-            // Push a new value to the end of collection
-            const newValue = [...value, null];
-            onChange(newValue);
-
-            // Index of new item is last array index
-            const newIndex = newValue.length - 1;
-
-            // Append index to path
-            const newPath = [...path, newIndex];
-
-            // Make an id string from path components
-            const modalId = newPath.join('/');
-
-            // const title = type.name;
-            const title = _.startCase(pluralize(name, 1));
-
-            // View modal with new value
-            onPushModal(modalId, {
-              path: newPath,
-              type,
-              title,
-              name: title,
-              isLookup,
-              value: null,
-              onChange: val => this.onItemChange(newIndex, val),
-              onClose: () => {
-                this.onItemReset(newIndex);
-                // this.removeNulls();
-                // onResetFields(newPath);
-              },
-              actions: [
-                {
-                  title: 'Done',
-                  callback: () => {
-                    onPopModal(modalId);
-                    // this.removeNulls();
-                  }
-                }
-              ]
-            });
-          }}
-        >New</Button>
       </div>
     );
   }
@@ -294,7 +318,6 @@ CollectionField.propTypes = {
   docs: PropTypes.array,
   onPushModal: PropTypes.func,
   onPopModal: PropTypes.func,
-  onResetFields: PropTypes.func,
   onChange: PropTypes.func,
   type: PropTypes.object.isRequired,
   isLookup: PropTypes.bool,
