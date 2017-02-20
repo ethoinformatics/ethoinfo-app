@@ -1,11 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { List, ListItem, Page, ListHeader } from 'react-onsenui';
+import { List, ListItem, Page, ListHeader, Icon } from 'react-onsenui';
 import './documentList.styl';
 import history from '../../history';
 import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 
-import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
+import {
+  fetchAll as fetchAllDocuments,
+  deleteDoc as _deleteDoc
+} from '../../redux/actions/documents';
+
 import { getDocsByDomain } from '../../redux/reducers';
 import { getSchema } from '../../schemas/main';
 
@@ -20,8 +24,42 @@ const mapStateToProps = (state, { domain }) =>
 const mapDispatchToProps = dispatch => ({
   fetchAllDocuments: () => {
     dispatch(fetchAllDocuments());
-  }
+  },
+  deleteDoc: (id, rev) => dispatch(_deleteDoc(id, rev)),
 });
+
+/* class DocumentListItem extends Component {
+  constructor() {
+    super();
+    this.state = {
+      shouldShowAlert: false
+    };
+  }
+
+  render() {
+    const { doc, domain, onDelete } = this.props;
+    const { _id, _rev } = doc;
+    return (
+      <ListItem key={index} onClick={() => history.push(path, {})}>
+        { displayValue }
+        <button
+          className="delete"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(_id, _rev);
+          }}
+        >
+          <Icon icon="md-close" />
+        </button>
+      </ListItem>
+    );
+  }
+}
+
+DocumentListItem.propTypes = {
+  doc: React.PropTypes.object.isRequired,
+  onDelete: React.PropTypes.func.isRequired
+}; */
 
 class DocumentList extends Component {
   componentDidMount() {
@@ -30,8 +68,8 @@ class DocumentList extends Component {
   }
 
   renderDocumentListItem(doc, index) {
-    const { _id } = doc;
-    const { domain, schema } = this.props;
+    const { _id, _rev } = doc;
+    const { domain, schema, deleteDoc } = this.props;
     const path = `/documents/${domain}/${_id}`;
 
     const displayValue = schema.getFriendlyString(doc);
@@ -39,6 +77,15 @@ class DocumentList extends Component {
     return (
       <ListItem key={index} onClick={() => history.push(path, {})}>
         { displayValue }
+        <button
+          className="delete"
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteDoc(_id, _rev);
+          }}
+        >
+          <Icon icon="md-close" />
+        </button>
       </ListItem>
     );
   }
