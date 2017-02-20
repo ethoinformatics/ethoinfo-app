@@ -10,6 +10,13 @@ export default [
     nextPath: () => null
   },
   {
+    path: '/documents',
+    name: 'overview',
+    title: () => 'Overview',
+    prevPath: () => null,
+    nextPath: () => null
+  },
+  {
     path: '/documents/:id',
     name: 'documents',
     title: params => `${_.startCase(pluralize(params.id))}`,

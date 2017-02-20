@@ -1,4 +1,5 @@
 import React from 'react';
+import R from 'ramda';
 import { connect } from 'react-redux';
 
 // Components
@@ -21,7 +22,8 @@ import { getById } from '../../redux/reducers/documents';
 const mapStateToProps = (state, ownProps) =>
   ({
     doc: getById(state.docs.byId, ownProps.id),
-    fieldValues: getFieldsByPath(state.fields, ownProps.fieldsPath)
+    fieldValues: getFieldsByPath(state.fields, ownProps.fieldsPath),
+    historyPath: state.views.history.path // Todo: make a selector
   });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -66,12 +68,17 @@ class EditDocument extends React.Component {
   }
 
   render() {
-    const { doc, domain, fieldsPath, fieldValues, resetFields } = this.props;
+    const { doc, domain, fieldsPath, fieldValues, historyPath, resetFields } = this.props;
     const schema = getSchema(domain);
 
+    const pathToComponents = R.split('/');
+    const padComponents = R.map(p => [p, '']);
+    const makeComponents = R.pipe(pathToComponents, R.tail, padComponents, R.flatten);
+    const components = makeComponents(historyPath);
+
     return (
-      <Page className="newDocument">
-        <Breadcrumbs path={fieldsPath} />
+      <Page className="editDocument">
+        <Breadcrumbs path={components} />
         <Form
           path={fieldsPath}
           initialValues={doc}
@@ -96,6 +103,7 @@ EditDocument.propTypes = {
   deleteDoc: React.PropTypes.func,
   updateDoc: React.PropTypes.func,
   domain: React.PropTypes.string,
+  historyPath: React.PropTypes.string,
   fieldsPath: React.PropTypes.array,
   fieldValues: React.PropTypes.object,
   resetFields: React.PropTypes.func

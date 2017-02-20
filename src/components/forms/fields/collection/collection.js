@@ -152,22 +152,21 @@ class CollectionField extends Component {
     const accordionIcon = isExpanded ? 'md-chevron-down' : 'md-chevron-right';
 
     return (
-      <button
-        className="collectionHeader"
-        onClick={() => this.setState({ isExpanded: !isExpanded })}
-      >
-        { /* Only show accordion button if we have items */ }
-        {
-          value && value.length > 0 &&
-            <div
-              className="accordionIcon"
-            >
-              <Icon icon={accordionIcon} />
-            </div>
-        }
-        <div className="collectionHeaderLabel">{text}</div>
+      <div className="collectionHeader">
+        <button className="expandButton" onClick={() => this.setState({ isExpanded: !isExpanded })} >
+          { /* Only show accordion button if we have items */ }
+          {
+            value && value.length > 0 &&
+              <div
+                className="accordionIcon"
+              >
+                <Icon icon={accordionIcon} />
+              </div>
+          }
+          <div className="collectionHeaderLabel">{text}</div>
+        </button>
         {this.renderNewButton()}
-      </button>
+      </div>
     );
   }
 
@@ -187,7 +186,10 @@ class CollectionField extends Component {
       <Button
         className="newHeaderButton"
         modifier="quiet"
-        onClick={() => {
+        onClick={(event) => {
+          // Prevent propogation
+          event.preventDefault();
+
           // Push a new value to the end of collection
           const newValue = [...value, null];
           onChange(newValue);

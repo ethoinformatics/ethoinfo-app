@@ -38,6 +38,8 @@
   margin-left 0.5em
   padding 0
   float left
+  font-weight 700
+  cursor pointer
 
 .breadcrumbComponent::after
   content " "
@@ -55,7 +57,6 @@
 
 .breadcrumbsSpacer
   clear both
-
 
 .breadcrumbComponent:nth-child(odd)
   background #ddd
@@ -81,4 +82,16 @@
       color #fff
     &::after
       border-left 16px solid #000
+
+.breadcrumbComponent:nth-last-child(2)
+  background-color #eee
+  .breadcrumbPath
+    color #000
+    font-weight 200
+    cursor auto
+
+.breadcrumbComponent:nth-last-child(2)::after
+  border-left 16px solid #eee
+
+
 

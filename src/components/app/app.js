@@ -113,7 +113,7 @@ class App extends Component {
         return (
           <EditDocument
             id={docId}
-            fieldsPath={['edit', id]}
+            fieldsPath={['documents', '', id, '', docId, '']} // ['edit', id]
             domain={id}
             actions={{
               onUpdate: () => history.push(`/documents/${id}/`, {})
