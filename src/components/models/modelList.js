@@ -12,7 +12,7 @@ const ModelList = ({ schemas = [], visibleItems = [] }) => {
     <Page className="modelList">
       <List
         dataSource={dataSource}
-        renderHeader={() => <ListHeader>Documents</ListHeader>}
+        // renderHeader={() => <ListHeader>Documents</ListHeader>}
         renderRow={(row, index) => {
           const { name } = row;
           const path = `/documents/${row.name}`;

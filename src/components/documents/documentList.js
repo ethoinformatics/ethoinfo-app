@@ -46,13 +46,13 @@ class DocumentList extends Component {
   render() {
     const { docs } = this.props;
     const { domain } = this.props;
-    const path = ['documents', domain];
+    const path = ['documents', '', domain, ''];
 
     return (<Page className="documentList">
-      {/* <Breadcrumbs path={path} /> */}
+      {<Breadcrumbs path={path} />}
       <List
         dataSource={docs}
-        renderHeader={() => <ListHeader>Documents</ListHeader>}
+        // renderHeader={() => <ListHeader>Documents</ListHeader>}
         renderRow={(doc, index) => this.renderDocumentListItem(doc, index)}
       />
     </Page>);

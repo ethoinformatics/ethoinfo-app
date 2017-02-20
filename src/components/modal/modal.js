@@ -48,7 +48,9 @@ const Modal = (props) => {
       }
     >
       <Breadcrumbs path={path} />
-      <ModalComponent {...props} />
+      <div className="modalComponent">
+        <ModalComponent {...props} />
+      </div>
       <div className="modalActions">
         {
           actions.map((action, index) =>

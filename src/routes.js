@@ -5,14 +5,14 @@ export default [
   {
     path: '/',
     name: 'overview',
-    title: () => 'Overview',
+    title: () => 'Documents',
     prevPath: () => null,
     nextPath: () => null
   },
   {
     path: '/documents',
     name: 'overview',
-    title: () => 'Overview',
+    title: () => 'Documents',
     prevPath: () => null,
     nextPath: () => null
   },
@@ -68,7 +68,7 @@ export default [
   {
     path: '/categories',
     name: 'categories',
-    title: () => 'Code Manager',
+    title: () => 'Code categories',
     prevPath: () => null,
     nextPath: () => null
   },

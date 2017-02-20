@@ -7,6 +7,7 @@ import { Button, Page } from 'react-onsenui';
 import Form from '../forms/form';
 import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 
+import './editDocument.styl';
 import './documentForm.styl';
 
 import { getSchema } from '../../schemas/main';
@@ -85,9 +86,11 @@ class EditDocument extends React.Component {
           fieldValues={fieldValues}
           schema={schema}
         />
-        <Button modifier="large" onClick={this.saveFields}>Save</Button>
-        <Button modifier="large" onClick={resetFields}>Reset fields</Button>
-        <Button modifier="large" onClick={this.deleteDoc}>Delete</Button>
+        <div className="actions">
+          <Button modifier="large" onClick={this.saveFields}>Save</Button>
+          <Button modifier="large" onClick={resetFields}>Reset fields</Button>
+          <Button modifier="large" onClick={this.deleteDoc}>Delete</Button>
+        </div>
       </Page>
     );
   }

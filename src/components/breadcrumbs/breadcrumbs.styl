@@ -1,10 +1,16 @@
 .breadcrumbs
+  background #fff
+  padding-bottom 4px
   position relative
   display block
   min-height 44px
   line-height 44px
-  margin-bottom 1em
+  // margin-bottom 1em
   clear both
+  // background-size: 100% 1px;
+  // background-repeat: no-repeat;
+  // background-position: bottom;
+  // background-image: linear-gradient(0deg, #ccc, #ccc 100%);
 
 .breadcrumbComponent
   position relative
@@ -12,7 +18,7 @@
   height 44px
   padding-left 0.5em
   padding-right 0.5em
-  background #ccc
+  background #bbb
   float left
   padding-left 22px
   margin-top 4px
@@ -48,7 +54,7 @@
   height 0
   border-top 22px solid transparent /* Go big on the size, and let overflow hide */
   border-bottom 22px solid transparent
-  border-left 16px solid #ccc
+  border-left 16px solid #bbb
   position absolute
   top 50%
   margin-top -22px
@@ -59,7 +65,7 @@
   clear both
 
 .breadcrumbComponent:nth-child(odd)
-  background #ddd
+  background #ccc
 
 .breadcrumbComponent:nth-child(odd)::after
   content " "
@@ -68,7 +74,7 @@
   height 0
   border-top 22px solid transparent /* Go big on the size, and let overflow hide */
   border-bottom 22px solid transparent
-  border-left 16px solid #ddd
+  border-left 16px solid #ccc
   position absolute
   top 50%
   margin-top -22px
@@ -84,14 +90,14 @@
       border-left 16px solid #000
 
 .breadcrumbComponent:nth-last-child(2)
-  background-color #eee
+  background-color #ddd
   .breadcrumbPath
     color #000
     font-weight 200
     cursor auto
 
 .breadcrumbComponent:nth-last-child(2)::after
-  border-left 16px solid #eee
+  border-left 16px solid #ddd
 
 
 

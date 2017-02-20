@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { List, ListHeader, Page } from 'react-onsenui';
 import CodeListItem from './codeListItem';
 import './codeList.styl';
+import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 
 import {
   fetchAll as fetchAllDocuments,
@@ -46,16 +47,19 @@ class CodeList extends Component {
   }
 
   render() {
-    const { codes = [] } = this.props;
+    const { codes = [], domain } = this.props;
     const dataSource = codes.sort(sortFn); // Todo: sort at selector
+
+    const path = ['categories', '', domain, ''];
 
     return (
       <Page className="codeList">
+        {<Breadcrumbs path={path} />}
         <div className="list-container">
           <List
             className="list"
             dataSource={dataSource}
-            renderHeader={() => <ListHeader>Codes</ListHeader>}
+            // renderHeader={() => <ListHeader>Codes</ListHeader>}
             renderRow={(code, index) =>
               <CodeListItem
                 item={code}

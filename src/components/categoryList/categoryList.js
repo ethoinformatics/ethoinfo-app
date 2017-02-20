@@ -12,7 +12,7 @@ const CategoryList = (({ categories }) => {
     <Page className="categoryList">
       <List
         dataSource={dataSource}
-        renderHeader={() => <ListHeader>Categories</ListHeader>}
+        // renderHeader={() => <ListHeader>Categories</ListHeader>}
         renderRow={(row, index) => {
           const { name } = row;
           const path = `/categories/${row.name}`;
