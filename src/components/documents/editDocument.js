@@ -88,7 +88,7 @@ class EditDocument extends React.Component {
         />
         <div className="actions">
           <Button modifier="large" onClick={this.saveFields}>Save</Button>
-          <Button modifier="large" onClick={resetFields}>Reset fields</Button>
+          {/* <Button modifier="large" onClick={resetFields}>Reset fields</Button> */}
           <Button modifier="large" onClick={this.deleteDoc}>Delete</Button>
         </div>
       </Page>
