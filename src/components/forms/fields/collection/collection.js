@@ -22,6 +22,7 @@ const mapStateToProps = (state, { domain }) =>
     schema: getSchema(domain)
   });
 
+// Map dispatch to props
 const mapDispatchToProps = dispatch => ({
   onPopModal: (id) => {
     dispatch(popModal(id));
@@ -214,15 +215,12 @@ class CollectionField extends Component {
             onChange: val => this.onItemChange(newIndex, val),
             onClose: () => {
               this.onItemReset(newIndex);
-              // this.removeNulls();
-              // onResetFields(newPath);
             },
             actions: [
               {
                 title: 'Done',
                 callback: () => {
                   onPopModal(modalId);
-                  // this.removeNulls();
                 }
               }
             ]

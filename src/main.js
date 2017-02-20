@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import App from './components/app/app';
-import ViewStore from './stores/ViewStore';
 import DataStore from './stores/DataStore';
 import GeoStore from './stores/GeoStore';
 import history from './history';
@@ -34,10 +33,9 @@ function start() {
   // Initialize our stores
   const dataStore = new DataStore();
   const geoStore = new GeoStore();
-  const viewStore = new ViewStore(dataStore);
 
   const stores = {
-    dataStore, geoStore, viewStore
+    dataStore, geoStore
   };
 
   // Kickoff history:

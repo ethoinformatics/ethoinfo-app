@@ -12,82 +12,30 @@ import './app.styl';
 import Menu from '../menu/menu';
 import Navbar from '../navbar/navbar';
 
+// Actions
 import { open as openMenu, close as closeMenu } from '../../redux/actions/menu';
 import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
+
+// Selectors
 import { getAllModals } from '../../redux/reducers';
+import { getCurrentView } from '../../redux/reducers/views';
 
-import Modal from '../modal/modal';
-
-// import AllDocs from '../documents/allDocuments';
+// Components
 import CategoryList from '../categoryList/categoryList';
 import CodeList from '../codeList/codeList';
 import DocumentList from '../documents/documentList';
 import EditDocument from '../documents/editDocument';
 import Geo from '../geoViewer/geoViewer';
+import Modal from '../modal/modal';
 import ModelList from '../models/modelList';
 import NewCode from '../newCode/newCode';
 import NewDocument from '../documents/newDocument';
 import Settings from '../settings/settings';
 import Sync from '../sync/sync';
 
+import history from '../../history';
+
 import { models, categories } from '../../schemas/main';
-
-// Renders currentView, passing in appropriate state as props.
-function renderCurrentView(stores) {
-  const { dataStore, geoStore, viewStore } = stores;
-  const view = viewStore.currentView;
-
-  switch (view.name) {
-    case 'categories':
-      return <CategoryList categories={categories} />;
-    case 'codes':
-      return (
-        <CodeList domain={view.params.id} />);
-    case 'newCode':
-      return (
-        <NewCode
-          createAction={data => dataStore.createDoc(view.params.id, data)}
-          createSuccessAction={() => viewStore.navigateTo(`/categories/${view.params.id}`)}
-        />);
-    case 'documents':
-      return <DocumentList domain={view.params.id} />;
-    case 'newDocument':
-      return (
-        <NewDocument
-          domain={view.params.id}
-          actions={{
-            onCreate: () =>
-              viewStore.navigateTo(`/documents/${view.params.id}/`)
-          }}
-        />
-      );
-    case 'viewDocument':
-      // Reset form state.
-      // dataStore.resetFieldsAtPath(['edit', view.params.docId]);
-      return (<EditDocument
-        id={view.params.docId}
-        domain={view.params.id}
-        actions={{
-          onUpdate: () => viewStore.navigateTo(`/documents/${view.params.id}/`)
-        }}
-      />);
-    case 'geoViewer':
-      return <Geo store={geoStore} />;
-    case 'overview':
-      return (
-        <ModelList
-          schemas={models}
-          visibleItems={config.views.models.visibleItems}
-        />
-      );
-    case 'settings':
-      return <Settings />;
-    case 'sync':
-      return <Sync store={dataStore} />;
-    default:
-      return <div>View not found</div>;
-  }
-}
 
 @observer
 class App extends Component {
@@ -102,30 +50,101 @@ class App extends Component {
   }
 
   renderNavbar() {
-    const { stores, onOpenMenu } = this.props;
-    const { viewStore } = stores;
-    const { currentView } = viewStore;
+    const { currentView, onOpenMenu } = this.props;
 
     return (
       <Navbar
         leftItem={currentView.prevPath ? {
           icon: 'md-chevron-left',
-          action: () => viewStore.navigateTo(currentView.prevPath)
+          action: () => history.push(currentView.prevPath, {})
         } : {
           icon: 'md-menu',
           action: () => onOpenMenu()
         }}
         rightItem={currentView.nextPath ? {
           icon: 'md-plus',
-          action: () => viewStore.navigateTo(currentView.nextPath)
+          action: () => history.push(currentView.nextPath, {})
         } : null}
         title={currentView.title}
       />
     );
   }
 
+  // Renders currentView, passing in appropriate state as props.
+  renderCurrentView(stores) {
+    const { dataStore, geoStore } = stores;
+    const { currentView } = this.props;
+
+    const id = currentView.params.id; // domain
+    const docId = currentView.params.docId; // document id
+
+    switch (currentView.name) {
+
+      case 'categories':
+        return <CategoryList categories={categories} />;
+
+      case 'codes':
+        return <CodeList domain={id} />;
+
+      case 'newCode':
+        return (
+          <NewCode
+            createAction={data => dataStore.createDoc(id, data)}
+            createSuccessAction={() => history.push(`/categories/${id}`, {})}
+          />
+        );
+
+      case 'documents':
+        return <DocumentList domain={id} />;
+
+      case 'newDocument':
+        return (
+          <NewDocument
+            domain={id}
+            fieldsPath={['new', id]}
+            actions={{
+              onCreate: () =>
+                history.push(`/documents/${id}/`, {})
+            }}
+          />
+        );
+
+      case 'viewDocument':
+        return (
+          <EditDocument
+            id={docId}
+            fieldsPath={['edit', id]}
+            domain={id}
+            actions={{
+              onUpdate: () => history.push(`/documents/${id}/`, {})
+            }}
+          />
+        );
+
+      case 'geoViewer':
+        return <Geo store={geoStore} />;
+
+      case 'overview':
+        return (
+          <ModelList
+            schemas={models}
+            visibleItems={config.views.models.visibleItems}
+          />
+        );
+
+      case 'settings':
+        return <Settings />;
+
+      case 'sync':
+        return <Sync store={dataStore} />;
+
+      default:
+        return <div>View not found</div>;
+    }
+  }
+
   render() {
-    const { stores, onCloseMenu, views, modals } = this.props;
+    const { modals, onCloseMenu, stores, views } = this.props;
 
     const menuProps = {
       items: config.views.menu.items,
@@ -145,7 +164,7 @@ class App extends Component {
 
             {/* Main page */}
             <Page renderToolbar={this.renderNavbar}>
-              { renderCurrentView(stores) }
+              { this.renderCurrentView(stores) }
             </Page>
           </SplitterContent>
         </Splitter>
@@ -155,6 +174,7 @@ class App extends Component {
 }
 
 App.propTypes = {
+  currentView: PropTypes.object,
   onOpenMenu: PropTypes.func,
   onCloseMenu: PropTypes.func,
   fetchAllDocuments: PropTypes.func,
@@ -167,7 +187,8 @@ function mapStateToProps(state) {
   return {
     docs: state.docs,
     views: state.views,
-    modals: getAllModals(state)
+    modals: getAllModals(state),
+    currentView: getCurrentView(state.views)
   };
 }
 

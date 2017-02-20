@@ -45,9 +45,6 @@ PouchDB.plugin(require('pouchdb-find'));
  * and remote (couchDB) persistence layers
  * with our in-memory state.
  *
- * For more detailed information about general Store design, see
- * comments in ViewStore
- *
  * @export
  * @class DataStore
  */
