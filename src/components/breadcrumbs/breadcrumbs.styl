@@ -57,9 +57,8 @@
   clear both
 
 
-.breadcrumbComponent:nth-child(odd) {
+.breadcrumbComponent:nth-child(odd)
   background #ddd
-}
 
 .breadcrumbComponent:nth-child(odd)::after
   content " "
@@ -74,4 +73,12 @@
   margin-top -22px
   left 100%
   z-index 2
+
+.breadcrumbComponent
+  &:hover
+    background-color #000
+    .breadcrumbPath
+      color #fff
+    &::after
+      border-left 16px solid #000
 

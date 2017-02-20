@@ -2,26 +2,36 @@ import R from 'ramda';
 import React from 'react';
 import './breadcrumbs.styl';
 
+/**
+ * A component for rendering a path
+ * as a series of clickable breadcrumb links.
+ */
+
 const Breadcrumbs = ({ path }) => {
   const components = R.splitEvery(2, path);
-  console.log('>>> Path is: ', components);
 
   return (
     <div className="breadcrumbs">
-      { /* path.join('/') */ }
       {
-        components.map(component => (
+        components.map((component, index) => (
           <div className="breadcrumbComponent" key={component.join('/')}>
             <div className="breadcrumbSlash">
               /
             </div>
-            <button className="breadcrumbPath">
+            <button
+              className="breadcrumbPath"
+              onClick={() => {
+                console.log('Clicked path component:', component);
+              }}
+            >
               {component.join(' ')}
             </button>
           </div>
         ))
       }
-      <div className="breadcrumbsSpacer"></div>
+
+      { /* Clearfix */ }
+      <div className="breadcrumbsSpacer" />
     </div>
   );
 };
