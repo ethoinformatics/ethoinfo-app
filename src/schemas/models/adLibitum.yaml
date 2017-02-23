@@ -1,0 +1,14 @@
+name: AdLibitum
+
+# Which field will we use to display instances of this model in our app
+displayField: datetime
+
+fields:
+  - name: datetime
+    type: Date
+  #  required: true
+  - name: location
+    type: Geolocation
+  #  required: true
+  - name: comments
+    type: [String]

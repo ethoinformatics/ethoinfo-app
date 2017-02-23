@@ -9,7 +9,7 @@ items:
     icon:   md-settings
     route:  /settings
   
-  - name:   Data sync
+  - name:   Data Sync
     icon:   md-refresh-sync
     route:  /sync
 
@@ -17,6 +17,6 @@ items:
     icon:   md-search
     route:  /categories
 
-  - name:   Geolocation viewer
+  - name:   Geolocation Viewer
     icon:   ion-map
     route:  /geoViewer

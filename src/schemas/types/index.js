@@ -6,7 +6,8 @@ export const primitiveTypes = [
 
 export const specialTypes = [
   'Date',
-  'Geolocation'
+  'Geolocation',
+  'Time',
 ];
 
 // Default types are primitive types and special types

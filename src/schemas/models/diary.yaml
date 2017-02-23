@@ -1,23 +1,31 @@
 name: Diary
 
 # Which field will we use to display instances of this model in our app
-displayField: datetime
+displayField: date
 
 fields:
   - name: observer
     type: Observer
     lookup: true
-  - name: datetime
+  - name: date
     type: Date
   - name: location
     type: Geolocation
   - name: contacts
     type: [Contact]
-  #- name: adLibitums
-  #  type: [AdLibitum]
+  - name: adLibitums
+    type: [AdLibitum]
   - name: biologicalSamples
     type: [BiologicalSample]
   - name: plantSamples
     type: [PlantSample]
-  - name: comments
-    type: [String]
+  - name: comment
+    type: String
+  - name: medias
+    type: [Media]
+#  - name: photos
+#    type: [Photo]
+#  - name: videos
+#    type: [Video]
+#  - name: audios
+#    type: [Audio]

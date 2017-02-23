@@ -68,7 +68,7 @@ export default [
   {
     path: '/categories',
     name: 'categories',
-    title: () => 'Code categories',
+    title: () => 'Code Categories',
     prevPath: () => null,
     nextPath: () => null
   },
@@ -89,7 +89,7 @@ export default [
   {
     path: '/sync',
     name: 'sync',
-    title: () => 'Data sync',
+    title: () => 'Data Sync',
     prevPath: () => null,
     nextPath: () => null
   }

@@ -3,11 +3,19 @@
 # Exclude child (e.g. nested) documents that users can only reach through a parent.
 ---
 visibleItems:
-  # - BiologicalSample    # Only accessible via a diary
+  # - AdLibitum           # Only accessible via a diary or contact
+  # - Audio               # Only accessible via a diary or contact or adLibitum or focalSample
+  # - Behavior            
+  # - BiologicalSample    # Only accessible via a diary or contact
   # - Contact             # Only accessible via a diary
   - Diary
-  - Observer
-  # - PlantSample         # Only accessible via a diary
-  - Subject
-  - Taxonomy
-  
+  # - FocalDatum          # Only accessible via a focalSample
+  # - FocalSample         # Only accessible via a contact
+  # - Measurement         # Only accessible via a contact
+  # - Media               # Only accessible via a diary or contact or adLibitum or focalSample
+  # - Observer
+  # - Photo               # Only accessible via a diary or contact or adLibitum or focalSample
+  # - PlantSample         # Only accessible via a diary or contact
+  # - Subject
+  # - Taxonomy
+  # - Video               # Only accessible via a diary or contact or adLibitum or focalSample

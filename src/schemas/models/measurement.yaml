@@ -1,0 +1,22 @@
+name: Measurement
+
+# Which field will we use to display instances of this model in our app
+displayField: datetime
+
+fields:
+  - name: measurementType
+    type: String
+    lookup: true
+  #  required: true
+  - name: measurementValue
+    type: Number
+  - name: datetime
+    type: Date
+  #  required: true
+  - name: location
+    type: Geolocation
+  #  required: true
+  - name: measurementUnits
+    type: String
+  - name: comments
+    type: String

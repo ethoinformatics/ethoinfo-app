@@ -31,7 +31,7 @@
 // Categories are imported from an index file:
 import categories from './categories/index.yaml';
 
-// Models are imported individually here:
+// Models (document types) are imported individually here:
 // import Contact from './models/contact.yaml';
 
 import BiologicalSample from './models/biologicalSample.yaml';
@@ -41,6 +41,11 @@ import Observer from './models/observer.yaml';
 import PlantSample from './models/plantSample.yaml';
 import Subject from './models/subject.yaml';
 import Taxonomy from './models/taxonomy.yaml';
+import FocalSample from './models/focalSample.yaml';
+import FocalDatum from './models/focalDatum.yaml';
+import AdLibitum from './models/adLibitum.yaml';
+import Measurement from './models/measurement.yaml';
+import Media from './models/media.yaml';
 
 // Export an object containing all of our schemas:
 export default {
@@ -52,8 +57,10 @@ export default {
     Observer,
     PlantSample,
     Subject,
-    Taxonomy
-  ]
-};
-
-
+    Taxonomy,
+    FocalSample,
+    FocalDatum,
+    AdLibitum,
+    Measurement,
+//    Media,
+]};

@@ -8,9 +8,9 @@ fields:
     type: String
   - name: sex
     type: Sex #coded field {male, female}
-  - name: identification
+  - name: taxonomy
     type: Taxonomy
     lookup: true
   #  required: false
-  - name: levelOfOrganization # Could be "individual animal" or "social group"
-    type: String
+  - name: subjectType
+    type: SubjectType # coded field Could be "individual animal" or "social group"
