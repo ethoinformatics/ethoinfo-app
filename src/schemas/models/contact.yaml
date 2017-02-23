@@ -20,7 +20,7 @@ fields:
     type: [AdLibitum]
   - name: focalSamples
     type: [FocalSample]
-  - name: medias
+  - name: media
     type: [Media]
-  - name: comment
+  - name: comments
     type: String

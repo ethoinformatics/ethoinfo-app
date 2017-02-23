@@ -9,5 +9,7 @@ fields:
   - name: location
     type: Geolocation
   #  required: true
+  - name: media
+    type: [Media]
   - name: comments
     type: String

@@ -10,7 +10,7 @@ fields:
   - name: datetime
     type: Date
     #required: true
-  - name: tag
+  - name: tagName
     type: String # might want to think about enforcing format (e.g., ##-###-##)
     #required: false
   - name: identification

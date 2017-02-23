@@ -2,11 +2,11 @@
 # Values should be alphabetical (no numbers, symbols, spaces) and PascalCased
 
 ---
+- BiologicalSampleContainer
 - BiologicalSampleMedium
 - BiologicalSampleType
-- BiologicalSampleContainer
+- MediaType
 - PlantPart
 - SampleQuality
 - Sex
 - SubjectType
-- MediaType

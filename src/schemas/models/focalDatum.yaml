@@ -22,5 +22,5 @@ fields:
     type: [Subject]
     lookup: true
   #  required: true
-  - name: comment
+  - name: comments
     type: String

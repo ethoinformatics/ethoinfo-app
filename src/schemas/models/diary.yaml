@@ -18,7 +18,7 @@ fields:
     type: [BiologicalSample]
   - name: plantSamples
     type: [PlantSample]
-  - name: medias
+  - name: media
     type: [Media]
-  - name: comment
+  - name: comments
     type: String

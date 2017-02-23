@@ -37,7 +37,7 @@ const Breadcrumbs = ({ path, sliceHistory }) => {
 
                 // Ignore clicks on last component (we're already on that crumb)
                 if (index === components.length - 1) { return; }
-
+                console.log(path);
                 sliceHistory(subPath);
               }}
             >

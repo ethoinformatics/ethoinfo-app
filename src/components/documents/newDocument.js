@@ -57,7 +57,7 @@ class NewDocument extends React.Component {
           schema={schema}
         />
         <Button modifier="large" onClick={this.saveFields}>Save</Button>
-        <Button modifier="large" onClick={resetFields}>Reset fields</Button>
+        <Button modifier="large" onClick={resetFields}>Reset Fields</Button>
       </Page>
     );
   }

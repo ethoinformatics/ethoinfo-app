@@ -17,7 +17,7 @@ fields:
     type: [AdLibitum]
   - name: focalData
     type: [FocalDatum]
-  - name: medias
+  - name: media
     type: [Media]
-  - name: comment
+  - name: comments
     type: String

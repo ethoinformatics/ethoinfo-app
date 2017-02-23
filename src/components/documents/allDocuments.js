@@ -5,7 +5,7 @@ import R from 'ramda';
 import history from '../../history';
 import { getAllDocs } from '../../redux/selectors/documents';
 import './allDocuments.styl';
-
+      
 const mapStateToProps = state =>
   ({ docs: getAllDocs(state) });
 

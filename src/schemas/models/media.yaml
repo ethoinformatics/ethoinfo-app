@@ -18,5 +18,5 @@ fields:
     type: String
   - name: caption
     type: String
-  - name: tag
+  - name: tags
     type: [String]

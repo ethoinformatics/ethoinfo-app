@@ -41,7 +41,7 @@ class CollectionField extends Component {
 
     // Accordion state
     this.state = {
-      isExpanded: true
+      isExpanded: false
     };
 
     // Bind context
@@ -156,7 +156,7 @@ class CollectionField extends Component {
         <button className="expandButton" onClick={() => this.setState({ isExpanded: !isExpanded })} >
           { /* Only show accordion button if we have items */ }
           {
-            value && value.length > 0 &&
+          /*  value && value.length > 0 && */
               <div
                 className="accordionIcon"
               >
@@ -280,14 +280,14 @@ class CollectionField extends Component {
                       },
                       actions: [
                         {
-                          title: 'Done',
+                          title: 'Save',
                           callback: () => {
                             onPopModal(modalId);
                             // this.removeNulls();
                           }
                         },
                         {
-                          title: 'Remove',
+                          title: 'Delete',
                           callback: () => {
                             onPopModal(modalId);
                             this.removeAtIndex(index);
