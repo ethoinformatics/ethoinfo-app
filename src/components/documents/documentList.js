@@ -84,7 +84,7 @@ class DocumentList extends Component {
             deleteDoc(_id, _rev);
           }}
         >
-          <Icon icon="md-close" />
+        <Icon icon="md-close" />
         </button>
       </ListItem>
     );

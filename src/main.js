@@ -65,7 +65,3 @@ if (window.cordova) {
 } else {
   start();
 }
-
-
-
-

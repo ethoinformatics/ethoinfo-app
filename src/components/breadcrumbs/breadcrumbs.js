@@ -2,6 +2,7 @@ import R from 'ramda';
 import React from 'react';
 import { connect } from 'react-redux';
 import { slice } from '../../redux/actions/history';
+import { Icon } from 'react-onsenui';
 
 import './breadcrumbs.styl';
 

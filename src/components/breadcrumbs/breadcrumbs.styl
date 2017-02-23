@@ -41,7 +41,7 @@
   vertical-align top
   display block
   margin 0
-  margin-left 0.5em
+  margin-left -0.5em
   padding 0
   float left
   font-weight 700
@@ -64,10 +64,13 @@
 .breadcrumbsSpacer
   clear both
 
-.breadcrumbComponent:nth-child(odd)
+.breadcrumbComponent:nth-child(1)
+  display none
+
+.breadcrumbComponent:nth-child(even)
   background #ccc
 
-.breadcrumbComponent:nth-child(odd)::after
+.breadcrumbComponent:nth-child(even)::after
   content " "
   display block
   width 0
@@ -98,6 +101,3 @@
 
 .breadcrumbComponent:nth-last-child(2)::after
   border-left 16px solid #ddd
-
-
-

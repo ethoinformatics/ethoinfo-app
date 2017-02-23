@@ -4,8 +4,8 @@ name: BiologicalSample # renamed from FecalSample to encompass other similar typ
 displayField: sampleLabel
 
 fields:
-  - name: subjects
-    type: [Subject]
+  - name: subject
+    type: Subject
     lookup: true
     #required: false
   - name: sampleLabel
@@ -15,8 +15,8 @@ fields:
     type: Date
     #required: true
   - name: sampleType
-    type: [BiologicalSampleType] # coded field: blood, tissue, feces, urine, hair, saliva
-    #required: true 
+    type: BiologicalSampleType # coded field: blood, tissue, feces, urine, hair, saliva
+    #required: true
   - name: storageMedium
     type: BiologicalSampleMedium # coded field (example: ethanol, RNAlater solution, silica gel)
   - name: storageContainer

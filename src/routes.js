@@ -68,7 +68,7 @@ export default [
   {
     path: '/categories',
     name: 'categories',
-    title: () => 'Code Categories',
+    title: () => 'Codes',
     prevPath: () => null,
     nextPath: () => null
   },

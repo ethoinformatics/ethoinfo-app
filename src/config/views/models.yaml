@@ -4,8 +4,7 @@
 ---
 visibleItems:
   # - AdLibitum           # Only accessible via a diary or contact
-  # - Audio               # Only accessible via a diary or contact or adLibitum or focalSample
-  # - Behavior            
+  # - Behavior
   # - BiologicalSample    # Only accessible via a diary or contact
   # - Contact             # Only accessible via a diary
   - Diary
@@ -13,9 +12,7 @@ visibleItems:
   # - FocalSample         # Only accessible via a contact
   # - Measurement         # Only accessible via a contact
   # - Media               # Only accessible via a diary or contact or adLibitum or focalSample
-  # - Observer
-  # - Photo               # Only accessible via a diary or contact or adLibitum or focalSample
+  - Observer
   # - PlantSample         # Only accessible via a diary or contact
-  # - Subject
-  # - Taxonomy
-  # - Video               # Only accessible via a diary or contact or adLibitum or focalSample
+  - Subject
+  - Taxonomy

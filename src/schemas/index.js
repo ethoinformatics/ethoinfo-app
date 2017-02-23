@@ -46,6 +46,8 @@ import FocalDatum from './models/focalDatum.yaml';
 import AdLibitum from './models/adLibitum.yaml';
 import Measurement from './models/measurement.yaml';
 import Media from './models/media.yaml';
+import Behavior from './models/behavior.yaml';
+
 
 // Export an object containing all of our schemas:
 export default {
@@ -62,5 +64,6 @@ export default {
     FocalDatum,
     AdLibitum,
     Measurement,
-//    Media,
+    Media,
+    Behavior,
 ]};

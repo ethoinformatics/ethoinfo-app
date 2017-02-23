@@ -1,41 +1,26 @@
 name: Contact
 
-# Which field will we use to display instances of this model in our app
-displayField: time # or subject?
+displayField: time
 
 fields:
-  - name: subject
-    type: Subject
-    lookup: true
-  #  required: true
-  #- name: observer
-  #  type: [Observer]
-  #  lookup: true
-  #  required: true
   - name: time
     type: Date
   #  required: true
   - name: location
     type: Geolocation
   #  required: true
-  - name: comment
-    type: String
+  - name: subject
+    type: Subject
+    lookup: true
   - name: biologicalSamples
     type: [BiologicalSample]
   - name: plantSamples
     type: [PlantSample]
   - name: adLibitums
     type: [AdLibitum]
-  #- name: groupScans
-  #  type: [GroupScan]
-  - name: additionalObservers # think about merging this with the observer as a larger array if possible?
-    type: [Observer]
-    # lookup: true
-  - name: photos
-    type: [Photo]
-  - name: videos
-    type: [Video]
-  - name: audios
-    type: [Audio]
   - name: focalSamples
     type: [FocalSample]
+  - name: medias
+    type: [Media]
+  - name: comment
+    type: String

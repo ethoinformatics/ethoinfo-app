@@ -4,19 +4,19 @@ name: Media
 displayField: caption
 
 fields:
+  - name: time
+    type: Date
+   # required: true
   - name: mediaType
     type: MediaType # coded field
-   # lookup: true
+    lookup: true
    # required: true
+  - name: location
+    type: Geolocation
+  #  required: true
+  - name: path # filename
+    type: String
   - name: caption
     type: String
   - name: tag
     type: [String]
-  - name: time
-    type: Date
-  #  required: true
-  - name: location
-    type: Geolocation
-  #  required: true
-  - name: path # {filename?}
-    type: String

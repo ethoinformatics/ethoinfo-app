@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, ListItem } from 'react-onsenui';
+import { ListItem, Icon } from 'react-onsenui';
 import _ from 'lodash';
+import './codeListItem.styl';
 
 const CodeListItem = ({ item, deleteAction }) => {
   const { name, _id, _rev } = item;
@@ -10,9 +11,8 @@ const CodeListItem = ({ item, deleteAction }) => {
         {_.startCase(name)}
       </div>
       <div className="right">
-        <Button
-          style={{ margin: '0px', padding: '0px' }}
-          modifier="quiet"
+        <button
+          className="delete"
           onClick={() => {
             deleteAction(_id, _rev)
             .then(() => {
@@ -23,8 +23,8 @@ const CodeListItem = ({ item, deleteAction }) => {
             });
           }}
         >
-          Delete
-        </Button>
+          <Icon icon="md-close"/>
+        </button>
       </div>
     </ListItem>
   );

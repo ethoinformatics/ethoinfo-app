@@ -1,26 +1,23 @@
 name: FocalSample
 
-# Which field will we use to display instances of this model in our app
-displayField: subject
+displayField: timeStart
 
 fields:
+  - name: timeStart
+    type: Date
+  # required: true
   - name: subject
     type: Subject
     lookup: true
-  #  required: true
-  - name: timeStart
-    type: Date
-  #  required: true
+  # required: true
   - name: location
     type: Geolocation
   #  required: true
-  - name: comment
-    type: String
+  - name: adLibitums
+    type: [AdLibitum]
   - name: focalData
     type: [FocalDatum]
-  - name: photos
-    type: [Photo]
-  - name: videos
-    type: [Video]
-  - name: audios
-    type: [Audio]
+  - name: medias
+    type: [Media]
+  - name: comment
+    type: String

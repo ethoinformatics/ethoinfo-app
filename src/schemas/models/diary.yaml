@@ -1,6 +1,5 @@
 name: Diary
 
-# Which field will we use to display instances of this model in our app
 displayField: date
 
 fields:
@@ -19,13 +18,7 @@ fields:
     type: [BiologicalSample]
   - name: plantSamples
     type: [PlantSample]
-  - name: comment
-    type: String
   - name: medias
     type: [Media]
-#  - name: photos
-#    type: [Photo]
-#  - name: videos
-#    type: [Video]
-#  - name: audios
-#    type: [Audio]
+  - name: comment
+    type: String

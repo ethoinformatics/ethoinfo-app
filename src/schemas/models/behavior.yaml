@@ -1,10 +1,10 @@
 name: Behavior
 
 # Which field will we use to display instances of this model in our app
-displayField: behavior
+displayField: behaviorName
 
 fields:
   - name: behaviorName
     type: String
   - name: behaviorCategory
-    type: [String]
+    type: String

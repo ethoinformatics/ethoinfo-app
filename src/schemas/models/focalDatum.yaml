@@ -4,14 +4,16 @@ name: FocalDatum
 displayField: time
 
 fields:
+  - name: time
+    type: Date
   - name: focalName
     type: Subject
     lookup: true
   #  required: true
   - name: behavior
     type: Behavior
-  - name: time
-    type: Date
+  - name: direction
+    type: Boolean # (e.g., 0 = focal => partner; 1 = partner => focal)
   #  required: true
   - name: location
     type: Geolocation
@@ -22,5 +24,3 @@ fields:
   #  required: true
   - name: comment
     type: String
-  - name: direction
-    type: Boolean # {0 = focal => partner; 1 = partner => focal}
