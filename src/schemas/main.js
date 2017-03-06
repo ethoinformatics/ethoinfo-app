@@ -1,5 +1,5 @@
 import R from 'ramda';
-import { CategorySchema, ModelSchema } from '../schemas/schema';
+import { CategorySchema, ModelSchema } from './schema';
 import * as validations from './validations';
 import { defaultTypes } from './types';
 

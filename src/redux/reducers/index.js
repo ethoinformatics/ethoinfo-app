@@ -4,6 +4,7 @@ import { combineReducers } from 'redux';
 import docs, * as FromDocuments from './documents';
 import views, * as FromViews from './views';
 import fields from './fields';
+import geo from './geo';
 
 // -----------------------------------------------------------------------------
 // REDUCER
@@ -11,6 +12,7 @@ import fields from './fields';
 const rootReducer = combineReducers({
   docs,
   fields,
+  geo,
   views
 });
 

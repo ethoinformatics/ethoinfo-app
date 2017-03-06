@@ -73,6 +73,7 @@ export default {
             Joi.string().only(allTypesTmp).required()
           ).required(),
           lookup: Joi.boolean(),
+          options: Joi.object().unknown(),
         })).required()
         .min(1)
         .unique((a, b) => a.name.toLowerCase() === b.name.toLowerCase())

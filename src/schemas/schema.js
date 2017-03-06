@@ -50,12 +50,13 @@ class CategorySchema extends Schema {
 }
 
 class Field {
-  constructor(name, isLookup, typeStringOrArray, customTypes) {
+  constructor(name, isLookup, typeStringOrArray, options, customTypes) {
     this.name = name;
     this.isCollection = false;
 
     let typeString = typeStringOrArray;
 
+    // Check if type is a string
     if (Array.isArray(typeStringOrArray)) {
       if (typeStringOrArray.length === 0) {
         throw new Error('Type array must contain a Type string');
@@ -79,6 +80,10 @@ class Field {
         break;
       case 'Date':
         this.type = new Types.Date();
+        break;
+      case 'Geolocation':
+        this.type = new Types.Geolocation();
+        this.track = !!options.track; // coerce boolean.
         break;
       default:
         if (customTypes.modelNames.includes(typeString)) {
@@ -110,8 +115,15 @@ class ModelSchema extends Schema {
       ? displayFieldValue.name : '_id';
 
     // Map field strings
-    this.fields = toJS(fields).map(field =>
-      new Field(field.name, field.lookup || false, field.type, types)
+    this.fields = toJS(fields).map((field) => { // eslint-disable-line arrow-body-style
+      return new Field(
+        field.name,
+        field.lookup || false,
+        field.type,
+        field.options || {},
+        types
+      );
+    }
     ).filter(field => field.type !== null);
   }
 

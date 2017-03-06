@@ -1,53 +1,42 @@
 import React from 'react';
-import R from 'ramda';
-import { connect } from 'react-redux';
-import { Fab, BottomToolbar, Page, Icon } from 'react-onsenui';
+import { observer } from 'mobx-react';
+import { toJS } from 'mobx';
+import { Fab, BottomToolbar, Page, Icon, Switch } from 'react-onsenui';
+// import JSONTree from 'react-json-tree';
 import Map from '../map/map';
 import './geoViewer.styl';
 
 /**
- * A component for viewing geolocation cache.
+ * A component for viewing geolocation and configuring
+ * geo settings.
  *
- * renders a <Map /> component with the data from cache
+ * Reads from GeoStore and
+ * renders a <Map /> component with the current location.
  *
  * @class GeoViewer
  * @extends {React.Component}
  */
 
-function mapStateToProps(state) {
-  return {
-    geo: state.geo,
-  };
-}
-
-const mapDispatchToProps = () => ({
-});
-
+@observer
 class GeoViewer extends React.Component {
-
   render() {
-    const { geo: { entries } } = this.props;
-    const firstEntry = R.head(entries);
-    // const lastEntry = R.last(entries);
-
-    const startPos = firstEntry ?
-      [firstEntry.coords.latitude, firstEntry.coords.longitude] : [];
-
+    const { store } = this.props;
+    const geo = toJS(store.geolocation);
+    const pos = geo ? [geo.latitude, geo.longitude] : [];
     return (
       <Page className="geoViewer">
         <div className="mapContainer">
           <Map
             followLocation
-            location={startPos}
-            entries={entries}
+            location={pos}
             ref={(c) => { this.mapRef = c; }}
           />
         </div>
         {
-          /* pos && pos.length > 1 &&
+          pos && pos.length > 1 &&
           <div className="status">
             <div>{`Updated ${store.friendlyElapsed}`}</div>
-          </div> */
+          </div>
         }
         <Fab
           style={{ zIndex: 999, bottom: '74px', background: '#fff', color: '#000' }}
@@ -57,7 +46,7 @@ class GeoViewer extends React.Component {
           <Icon icon="md-my-location" />
         </Fab>
         <BottomToolbar>
-          {/* <div className="switchContainer">
+          <div className="switchContainer">
             <Switch
               modifier="etho"
               checked={store.shouldWatch} onChange={(event) => {
@@ -70,7 +59,7 @@ class GeoViewer extends React.Component {
                 console.log('Switched:', value);
               }}
             />
-          </div> */}
+          </div>
           {/* <ToolbarButton onClick={() => this.mapRef.focusCurrentLocation()}>
             <Icon icon="md-gps-fixed" />
           </ToolbarButton> */}
@@ -82,20 +71,9 @@ class GeoViewer extends React.Component {
 }
 
 GeoViewer.propTypes = {
-  geo: React.PropTypes.shape({
-    entries: React.PropTypes.arrayOf(
-      React.PropTypes.shape({
-        timestamp: React.PropTypes.number,
-        coords: React.PropTypes.shape({
-          latitude: React.PropTypes.number,
-          longitude: React.PropTypes.number
-        })
-      })
-    )
+  store: React.PropTypes.shape({
+    isWatching: React.PropTypes.Boolean, // eslint-disable-line react/no-unused-prop-types
   })
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(GeoViewer);
+export default GeoViewer;

@@ -56,7 +56,10 @@ export const validateModelShape = (model) => {
             .min(1)
       ).required(),
 
-      lookup: Joi.boolean()
+      lookup: Joi.boolean(),
+
+      // For now, options apply across all field types and can be anything
+      options: Joi.object().unknown(),
 
     })).required().min(1)
   });
@@ -90,6 +93,9 @@ export const validateModel = (model, validFieldTypeNames = []) => {
             .valid(validFieldTypeNames)
             .min(1)
       ).required(),
+
+      // For now, options apply across all field types and can be anything
+      options: Joi.object().unknown(),
 
       lookup: Joi.boolean()
 

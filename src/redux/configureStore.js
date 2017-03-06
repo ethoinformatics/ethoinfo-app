@@ -1,7 +1,9 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { createEpicMiddleware } from 'redux-observable';
 import PouchDB from 'pouchdb';
 import thunk from 'redux-thunk';
+import rootEpic from './epics';
 
 import { KEYS } from '../constants';
 import config from '../config';
@@ -12,37 +14,30 @@ import reducer from './reducers';
 const dbName = config[KEYS.pouchDbName];
 const pouchdb = new PouchDB(dbName);
 
+const epicMiddleware = createEpicMiddleware(rootEpic);
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+// https://github.com/zalmoxisus/redux-devtools-extension#12-advanced-store-setup
+
 function configureStore(initialState) {
   // create the saga middleware
   const sagaMiddleware = createSagaMiddleware();
 
-  const enhancers = compose(
+  const enhancers = composeEnhancers(
     // Middleware store enhancer.
     applyMiddleware(
       // Initialising redux-thunk with extra arguments will pass the below
       // arguments to all the redux-thunk actions.
-
-      // Todo: pass a preconfigured pouchdb instance which can be used to fetch data
-      // @see https://github.com/gaearon/redux-thunk
-
+      // Pass a preconfigured pouchdb instance which can be used to fetch data
       thunk.withExtraArgument({
         pouchdb
       }),
 
-      // thunk.withExtraArgument({}),
-      sagaMiddleware
-    ),
-    // Redux Dev Tools store enhancer.
-    // @see https://github.com/zalmoxisus/redux-devtools-extension
-    // We only want this enhancer enabled for development and when in a browser
-    // with the extension installed.
-    process.env.NODE_ENV === 'development'
-      && typeof window !== 'undefined'
-      && typeof window.devToolsExtension !== 'undefined'
-      // Call the brower extension function to create the enhancer.
-      ? window.devToolsExtension()
-      // Else we return a no-op function.
-      : f => f,
+      sagaMiddleware,
+
+      epicMiddleware,
+    )
   );
 
   const store = initialState

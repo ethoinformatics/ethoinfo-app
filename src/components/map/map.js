@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import R from 'ramda';
 import L from 'leaflet';
 import raf from 'raf';
 import 'raf/polyfill';
@@ -40,12 +41,13 @@ class Map extends React.Component {
     // after the map has a chance to paint.
     raf(() => {
       // If location is set, zoom to that spot, otherwise go to center of USA.
-      if (this.props.location && this.props.location.length > 1) {
+      /* if (this.props.location && this.props.location.length > 1) {
         this.map.setView(this.props.location, this.map.getMaxZoom());
         this.updateLocation();
       } else {
         this.map.setView([37.0902, -95.7129], 4); // Center USA.
-      }
+      } */
+      this.refreshMapLayers();
     });
   }
 
@@ -55,9 +57,67 @@ class Map extends React.Component {
     // Skip if location hasn't changed
 
     // Use lodash isEqual to compare values.
-    if (!_.isEqual(prevProps.location, this.props.location)) {
+    /* if (!_.isEqual(prevProps.location, this.props.location)) {
       this.updateLocation();
+    } */
+
+    // Use lodash isEqual to compare values.
+    if (!_.isEqual(prevProps.entries, this.props.entries)) {
+      this.refreshMapLayers();
     }
+  }
+
+  refreshMapLayers() {
+    // Good use case for immutablejs here.
+    // Difficult to diff geolocation entries to accomodate imperative leaflet api
+    const { entries } = this.props;
+
+    const latLngs = entries.map(entry => [
+      entry.coords.latitude, entry.coords.longitude
+    ]);
+
+    // For now we are just going to refresh map each time
+    if (this.layerGroup) {
+      // Remove existing
+      this.layerGroup.eachLayer(l => this.layerGroup.removeLayer(l));
+    } else {
+      // Create layer group if it  doesn't exist
+      this.layerGroup = L.layerGroup([]).addTo(this.map);
+    }
+
+    if (latLngs.length > 0) {
+        // Re-add path
+      const geoPath = L.polyline(
+        latLngs,
+        {
+          color: 'blue',
+          weight: 1
+        }).addTo(this.map);
+      // Zoom map to bounding box of polyline
+      this.map.fitBounds(geoPath.getBounds());
+
+      // Add individual points
+      latLngs.forEach((ll) => {
+        const marker = L.circleMarker(ll, {
+          radius: 1,
+          color: 'red',
+        });
+
+        marker.bindPopup(`<p>${ll[0]}, ${ll[1]}</p>`);
+
+        this.layerGroup.addLayer(marker);
+      });
+    }
+
+    // Zoom to first entry
+    /* const firstEntry = R.head(entries);
+    if (firstEntry) {
+      this.map.setView(
+        [firstEntry.coords.latitude, firstEntry.coords.longitude], this.map.getMaxZoom()
+      );
+    } else {
+      // this.map.setView([37.0902, -95.7129], 4); // Center USA.
+    } */
   }
 
   updateLocation() {
@@ -128,7 +188,16 @@ class Map extends React.Component {
 // Location is an array of numbers [lat, long]
 Map.propTypes = {
   followLocation: React.PropTypes.bool,
-  location: React.PropTypes.arrayOf(React.PropTypes.number)
+  location: React.PropTypes.arrayOf(React.PropTypes.number),
+  entries: React.PropTypes.arrayOf(
+      React.PropTypes.shape({
+        timestamp: React.PropTypes.number,
+        coords: React.PropTypes.shape({
+          latitude: React.PropTypes.number,
+          longitude: React.PropTypes.number
+        })
+      })
+    )
 };
 
 export default Map;

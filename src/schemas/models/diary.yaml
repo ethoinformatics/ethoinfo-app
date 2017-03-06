@@ -11,6 +11,8 @@ fields:
     type: Date
   - name: location
     type: Geolocation
+    options:
+      track: true
   - name: contacts
     type: [Contact]
   #- name: adLibitums

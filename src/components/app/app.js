@@ -13,6 +13,11 @@ import Menu from '../menu/menu';
 import Navbar from '../navbar/navbar';
 
 // Actions
+import {
+  watch as watchGeolocation,
+  loadCache as loadGeolocationCache
+} from '../../redux/actions/geo';
+
 import { open as openMenu, close as closeMenu } from '../../redux/actions/menu';
 import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
 
@@ -47,6 +52,8 @@ class App extends Component {
 
   componentDidMount() {
     this.props.fetchAllDocuments();
+    this.props.watchGeolocation();
+    this.props.loadGeolocationCache();
   }
 
   renderNavbar() {
@@ -122,7 +129,7 @@ class App extends Component {
         );
 
       case 'geoViewer':
-        return <Geo store={geoStore} />;
+        return <Geo />;
 
       case 'overview':
         return (
@@ -178,6 +185,8 @@ App.propTypes = {
   onOpenMenu: PropTypes.func,
   onCloseMenu: PropTypes.func,
   fetchAllDocuments: PropTypes.func,
+  watchGeolocation: PropTypes.func,
+  loadGeolocationCache: PropTypes.func,
   views: PropTypes.object, // Todo: shape
   stores: PropTypes.object, // Todo: shape
   modals: PropTypes.array, // Todo: shape
@@ -201,6 +210,12 @@ const mapDispatchToProps = dispatch => ({
   },
   fetchAllDocuments: () => {
     dispatch(fetchAllDocuments());
+  },
+  watchGeolocation: () => {
+    dispatch(watchGeolocation());
+  },
+  loadGeolocationCache: () => {
+    dispatch(loadGeolocationCache());
   }
 });
 

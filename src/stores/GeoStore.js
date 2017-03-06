@@ -106,9 +106,9 @@ export default class GeoStore {
       () => this.shouldWatch,
       (shouldWatch) => {
         if (shouldWatch) {
-          this.watch();
+          // this.watch();
         } else {
-          this.clearWatch();
+          // this.clearWatch();
         }
       },
       true // Fire immediately.
