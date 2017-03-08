@@ -38,7 +38,17 @@ class Fields extends React.Component {
         <ol className="fields">
           {
             schema.fields.map((field, index) => {
-              const { name, isCollection = false, isLookup = false, type } = field;
+              const {
+                name,
+                isCollection = false,
+                isLookup = false,
+                options = {},
+                type
+              } = field;
+
+              console.log(
+                'Field is:', field,
+              );
 
               const fieldValue = fieldValues[name];
               const initialValue = initialValues ? initialValues[name] || null : null;
@@ -50,6 +60,7 @@ class Fields extends React.Component {
                     initialValue={initialValue}
                     fieldValue={fieldValue}
                     // value={value}
+                    options={options}
                     name={name}
                     path={subpath}
                     type={type}

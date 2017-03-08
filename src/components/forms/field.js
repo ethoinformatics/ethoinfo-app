@@ -11,6 +11,9 @@ import TextInputField from './fields/text/input';
 import DateField from './fields/date/date';
 import CollectionField from './fields/collection/collection';
 import SelectField from './fields/select/select';
+import BooleanField from './fields/boolean/boolean';
+
+import Geo from './fields/geolocation/geolocation';
 
 import { getSchema } from '../../schemas/main';
 
@@ -27,12 +30,12 @@ const mapDispatchToProps = () => ({
 const Field = (props) => {
   const {
     docs,
-    // value,
     path,
     type,
     name,
     isCollection,
     isLookup,
+    options,
     onChange,
     initialValue,
     fieldValue
@@ -52,11 +55,8 @@ const Field = (props) => {
     isLookup
   };
 
-  // console.log('>> Inside render field:', name, initialValue);
-
+  // For collections, enforce array value:
   if (isCollection) {
-    // Make sure value is an array or set to empty array.
-
     fieldProps = {
       ...fieldProps,
       value: Array.isArray(normalizedValue) ? normalizedValue : [],
@@ -66,47 +66,63 @@ const Field = (props) => {
     fieldComponent = <CollectionField {...fieldProps} />;
   } else {
     switch (type.constructor) {
+      // DATE
       case Types.Date:
         fieldComponent = <DateField {...fieldProps} />;
         break;
 
+      // STRING
       case Types.String:
         fieldComponent = <TextInputField {...fieldProps} />;
         break;
 
+      // NUMBER
       case Types.Number:
         fieldComponent = <TextInputField {...fieldProps} />;
         break;
 
+      case Types.Geolocation:
+        // If this is a geolocation track, field is a switch that turns tracking on and off.
+
+        console.log('Rendering geolocation:', options);
+
+        // If this is a geolocation point, field is a button
+        // which calls the geolocation API or allows user to manually input position
+        // fieldComponent = <BooleanField {...fieldProps} />;
+        fieldComponent = <Geo {...fieldProps} />;
+        break;
+
+      // CATEGORY
       case Types.Category: {
         const { name: domainName } = type;
         const schema = getSchema(domainName);
         if (!schema) { return null; }
 
-        const options = docs
+        const selectOptions = docs
           .filter(doc => doc.domainName === domainName)
           .map(doc => ({
             _id: doc._id,
             name: doc[schema.displayField] || doc.name || doc._id
           }));
 
-        return <SelectField options={[null, ...options]} {...fieldProps} />;
+        return <SelectField options={[null, ...selectOptions]} {...fieldProps} />;
       }
 
+      // MODEL
       case Types.Model: {
         const { name: domainName } = type;
         const schema = getSchema(domainName);
         if (!schema) { return null; }
 
         if (isLookup) {
-          const options = docs
+          const selectOptions = docs
           .filter(doc => doc.domainName === domainName)
           .map(doc => ({
             _id: doc._id,
             name: doc[schema.displayField] || doc.name || doc._id
           }));
 
-          return <SelectField options={[null, ...options]} {...fieldProps} />;
+          return <SelectField options={[null, ...selectOptions]} {...fieldProps} />;
         }
 
         return (
@@ -137,6 +153,7 @@ Field.propTypes = {
   /* path: PropTypes.arrayOf( // Update path in state.fields
     PropTypes.string
   ), */
+  options: PropTypes.object,
   path: PropTypes.array,
   isCollection: PropTypes.bool,
   isLookup: PropTypes.bool,

@@ -66,6 +66,8 @@ class Field {
       }
     }
 
+    this.options = {};
+
     // console.log('Making field', name, typeString, this.isCollection);
 
     switch (typeString) {
@@ -83,7 +85,7 @@ class Field {
         break;
       case 'Geolocation':
         this.type = new Types.Geolocation();
-        this.track = !!options.track; // coerce boolean.
+        this.options.track = !!options.track; // coerce boolean.
         break;
       default:
         if (customTypes.modelNames.includes(typeString)) {
