@@ -82,14 +82,17 @@ const Field = (props) => {
         break;
 
       case Types.Geolocation:
-        // If this is a geolocation track, field is a switch that turns tracking on and off.
+        // If this is a geolocation track (a series of points, field is a switch
+        // that marks tracking on and off.
 
-        console.log('Rendering geolocation:', options);
+        // If this is a single geolocation point, field is a button fieldComponent
+        // which takes taps and returns geolocation points
+        if (options.track) {
+          fieldComponent = <BooleanField {...fieldProps} />;
+        } else {
+          fieldComponent = <Geo {...fieldProps} />;
+        }
 
-        // If this is a geolocation point, field is a button
-        // which calls the geolocation API or allows user to manually input position
-        // fieldComponent = <BooleanField {...fieldProps} />;
-        fieldComponent = <Geo {...fieldProps} />;
         break;
 
       // CATEGORY

@@ -46,9 +46,9 @@ class Fields extends React.Component {
                 type
               } = field;
 
-              console.log(
+              /* console.log(
                 'Field is:', field,
-              );
+              ); */
 
               const fieldValue = fieldValues[name];
               const initialValue = initialValues ? initialValues[name] || null : null;

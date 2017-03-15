@@ -4,10 +4,33 @@ import { Fab, Icon } from 'react-onsenui';
 import _ from 'lodash';
 import './geolocation.styl';
 
+// Enable Promise cancellation.
+// Important in case component unmounts before Promise returns.
 Promise.config({
-  // Enable cancellation
   cancellation: true,
 });
+
+// navigator.geolocation.getCurrentPosition as a Promise.
+const geolocate = () =>
+  new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        // Convert position values to plain object:
+        const { coords: { longitude, latitude }, timestamp } = position;
+
+        return {
+          coords: { longitude, latitude },
+          timestamp
+        };
+      },
+      err => reject(new Error(err.message))
+    );
+  });
+
+/**
+ * A "controlled component" that takes button presses and returns geolocation.
+ *
+ */
 
 class GeolocationPointInput extends Component {
   constructor() {
@@ -30,33 +53,52 @@ class GeolocationPointInput extends Component {
     }
   }
 
-  geolocate() { // eslint-disable-line class-methods-use-this
-    // Todo: extrapolate this to a common geolocation api once we know all geo touchpoints
+  geolocate() {
+    const { onChange } = this.props;
 
     this.setState({
       isGeolocating: true
     });
 
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.setState({
-            isGeolocating: false
-          });
-          resolve(position);
-        },
-        (err) => {
-          this.setState({
-            isGeolocating: false
-          });
-          reject(err);
-        }
-      );
-    });
+    this.geoPromise = geolocate()
+      .then((geo) => {
+        onChange(geo);
+        this.setState({ isGeolocating: false });
+      })
+      .catch((err) => {
+        this.setState({ isGeolocating: false });
+        console.log(err);
+      });
+  }
+
+  renderNullGeo = () =>
+    <div className="nullGeo">
+      No geolocation data
+    </div>
+
+  renderIsGeolocating = () =>
+    <div className="geolocating">
+      Geolocating...
+    </div>
+
+  renderCoords() {
+    const { value: { coords: { latitude, longitude } } } = this.props;
+
+    return (
+      <div className="latLong">
+        <div className="lat">
+          {latitude}
+        </div>
+        ,
+        <div className="long">
+          {longitude}
+        </div>
+      </div>
+    );
   }
 
   render() {
-    const { name, value, onChange } = this.props;
+    const { name, value } = this.props;
     const { isGeolocating } = this.state;
 
     return (
@@ -66,49 +108,21 @@ class GeolocationPointInput extends Component {
           ripple
           style={{ background: '#fff', color: '#000' }}
           disabled={isGeolocating}
-          onClick={() => {
-            console.log('Geolocating...');
-            this.geoPromise = this.geolocate()
-              .then((geo) => {
-                const { coords: { longitude, latitude }, timestamp } = geo;
-
-                onChange({
-                  coords: { longitude, latitude },
-                  timestamp
-                });
-
-                console.log('Found geolocation:', geo);
-              })
-              .catch((err) => {
-                console.log('Error geolocating:', err);
-              });
-          }}
+          onClick={this.geolocate}
         >
           <Icon icon="md-my-location" />
         </Fab>
         {
           isGeolocating &&
-          <div className="geolocating">
-            Geolocating...
-          </div>
+          this.renderIsGeolocating()
         }
         {
           !isGeolocating && !value &&
-          <div className="nullGeo">
-            No geolocation data
-          </div>
+          this.renderNullGeo()
         }
         {
           !isGeolocating && value && value.coords &&
-          <div className="latLong">
-            <div className="lat">
-              {value.coords.latitude}
-            </div>
-            ,
-            <div className="long">
-              {value.coords.longitude}
-            </div>
-          </div>
+          this.renderCoords()
         }
       </div>
     );
