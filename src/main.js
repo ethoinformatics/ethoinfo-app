@@ -30,6 +30,23 @@ import configureStore from './redux/configureStore';
 const store = configureStore();
 
 function start() {
+  // Some cordova logic:
+  const { cordova } = window;
+
+  if (cordova) {
+    // Enable background mode
+    // https://github.com/katzer/cordova-plugin-background-mode
+    cordova.plugins.backgroundMode.enable();
+
+    // Addresses background mode quirks around GPS on android:
+    cordova.plugins.backgroundMode.on('activate', () =>
+      cordova.plugins.backgroundMode.disableWebViewOptimizations()
+    );
+
+    // Debug cordova presence:
+    // alert('This is a cordova app');
+  }
+
   // Initialize our stores
   const dataStore = new DataStore();
   const geoStore = new GeoStore();

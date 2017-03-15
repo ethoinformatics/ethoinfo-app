@@ -16,10 +16,16 @@
         "cordova-plugin-geolocation": {
             "GEOLOCATION_USAGE_DESCRIPTION": "Allow Geolocation",
             "PACKAGE_NAME": "org.ethoinformatics.app"
+        },
+        "cordova-plugin-background-mode": {
+            "PACKAGE_NAME": "org.ethoinformatics.app"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-compat": {
+            "PACKAGE_NAME": "org.ethoinformatics.app"
+        },
+        "cordova-plugin-device": {
             "PACKAGE_NAME": "org.ethoinformatics.app"
         }
     }

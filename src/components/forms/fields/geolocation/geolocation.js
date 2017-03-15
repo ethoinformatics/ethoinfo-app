@@ -11,6 +11,9 @@ Promise.config({
 });
 
 // navigator.geolocation.getCurrentPosition as a Promise.
+// A note on geolocation errors:
+// If you are testing in desktop browser without a network connection,
+// You will get "Network location provider" Error
 const geolocate = () =>
   new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
@@ -18,12 +21,14 @@ const geolocate = () =>
         // Convert position values to plain object:
         const { coords: { longitude, latitude }, timestamp } = position;
 
-        return {
+        resolve({
           coords: { longitude, latitude },
           timestamp
-        };
+        });
       },
-      err => reject(new Error(err.message))
+      (err) => {
+        reject(new Error(err.message));
+      }
     );
   });
 
@@ -60,13 +65,15 @@ class GeolocationPointInput extends Component {
       isGeolocating: true
     });
 
+    const that = this;
+
     this.geoPromise = geolocate()
       .then((geo) => {
         onChange(geo);
-        this.setState({ isGeolocating: false });
+        that.setState({ isGeolocating: false });
       })
       .catch((err) => {
-        this.setState({ isGeolocating: false });
+        that.setState({ isGeolocating: false });
         console.log(err);
       });
   }
@@ -89,7 +96,9 @@ class GeolocationPointInput extends Component {
         <div className="lat">
           {latitude}
         </div>
-        ,
+        <div className="separator">
+          ,
+        </div>
         <div className="long">
           {longitude}
         </div>

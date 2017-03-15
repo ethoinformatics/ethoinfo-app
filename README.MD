@@ -123,7 +123,7 @@ We run / build our application via scripts defined in package.json:
             └──  android
     ```
 
-## Tools
+### Tools
 *   [ESLint](http://eslint.org/) checks our source code for potential errors. We use AirBnB's [awesome eslint config](https://www.npmjs.com/package/eslint-config-airbnb) to help us follow best practices.
 *   [Webpack](http://webpack.github.io/) is used for bundling / compiling.
 *   [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html) provides our development environment.
@@ -134,6 +134,19 @@ We run / build our application via scripts defined in package.json:
 *   [Leaflet](http://leafletjs.com/) is used for mapping.
 *   [Onsen](http://onsen.io/v2/) provides mobile UI components with a native look and feel.
 
+### Cordova plugins
+The following cordova plugins are installed
+* cordova-plugin-background-mode 0.7.2 "BackgroundMode"
+* cordova-plugin-compat 1.1.0 "Compat"
+* cordova-plugin-device 1.1.5 "Device"
+* cordova-plugin-geolocation 2.4.1 "Geolocation"
+* cordova-plugin-statusbar 2.2.0 "StatusBar"
+* cordova-plugin-whitelist 1.3.0 "Whitelist"
+
+### Quirks
+* **geolocation**
+
+    Geolocation in the browser via WiFi can be quirky and take some time.
 
 ### Known issues
 * **sync error**

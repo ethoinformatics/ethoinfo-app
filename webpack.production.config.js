@@ -21,6 +21,9 @@ module.exports = {
     extensions: ['', '.js', '.json', '.less', '.vash'],
   },
   module: {
+    // Fix for webpack warnings about prebuilt javascript with localForage
+    // https://github.com/localForage/localForage#browserify-and-webpack
+    noParse: /node_modules\/localforage\/dist\/localforage.js/,
     loaders: [
       {
         test: /\.js$/,
