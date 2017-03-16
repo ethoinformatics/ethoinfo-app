@@ -20,7 +20,7 @@ export default [
     path: '/documents/:id',
     name: 'documents',
     title: params => `${_.startCase(pluralize(params.id))}`,
-    prevPath: () => '/',
+    prevPath: () => '/documents',
     nextPath: params => `/documents/${params.id}/new`
   },
   {
@@ -48,7 +48,7 @@ export default [
     path: '/debug/:id',
     name: 'debugDetail',
     title: params => `${_.startCase(params.id)}`,
-    prevPath: () => '/',
+    prevPath: () => '/documents',
     nextPath: () => null
   },
   {

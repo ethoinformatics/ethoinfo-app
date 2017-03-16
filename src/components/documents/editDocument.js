@@ -72,14 +72,15 @@ class EditDocument extends React.Component {
     const { doc, domain, fieldsPath, fieldValues, historyPath, resetFields } = this.props;
     const schema = getSchema(domain);
 
-    const pathToComponents = R.split('/');
+    /* const pathToComponents = R.split('/');
     const padComponents = R.map(p => [p, '']);
     const makeComponents = R.pipe(pathToComponents, R.tail, padComponents, R.flatten);
-    const components = makeComponents(historyPath);
+    const components = makeComponents(historyPath); */
 
     return (
       <Page className="editDocument">
-        <Breadcrumbs path={components} />
+        { /* Breadcrumb logic is now handled in app.js and modal.js */ }
+        {/* <Breadcrumbs path={components} /> */}
         <Form
           path={fieldsPath}
           initialValues={doc}

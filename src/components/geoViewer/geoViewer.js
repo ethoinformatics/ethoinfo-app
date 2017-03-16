@@ -27,11 +27,11 @@ class GeoViewer extends React.Component {
 
   render() {
     const { geo: { entries } } = this.props;
-    const firstEntry = R.head(entries);
-    // const lastEntry = R.last(entries);
+    // const firstEntry = R.head(entries);
+    const lastEntry = R.last(entries);
 
-    const startPos = firstEntry ?
-      [firstEntry.coords.latitude, firstEntry.coords.longitude] : [];
+    const startPos = lastEntry ?
+      [lastEntry.coords.latitude, lastEntry.coords.longitude] : [];
 
     return (
       <Page className="geoViewer">

@@ -1,12 +1,9 @@
 import React from 'react';
-import { observer } from 'mobx-react';
 import { Icon, Toolbar, ToolbarButton } from 'react-onsenui';
 import './navbar.styl';
 
-const Navbar = observer(({ leftItem, rightItem, title }) => (
-  <Toolbar>
-    {
-    }
+const Navbar = ({ leftItem, rightItem, title, children }) => (
+  <Toolbar className={(children && 'navbar withChildren') || 'navbar'}>
     <div className="left">
       <ToolbarButton
         onClick={() => leftItem && leftItem.action()}
@@ -15,7 +12,8 @@ const Navbar = observer(({ leftItem, rightItem, title }) => (
       </ToolbarButton>
     </div>
     <div className="center">
-      {title}
+      {/* Render children if we have them or render title prop */}
+      {(children && children) || title}
     </div>
     <div className="right">
       <ToolbarButton
@@ -25,7 +23,7 @@ const Navbar = observer(({ leftItem, rightItem, title }) => (
       </ToolbarButton>
     </div>
   </Toolbar>
-));
+);
 
 Navbar.propTypes = {
   leftItem: React.PropTypes.shape({
@@ -36,7 +34,8 @@ Navbar.propTypes = {
     action: React.PropTypes.func.isRequired,
     icon: React.PropTypes.string.isRequired
   }),
-  title: React.PropTypes.string
+  title: React.PropTypes.string,
+  children: React.PropTypes.node
 };
 
 export default Navbar;

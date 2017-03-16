@@ -96,7 +96,8 @@ class DocumentList extends Component {
     const path = ['documents', '', domain, ''];
 
     return (<Page className="documentList">
-      {<Breadcrumbs path={path} />}
+      { /* Breadcrumb logic is now handled in app.js and modal.js */ }
+      { /* <Breadcrumbs path={path} /> */ }
       <List
         dataSource={docs}
         // renderHeader={() => <ListHeader>Documents</ListHeader>}

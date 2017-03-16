@@ -44,10 +44,11 @@ const Modal = (props) => {
             }
           }}
           title={title}
-        />
+        >
+          <Breadcrumbs path={path} />
+        </Navbar>
       }
     >
-      <Breadcrumbs path={path} />
       <div className="modalComponent">
         <ModalComponent {...props} />
       </div>

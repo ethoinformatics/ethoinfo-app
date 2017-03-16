@@ -3,7 +3,7 @@ items:
 
   - name:   Documents
     icon:   md-home
-    route:  /
+    route:  /documents
 
   - name:   Settings
     icon:   md-settings

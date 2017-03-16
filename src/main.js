@@ -56,7 +56,7 @@ function start() {
   };
 
   // Kickoff history:
-  history.replace('/', {});
+  history.replace('/documents', {});
 
   // Render our app into the DOM at the node with id 'root'
   ReactDOM.render(

@@ -1,0 +1,14 @@
+.navbar
+  border-bottom 0.5px solid #ccc
+  box-sizing border-box
+  .navigation-bar__left, .navigation-bar__right
+    width 44px
+    position relative
+  .navigation-bar__center
+    position relative
+    width calc(100% - 88px)
+    overflow hidden
+    overflow-x: scroll;
+    height: 72px; // Add some extra height so the scrollbar is hidden
+  &.withChildren
+    background transparent

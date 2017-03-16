@@ -1,35 +1,33 @@
 .breadcrumbs
-  background #fff
-  padding-bottom 4px
-  position relative
+  position absolute
+  top 0
+  left 0
   display block
+  text-align left
+  height 44px
   min-height 44px
   line-height 44px
+  // overflow-x scroll
   // margin-bottom 1em
-  clear both
+  // clear both
   // background-size: 100% 1px;
   // background-repeat: no-repeat;
   // background-position: bottom;
   // background-image: linear-gradient(0deg, #ccc, #ccc 100%);
 
 .breadcrumbComponent
+  display inline-block
   position relative
   // display inline-block
   height 44px
   padding-left 0.5em
   padding-right 0.5em
-  background #bbb
-  float left
+  background #eee
+  // float left
   padding-left 22px
-  margin-top 4px
+  margin-top 0px
 
 .breadcrumbSlash
-  display inline-block
-  height 44px
-  font-size 1.5em
-  margin 0
-  vertical-align top
-  background red
   display: none
 
 .breadcrumbPath
@@ -54,7 +52,7 @@
   height 0
   border-top 22px solid transparent /* Go big on the size, and let overflow hide */
   border-bottom 22px solid transparent
-  border-left 16px solid #bbb
+  border-left 16px solid #eee
   position absolute
   top 50%
   margin-top -22px
@@ -64,17 +62,17 @@
 .breadcrumbsSpacer
   clear both
 
-.breadcrumbComponent:nth-child(odd)
-  background #ccc
+.breadcrumbComponent:nth-child(even)
+  background #ddd
 
-.breadcrumbComponent:nth-child(odd)::after
+.breadcrumbComponent:nth-child(even)::after
   content " "
   display block
   width 0
   height 0
   border-top 22px solid transparent /* Go big on the size, and let overflow hide */
   border-bottom 22px solid transparent
-  border-left 16px solid #ccc
+  border-left 16px solid #ddd
   position absolute
   top 50%
   margin-top -22px
@@ -89,15 +87,15 @@
     &::after
       border-left 16px solid #000
 
-.breadcrumbComponent:nth-last-child(2)
-  background-color #ddd
+/* .breadcrumbComponent:nth-last-child(2)
+  background-color #eee
   .breadcrumbPath
     color #000
     font-weight 200
     cursor auto
 
 .breadcrumbComponent:nth-last-child(2)::after
-  border-left 16px solid #ddd
+  border-left 16px solid #eee */
 
 
 

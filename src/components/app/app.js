@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import R from 'ramda';
 import { connect } from 'react-redux';
 import { observer } from 'mobx-react';
 import 'normalize.css/normalize.css';
@@ -40,6 +41,8 @@ import Sync from '../sync/sync';
 
 import history from '../../history';
 
+import Breadcrumbs from '../breadcrumbs/breadcrumbs';
+
 import { models, categories } from '../../schemas/main';
 
 @observer
@@ -57,7 +60,14 @@ class App extends Component {
   }
 
   renderNavbar() {
-    const { currentView, onOpenMenu } = this.props;
+    const { currentView, historyPath, onOpenMenu } = this.props;
+
+    console.log('History path is:', historyPath);
+
+    const pathToComponents = R.split('/');
+    const padComponents = R.map(p => [p, '']);
+    const makeComponents = R.pipe(pathToComponents, R.tail, padComponents, R.flatten);
+    const components = makeComponents(historyPath);
 
     return (
       <Navbar
@@ -73,13 +83,15 @@ class App extends Component {
           action: () => history.push(currentView.nextPath, {})
         } : null}
         title={currentView.title}
-      />
+      >
+        <Breadcrumbs path={components} />
+      </Navbar>
     );
   }
 
   // Renders currentView, passing in appropriate state as props.
   renderCurrentView(stores) {
-    const { dataStore, geoStore } = stores;
+    const { dataStore } = stores;
     const { currentView } = this.props;
 
     const id = currentView.params.id; // domain
@@ -182,6 +194,7 @@ class App extends Component {
 
 App.propTypes = {
   currentView: PropTypes.object,
+  historyPath: PropTypes.string,
   onOpenMenu: PropTypes.func,
   onCloseMenu: PropTypes.func,
   fetchAllDocuments: PropTypes.func,
@@ -197,7 +210,8 @@ function mapStateToProps(state) {
     docs: state.docs,
     views: state.views,
     modals: getAllModals(state),
-    currentView: getCurrentView(state.views)
+    currentView: getCurrentView(state.views),
+    historyPath: state.views.history.path // Todo: make a selector
   };
 }
 
