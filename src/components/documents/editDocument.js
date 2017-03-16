@@ -1,11 +1,11 @@
 import React from 'react';
-import R from 'ramda';
 import { connect } from 'react-redux';
 
 // Components
 import { Button, Page } from 'react-onsenui';
 import Form from '../forms/form';
-import Breadcrumbs from '../breadcrumbs/breadcrumbs';
+import Map from '../map/map';
+import Tabs from '../tabs/tabs';
 
 import './editDocument.styl';
 import './documentForm.styl';
@@ -31,15 +31,25 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   updateDoc: (id, newValues) => dispatch(update(id, newValues)),
   deleteDoc: (id, rev) => dispatch(_deleteDoc(id, rev)),
   resetFields: () => dispatch(resetFieldsAtPath(ownProps.fieldsPath))
-
 });
+
+const TABS = {
+  DATA: 'Data',
+  MAP: 'Map',
+};
 
 class EditDocument extends React.Component {
   constructor() {
     super();
+
+    this.state = {
+      activeTab: TABS.DATA
+    };
+
     // Bind context so we can pass function to event handlers.
     this.saveFields = this.saveFields.bind(this);
     this.deleteDoc = this.deleteDoc.bind(this);
+    this.onSelectTab = this.onSelectTab.bind(this);
   }
 
   deleteDoc() {
@@ -68,6 +78,12 @@ class EditDocument extends React.Component {
     });
   }
 
+  onSelectTab(id) {
+    this.setState({
+      activeTab: id
+    });
+  }
+
   render() {
     const { doc, domain, fieldsPath, fieldValues, historyPath, resetFields } = this.props;
     const schema = getSchema(domain);
@@ -77,16 +93,44 @@ class EditDocument extends React.Component {
     const makeComponents = R.pipe(pathToComponents, R.tail, padComponents, R.flatten);
     const components = makeComponents(historyPath); */
 
+    const showMap = this.state.activeTab === TABS.MAP;
+    const showForm = this.state.activeTab === TABS.DATA;
+
     return (
       <Page className="editDocument">
         { /* Breadcrumb logic is now handled in app.js and modal.js */ }
         {/* <Breadcrumbs path={components} /> */}
-        <Form
-          path={fieldsPath}
-          initialValues={doc}
-          fieldValues={fieldValues}
-          schema={schema}
+
+        <Tabs
+          activeId={this.state.activeTab}
+          ids={[TABS.DATA, TABS.MAP]}
+          onSelectTab={this.onSelectTab}
         />
+        {
+          showMap && (
+          <div
+            className="mapContainer"
+            style={{
+              transform: showMap ? 'translate3d(0,0,0)' : 'translate3d(100%,0,0)'
+            }}
+          >
+            <Map
+              location={[40.7294245, -73.9958957]}
+              entries={[]}
+            />
+          </div>
+          )
+        }
+        {
+          showForm && (
+          <Form
+            path={fieldsPath}
+            initialValues={doc}
+            fieldValues={fieldValues}
+            schema={schema}
+          />
+          )
+        }
         <div className="actions">
           <Button modifier="large" onClick={this.saveFields}>Save</Button>
           {/* <Button modifier="large" onClick={resetFields}>Reset fields</Button> */}

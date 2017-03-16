@@ -70,7 +70,7 @@ class Map extends React.Component {
   refreshMapLayers() {
     // Good use case for immutablejs here.
     // Difficult to diff geolocation entries to accomodate imperative leaflet api
-    const { entries } = this.props;
+    const { entries, location } = this.props;
 
     const latLngs = entries.map(entry => [
       entry.coords.latitude, entry.coords.longitude
@@ -107,6 +107,8 @@ class Map extends React.Component {
 
         this.layerGroup.addLayer(marker);
       });
+    } else if (location) {
+      this.map.setView(location, this.map.getMaxZoom());
     }
 
     // Zoom to first entry

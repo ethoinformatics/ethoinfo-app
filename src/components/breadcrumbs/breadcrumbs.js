@@ -25,15 +25,7 @@ const mapDispatchToProps = dispatch => ({
 class Breadcrumbs extends React.Component {
   render() {
     const { path, sliceHistory } = this.props;
-
     const components = R.splitEvery(2, path);
-    console.log('Breadcrumb components are:', components);
-
-    components.forEach((c) => {
-      c.forEach((cc) => {
-        console.log(typeof cc);
-      });
-    });
 
     return (
       <div className="breadcrumbs">
@@ -58,10 +50,14 @@ class Breadcrumbs extends React.Component {
                   Format the path component to be more human friendly:
                   - Pluralize and capitalize strings (assumes string names are model names)
                   - Don't do anything to numbers or UUIDs
+                  - Ignore the special case 'New' which corresponds to new doc
                   - Join components with a space (e.g. Widgets 0)
                 */}
                 {component.map((cc) => {
                   if (typeof cc === 'string' && !isUUID(cc)) {
+                    if (cc === 'new') {
+                      return 'New';
+                    }
                     return _.startCase(pluralize(cc));
                   }
 
