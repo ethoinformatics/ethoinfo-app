@@ -26,9 +26,13 @@ import { getById } from '../../redux/reducers/documents';
 const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
   return schema.fields.reduce((acc, field) => {
     if (field.type.constructor === Types.Geolocation && !!field.options.track === false) {
-
       if (Array.isArray(doc)) {
-        return [...acc, ...doc.map(dd => dd[field.name])].filter(element => !!element);
+        return [
+          ...acc,
+          ...doc
+            .filter(dd => !!dd) // Remove nils
+            .map(dd => dd[field.name])
+        ].filter(element => !!element); // Remove nils
       }
 
       return acc.push(doc[field.name]);
@@ -44,8 +48,7 @@ const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
         return acc;
       }
 
-      console.log('Recursing:', field.name);
-
+      // console.log('Recursing:', field.name);
       return [...acc, ...getGeoPoints(doc[field.name], subSchema)];
     }
 
@@ -85,19 +88,6 @@ class EditDocument extends React.Component {
     this.onSelectTab = this.onSelectTab.bind(this);
   }
 
-  deleteDoc() {
-    const { actions, deleteDoc, doc, resetFields } = this.props;
-
-    deleteDoc(doc._id, doc._rev)
-    .then(() => {
-      actions.onUpdate();
-      resetFields();
-    })
-    .catch((err) => {
-      console.log('Error editing document:', err);
-    });
-  }
-
   saveFields() {
     const { actions, updateDoc, id, fieldValues, resetFields } = this.props;
 
@@ -117,6 +107,19 @@ class EditDocument extends React.Component {
     });
   }
 
+  deleteDoc() {
+    const { actions, deleteDoc, doc, resetFields } = this.props;
+
+    deleteDoc(doc._id, doc._rev)
+    .then(() => {
+      actions.onUpdate();
+      resetFields();
+    })
+    .catch((err) => {
+      console.log('Error editing document:', err);
+    });
+  }
+
   render() {
     const { doc, domain, fieldsPath, fieldValues, historyPath, resetFields } = this.props;
     const schema = getSchema(domain);
@@ -129,36 +132,11 @@ class EditDocument extends React.Component {
     const showMap = this.state.activeTab === TABS.MAP;
     const showForm = this.state.activeTab === TABS.DATA;
 
-    console.log('Rendering edit doc:', doc, schema.fields);
+    // console.log('Rendering edit doc:', doc, schema.fields);
 
     const geoPoints = getGeoPoints(doc, schema);
 
-    console.log('Geo points:', geoPoints);
-
-    // Extract
-    /* const takeGeoPoint = (data, field) =>
-      (field.type.constructor === Types.Geolocation && // check that field is geo
-      !!field.options.track === false // coerce bool and check that this isn't a track
-      ? data[field.name] : null);*/
-
-    // const filterNull = item => item !== null;
-
-    /* R.reduce(R.subtract, 0, [1, 2, 3, 4])
-
-    const getGeoPoint = R.pipe(
-      R.takeGeoPoint
-    )
-
-    const parseCategories = R.pipe(
-      R.uniq,
-      R.map(validatedCategory),
-      R.filter(withoutErrorPredicate),
-      R.map(getValue),
-      R.map(makeCategory)
-    );*/ 
-
-    // Todo: extrapolate this logic for parsing a doc relative to a schema
-
+    console.log('>> editDocument >> geo points:', geoPoints);
 
     return (
       <Page className="editDocument">
@@ -180,6 +158,7 @@ class EditDocument extends React.Component {
           >
             <Map
               location={[40.7294245, -73.9958957]}
+              points={geoPoints}
               entries={[]}
             />
           </div>

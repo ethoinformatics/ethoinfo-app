@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 import _ from 'lodash';
 import React from 'react';
 import R from 'ramda';
@@ -8,6 +10,15 @@ import 'leaflet/dist/leaflet.css';
 import 'spinkit/css/spinners/5-pulse.css';
 import './map.styl';
 
+// Leaflet bug fix:
+// https://github.com/Leaflet/Leaflet/issues/4968
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 /**
  * Map component
@@ -70,9 +81,36 @@ class Map extends React.Component {
   refreshMapLayers() {
     // Good use case for immutablejs here.
     // Difficult to diff geolocation entries to accomodate imperative leaflet api
-    const { entries, location } = this.props;
+    const { entries, location, points } = this.props;
 
-    const latLngs = entries.map(entry => [
+    // Create markers
+    const pointLatLngs = points.map(point => [
+      point.coords.latitude, point.coords.longitude
+    ]);
+
+    if (this.pointsLayerGroup) {
+      this.pointsLayerGroup.eachLayer(l => this.layerGroup.removeLayer(l));
+    } else {
+      this.pointsLayerGroup = L.layerGroup([]).addTo(this.map);
+    }
+
+    pointLatLngs.forEach((ll) => {
+      const marker = L.marker(ll, {});
+      marker.bindPopup(`<p>${ll[0]}, ${ll[1]}</p>`);
+      this.pointsLayerGroup.addLayer(marker);
+    });
+
+    const lastPoint = R.last(points);
+
+    if (lastPoint) {
+      console.log('Last point:', lastPoint);
+      const latLng = [lastPoint.coords.latitude, lastPoint.coords.longitude];
+      this.map.setView(latLng, this.map.getMaxZoom());
+    } else if (location) {
+      this.map.setView(location, this.map.getMaxZoom());
+    }
+
+    /* const latLngs = entries.map(entry => [
       entry.coords.latitude, entry.coords.longitude
     ]);
 
@@ -110,6 +148,7 @@ class Map extends React.Component {
     } else if (location) {
       this.map.setView(location, this.map.getMaxZoom());
     }
+    */
 
     // Zoom to first entry
     /* const firstEntry = R.head(entries);
@@ -199,7 +238,20 @@ Map.propTypes = {
           longitude: React.PropTypes.number
         })
       })
+    ),
+  points: React.PropTypes.arrayOf(
+      React.PropTypes.shape({
+        timestamp: React.PropTypes.number,
+        coords: React.PropTypes.shape({
+          latitude: React.PropTypes.number,
+          longitude: React.PropTypes.number
+        })
+      })
     )
+};
+
+Map.defaultProps = {
+  points: [],
 };
 
 export default Map;
