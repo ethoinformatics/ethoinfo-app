@@ -1,12 +1,11 @@
 import React from 'react';
-import R from 'ramda';
 import { connect } from 'react-redux';
 
 // Components
-import { Button, Page } from 'react-onsenui';
+import { Page } from 'react-onsenui';
 import Form from '../forms/form';
 import Map from '../map/map';
-import Tabs from '../tabs/tabs';
+import TabbedView from '../tabbedView/tabbedView';
 
 import { Types } from '../../schemas/schema';
 
@@ -16,13 +15,17 @@ import './documentForm.styl';
 import { getSchema } from '../../schemas/main';
 
 // Actions
-import { update, deleteDoc as _deleteDoc } from '../../redux/actions/documents';
-import { resetFields as resetFieldsAtPath } from '../../redux/actions/fields';
+import { update, deleteDoc as _deleteDoc }
+  from '../../redux/actions/documents';
+
+import { resetFields as resetFieldsAtPath } from
+  '../../redux/actions/fields';
 
 // Selectors
 import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
 import { getById } from '../../redux/reducers/documents';
 
+// Extract geo points recursively through document and children
 const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
   return schema.fields.reduce((acc, field) => {
     if (field.type.constructor === Types.Geolocation && !!field.options.track === false) {
@@ -69,23 +72,20 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   resetFields: () => dispatch(resetFieldsAtPath(ownProps.fieldsPath))
 });
 
-const TABS = {
-  DATA: 'Data',
-  MAP: 'Map',
-};
-
 class EditDocument extends React.Component {
   constructor() {
     super();
-
-    this.state = {
-      activeTab: TABS.DATA
-    };
 
     // Bind context so we can pass function to event handlers.
     this.saveFields = this.saveFields.bind(this);
     this.deleteDoc = this.deleteDoc.bind(this);
     this.onSelectTab = this.onSelectTab.bind(this);
+  }
+
+  onSelectTab(id) {
+    this.setState({
+      activeTab: id
+    });
   }
 
   saveFields() {
@@ -98,12 +98,6 @@ class EditDocument extends React.Component {
     })
     .catch((err) => {
       console.log('Error saving new document:', err);
-    });
-  }
-
-  onSelectTab(id) {
-    this.setState({
-      activeTab: id
     });
   }
 
@@ -121,64 +115,48 @@ class EditDocument extends React.Component {
   }
 
   render() {
-    const { doc, domain, fieldsPath, fieldValues, historyPath, resetFields } = this.props;
+    const { doc, domain, fieldsPath, fieldValues, /* historyPath, resetFields */ } = this.props;
     const schema = getSchema(domain);
-
-    /* const pathToComponents = R.split('/');
-    const padComponents = R.map(p => [p, '']);
-    const makeComponents = R.pipe(pathToComponents, R.tail, padComponents, R.flatten);
-    const components = makeComponents(historyPath); */
-
-    const showMap = this.state.activeTab === TABS.MAP;
-    const showForm = this.state.activeTab === TABS.DATA;
-
-    // console.log('Rendering edit doc:', doc, schema.fields);
 
     const geoPoints = getGeoPoints(doc, schema);
 
-    console.log('>> editDocument >> geo points:', geoPoints);
+    // console.log('>> editDocument >> geo points:', geoPoints);
+
 
     return (
       <Page className="editDocument">
-        { /* Breadcrumb logic is now handled in app.js and modal.js */ }
-        {/* <Breadcrumbs path={components} /> */}
-
-        <Tabs
-          activeId={this.state.activeTab}
-          ids={[TABS.DATA, TABS.MAP]}
-          onSelectTab={this.onSelectTab}
+        <TabbedView
+          views={
+            [
+              {
+                id: 'Data',
+                component: (
+                  <Form
+                    path={fieldsPath}
+                    initialValues={doc}
+                    fieldValues={fieldValues}
+                    schema={schema}
+                  />
+                )
+              },
+              {
+                id: 'Map',
+                component: (
+                  <Map
+                    location={[40.7294245, -73.9958957]}
+                    points={geoPoints}
+                    entries={[]}
+                  />
+                )
+              }
+            ]
+          }
         />
-        {
-          showMap && (
-          <div
-            className="mapContainer"
-            style={{
-              transform: showMap ? 'translate3d(0,0,0)' : 'translate3d(100%,0,0)'
-            }}
-          >
-            <Map
-              location={[40.7294245, -73.9958957]}
-              points={geoPoints}
-              entries={[]}
-            />
-          </div>
-          )
-        }
-        {
-          showForm && (
-          <Form
-            path={fieldsPath}
-            initialValues={doc}
-            fieldValues={fieldValues}
-            schema={schema}
-          />
-          )
-        }
+        { /*
         <div className="actions">
           <Button modifier="large" onClick={this.saveFields}>Save</Button>
-          {/* <Button modifier="large" onClick={resetFields}>Reset fields</Button> */}
           <Button modifier="large" onClick={this.deleteDoc}>Delete</Button>
-        </div>
+        </div> */}
       </Page>
     );
   }
