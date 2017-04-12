@@ -7,6 +7,7 @@ import { Types } from '../../schemas/schema';
 import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
 
 import Fields from './fields';
+import Form from './form';
 import TextInputField from './fields/text/input';
 import DateField from './fields/date/date';
 import CollectionField from './fields/collection/collection';
@@ -54,7 +55,7 @@ const Field = (props) => {
     isLookup
   };
 
-  console.log('Field props >>', fieldProps);
+  // console.log('Field props >>', fieldProps);
 
   // For collections, enforce array value:
   if (isCollection) {
@@ -130,11 +131,20 @@ const Field = (props) => {
           return <SelectField options={[null, ...selectOptions]} {...fieldProps} />;
         }
 
-        return (
+         /* return (
           <Fields
             path={path}
             schema={schema}
             initialValues={fieldProps.value}
+          />
+        ); */
+
+        return (
+          <Form
+            path={path}
+            initialValues={initialValue}
+            fieldValues={fieldValue}
+            schema={schema}
           />
         );
       }

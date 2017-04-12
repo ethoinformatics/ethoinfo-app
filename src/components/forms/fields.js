@@ -47,7 +47,7 @@ class Fields extends React.Component {
               } = field;
 
 
-              const fieldValue = fieldValues[name];
+              const fieldValue = fieldValues ? fieldValues[name] : null;
               const initialValue = initialValues ? initialValues[name] || null : null;
               const subpath = [...path, name];
 

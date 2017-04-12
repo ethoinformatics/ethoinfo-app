@@ -44,7 +44,7 @@ class TabbedView extends Component {
               this.state.activeTabId === view.id;
 
             const style = {
-              transform: shouldShow ? 'translate3d(0,0,0)' : 'translate3d(100%,0,0)'
+              transform: shouldShow ? 'translate3d(0,0,0)' : 'translate3d(-100%,0,0)'
             };
 
             return (

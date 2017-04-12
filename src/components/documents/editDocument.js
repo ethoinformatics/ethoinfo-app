@@ -2,10 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Components
-import { Page } from 'react-onsenui';
+import { Button, Page } from 'react-onsenui';
 import Form from '../forms/form';
-import Map from '../map/map';
-import TabbedView from '../tabbedView/tabbedView';
 
 import { Types } from '../../schemas/schema';
 
@@ -111,46 +109,21 @@ class EditDocument extends React.Component {
     const { doc, domain, fieldsPath, fieldValues, /* historyPath, resetFields */ } = this.props;
     const schema = getSchema(domain);
 
-    const geoPoints = getGeoPoints(doc, schema);
-
-    // console.log('>> editDocument >> geo points:', geoPoints);
-
-    const form = (
-      <Form
-        path={fieldsPath}
-        initialValues={doc}
-        fieldValues={fieldValues}
-        schema={schema}
-      />
-    );
-
-    const map = (
-      <Map
-        location={[40.7294245, -73.9958957]}
-        points={geoPoints}
-        entries={[]}
-      />
-    );
-
-    const tabbedViews = [
-      {
-        id: 'Data',
-        component: form
-      },
-      {
-        id: 'Map',
-        component: map
-      }
-    ];
+    // const geoPoints = getGeoPoints(doc, schema);
 
     return (
       <Page className="editDocument">
-        <TabbedView views={tabbedViews} />
-        { /*
+        <Form
+          path={fieldsPath}
+          initialValues={doc}
+          fieldValues={fieldValues}
+          schema={schema}
+        />
+
         <div className="actions">
           <Button modifier="large" onClick={this.saveFields}>Save</Button>
           <Button modifier="large" onClick={this.deleteDoc}>Delete</Button>
-        </div> */}
+        </div>
       </Page>
     );
   }
