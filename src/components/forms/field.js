@@ -37,15 +37,14 @@ const Field = (props) => {
     isLookup,
     options,
     onChange,
-    initialValue,
-    fieldValue
+    initialValue, // Initial value of field
+    fieldValue // Current value of field
   } = props;
 
   let fieldComponent = null;
   const normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
 
   let fieldProps = {
-    // value,
     value: normalizedValue,
     initialValue,
     path,
@@ -54,6 +53,8 @@ const Field = (props) => {
     onChange,
     isLookup
   };
+
+  console.log('Field props >>', fieldProps);
 
   // For collections, enforce array value:
   if (isCollection) {
@@ -81,6 +82,7 @@ const Field = (props) => {
         fieldComponent = <TextInputField {...fieldProps} />;
         break;
 
+      // GEOLOCATION
       case Types.Geolocation:
         // If this is a geolocation track (a series of points, field is a switch
         // that marks tracking on and off.
@@ -153,15 +155,15 @@ Field.propTypes = {
   docs: PropTypes.arrayOf(
     PropTypes.object
   ).isRequired,
-  /* path: PropTypes.arrayOf( // Update path in state.fields
-    PropTypes.string
-  ), */
+  fieldValue: PropTypes.any,
   options: PropTypes.object,
   path: PropTypes.array,
   isCollection: PropTypes.bool,
   isLookup: PropTypes.bool,
-  value: PropTypes.any, // Transient form values
+  initialValue: PropTypes.any,
+  name: PropTypes.string,
   onChange: PropTypes.func,
+  type: PropTypes.any
 };
 
 export default connect(

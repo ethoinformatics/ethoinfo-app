@@ -76,16 +76,9 @@ class EditDocument extends React.Component {
   constructor() {
     super();
 
-    // Bind context so we can pass function to event handlers.
+    // Bind context.
     this.saveFields = this.saveFields.bind(this);
     this.deleteDoc = this.deleteDoc.bind(this);
-    this.onSelectTab = this.onSelectTab.bind(this);
-  }
-
-  onSelectTab(id) {
-    this.setState({
-      activeTab: id
-    });
   }
 
   saveFields() {
@@ -122,36 +115,37 @@ class EditDocument extends React.Component {
 
     // console.log('>> editDocument >> geo points:', geoPoints);
 
+    const form = (
+      <Form
+        path={fieldsPath}
+        initialValues={doc}
+        fieldValues={fieldValues}
+        schema={schema}
+      />
+    );
+
+    const map = (
+      <Map
+        location={[40.7294245, -73.9958957]}
+        points={geoPoints}
+        entries={[]}
+      />
+    );
+
+    const tabbedViews = [
+      {
+        id: 'Data',
+        component: form
+      },
+      {
+        id: 'Map',
+        component: map
+      }
+    ];
 
     return (
       <Page className="editDocument">
-        <TabbedView
-          views={
-            [
-              {
-                id: 'Data',
-                component: (
-                  <Form
-                    path={fieldsPath}
-                    initialValues={doc}
-                    fieldValues={fieldValues}
-                    schema={schema}
-                  />
-                )
-              },
-              {
-                id: 'Map',
-                component: (
-                  <Map
-                    location={[40.7294245, -73.9958957]}
-                    points={geoPoints}
-                    entries={[]}
-                  />
-                )
-              }
-            ]
-          }
-        />
+        <TabbedView views={tabbedViews} />
         { /*
         <div className="actions">
           <Button modifier="large" onClick={this.saveFields}>Save</Button>
