@@ -62,8 +62,6 @@ class App extends Component {
   renderNavbar() {
     const { currentView, historyPath, onOpenMenu } = this.props;
 
-    console.log('History path is:', historyPath);
-
     const pathToComponents = R.split('/');
     const padComponents = R.map(p => [p, '']);
     const makeComponents = R.pipe(pathToComponents, R.tail, padComponents, R.flatten);
@@ -132,7 +130,7 @@ class App extends Component {
         return (
           <EditDocument
             id={docId}
-            fieldsPath={['documents', '', id, '', docId, '']} // ['edit', id]
+            fieldsPath={[docId]} // ['edit', id]
             domain={id}
             actions={{
               onUpdate: () => history.push(`/documents/${id}/`, {})

@@ -23,12 +23,8 @@ const mapDispatchToProps = () => ({
 
 // Extract geo points recursively through document and children
 const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
-  console.log('Getting points from:', doc, schema);
-
-  if (!doc) {
-    console.log('No doc - returning');
-    return [];
-  }
+  // Return empty array if no document
+  if (!doc) { return []; }
 
   return schema.fields.reduce((acc, field) => {
     if (field.type.constructor === Types.Geolocation && !!field.options.track === false) {
@@ -62,11 +58,8 @@ const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
   }, []);
 };
 
-const Form = ({ initialValues, fieldValues, path, schema }) => {
-  const doc = initialValues;
+const Form = ({ doc, fieldValues, path, schema }) => {
   const geoPoints = getGeoPoints(doc, schema);
-
-  console.log('!!!!! Geo points:', doc, geoPoints);
 
   const map = (
     <Map
@@ -81,7 +74,7 @@ const Form = ({ initialValues, fieldValues, path, schema }) => {
       <Fields
         path={path}
         schema={schema}
-        initialValues={initialValues}
+        initialValues={doc}
         fieldValues={fieldValues}
       />
     </ol>
@@ -105,13 +98,9 @@ const Form = ({ initialValues, fieldValues, path, schema }) => {
   );
 };
 
-
 Form.propTypes = {
-  /* path: PropTypes.arrayOf(
-    PropTypes.string
-  ).isRequired, */
   path: PropTypes.array,
-  initialValues: PropTypes.object,
+  doc: PropTypes.object,
   fieldValues: PropTypes.object,
   schema: PropTypes.object.isRequired,
 };

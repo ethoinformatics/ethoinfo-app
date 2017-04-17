@@ -2,14 +2,9 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Field from './field';
 import { setField as setFieldAction } from '../../redux/actions/fields';
-import { getAll as getAllDocs } from '../../redux/reducers/documents';
 import './fields.styl';
 
-const mapStateToProps = state =>
-  ({
-    docs: getAllDocs(state.docs),
-    fields: state.fields
-  });
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = dispatch => ({
   setField: (path, value) => {
@@ -18,56 +13,57 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Fields extends React.Component {
-    // Field update
+  constructor() {
+    super();
+    this.onFieldChange = this.onFieldChange.bind(this);
+    this.renderField = this.renderField.bind(this);
+  }
+
+  // Field update
   // Path is a string or an array on nested objects
   onFieldChange(name, value) {
+    console.log('&&& onFieldChange', name, value);
     const { path, setField } = this.props;
     setField([...path, name], value);
   }
 
+  renderField(field) {
+    // These properties are defined per field by the model schema
+    const { isCollection = false, isLookup = false, name, options = {}, type } = field;
+
+    const { fieldValues, initialValues, path } = this.props;
+
+    const fieldValue = fieldValues ? fieldValues[name] : null;
+    const initialValue = initialValues ? initialValues[name] || null : null;
+    const subpath = [...path, name];
+
+    return (
+      <Field
+        fieldValue={fieldValue}
+        initialValue={initialValue}
+        isCollection={isCollection}
+        isLookup={isLookup}
+        onChange={val => this.onFieldChange(name, val)}
+        options={options}
+        name={name}
+        path={subpath}
+        type={type}
+      />
+    );
+  }
+
   render() {
-    const {
-      fieldValues = {},
-      initialValues = {},
-      schema,
-      path,
-    } = this.props;
+    const { schema } = this.props;
+
+    // console.log('>>> Render fields:', this.props.path);
 
     return (
       <div>
         <ol className="fields">
-          {
-            schema.fields.map((field, index) => {
-              const {
-                name,
-                isCollection = false,
-                isLookup = false,
-                options = {},
-                type
-              } = field;
-
-
-              const fieldValue = fieldValues ? fieldValues[name] : null;
-              const initialValue = initialValues ? initialValues[name] || null : null;
-              const subpath = [...path, name];
-
-              return (
-                <li className="field" key={index}>
-                  <Field
-                    initialValue={initialValue}
-                    fieldValue={fieldValue}
-                    // value={value}
-                    options={options}
-                    name={name}
-                    path={subpath}
-                    type={type}
-                    isCollection={isCollection}
-                    isLookup={isLookup}
-                    onChange={val => this.onFieldChange(name, val)}
-                  />
-                </li>
-              );
-            })
+          { schema.fields.map((field, index) =>
+            (<li className="field" key={index}>
+              { this.renderField(field) }
+            </li>))
           }
         </ol>
       </div>
@@ -76,11 +72,16 @@ class Fields extends React.Component {
 }
 
 Fields.propTypes = {
-  path: PropTypes.array,
-  initialValues: PropTypes.object, // Values from model
   fieldValues: PropTypes.object, // Transient form values
+  initialValues: PropTypes.object, // Values from model
+  path: PropTypes.array,
   schema: PropTypes.object.isRequired,
   setField: PropTypes.func
+};
+
+Fields.defaultProps = {
+  initialValues: {},
+  fieldValues: {}
 };
 
 export default connect(

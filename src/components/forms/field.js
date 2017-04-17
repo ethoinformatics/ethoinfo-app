@@ -6,14 +6,12 @@ import { Types } from '../../schemas/schema';
 
 import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
 
-import Fields from './fields';
 import Form from './form';
 import TextInputField from './fields/text/input';
 import DateField from './fields/date/date';
 import CollectionField from './fields/collection/collection';
 import SelectField from './fields/select/select';
 import BooleanField from './fields/boolean/boolean';
-
 import Geo from './fields/geolocation/geolocation';
 
 import { getSchema } from '../../schemas/main';
@@ -31,16 +29,18 @@ const mapDispatchToProps = () => ({
 const Field = (props) => {
   const {
     docs,
-    path,
-    type,
-    name,
+    fieldValue, // Current value of field
+    initialValue, // Initial value of field
     isCollection,
     isLookup,
+    name,
     options,
     onChange,
-    initialValue, // Initial value of field
-    fieldValue // Current value of field
+    path,
+    type,
   } = props;
+
+  // console.log('> Render field:', path, fieldValue);
 
   let fieldComponent = null;
   const normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
@@ -54,8 +54,6 @@ const Field = (props) => {
     onChange,
     isLookup
   };
-
-  // console.log('Field props >>', fieldProps);
 
   // For collections, enforce array value:
   if (isCollection) {
@@ -131,18 +129,11 @@ const Field = (props) => {
           return <SelectField options={[null, ...selectOptions]} {...fieldProps} />;
         }
 
-         /* return (
-          <Fields
-            path={path}
-            schema={schema}
-            initialValues={fieldProps.value}
-          />
-        ); */
-
+        /// HERE! This should be fields
         return (
           <Form
             path={path}
-            initialValues={initialValue}
+            doc={initialValue}
             fieldValues={fieldValue}
             schema={schema}
           />
@@ -180,5 +171,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Field);
-
-

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import moment from 'moment';
+// import moment from 'moment';
 import localforage from 'localforage';
 
 import {
@@ -40,7 +40,7 @@ const watchEpic = (action$) => {
 
   return watch$.mergeMap(
     () => watchPosition()
-      .throttleTime(THROTTLE_TIME)
+      .debounceTime(THROTTLE_TIME)
       .map(geoposition => received({
         coords: {
           latitude: geoposition.coords.latitude,

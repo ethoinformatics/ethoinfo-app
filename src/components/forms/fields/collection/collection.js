@@ -49,9 +49,13 @@ class CollectionField extends Component {
     this.removeNulls = this.removeNulls.bind(this);
   }
 
+  // Wraps onChange with extra logic for collections.
   onItemChange(index, val) {
     const { value, onChange } = this.props;
     const newValue = R.adjust(() => val, index, value); // Merge at index
+
+    console.log('**** collection onItemChange:', value, newValue);
+
     onChange(newValue);
   }
 

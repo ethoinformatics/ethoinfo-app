@@ -5,63 +5,27 @@ import { connect } from 'react-redux';
 import { Button, Page } from 'react-onsenui';
 import Form from '../forms/form';
 
-import { Types } from '../../schemas/schema';
-
+// Styles
 import './editDocument.styl';
 import './documentForm.styl';
 
 import { getSchema } from '../../schemas/main';
 
 // Actions
-import { update, deleteDoc as _deleteDoc }
-  from '../../redux/actions/documents';
-
-import { resetFields as resetFieldsAtPath } from
-  '../../redux/actions/fields';
+import { update, deleteDoc as _deleteDoc } from '../../redux/actions/documents';
+import { resetFields as resetFieldsAtPath } from '../../redux/actions/fields';
 
 // Selectors
 import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
-import { getById } from '../../redux/reducers/documents';
+import { makeGetById } from '../../redux/selectors/documents';
 
-// Extract geo points recursively through document and children
-const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
-  return schema.fields.reduce((acc, field) => {
-    if (field.type.constructor === Types.Geolocation && !!field.options.track === false) {
-      if (Array.isArray(doc)) {
-        return [
-          ...acc,
-          ...doc
-            .filter(dd => !!dd) // Remove nils
-            .map(dd => dd[field.name])
-        ].filter(element => !!element); // Remove nils
-      }
+const getById = makeGetById();
 
-      return acc.push(doc[field.name]);
-    }
-
-    if (field.type.constructor === Types.Model) {
-      const { name: domainName } = field.type;
-
-      const subSchema = getSchema(domainName);
-      if (!subSchema) { return acc; }
-
-      if (!doc[field.name]) {
-        return acc;
-      }
-
-      // console.log('Recursing:', field.name);
-      return [...acc, ...getGeoPoints(doc[field.name], subSchema)];
-    }
-
-    return acc;
-  }, []);
-};
-
+// Redux setup
 const mapStateToProps = (state, ownProps) =>
   ({
-    doc: getById(state.docs.byId, ownProps.id),
-    fieldValues: getFieldsByPath(state.fields, ownProps.fieldsPath),
-    historyPath: state.views.history.path // Todo: make a selector
+    doc: getById(state, ownProps),
+    fieldValues: getFieldsByPath(state.fields, ownProps.fieldsPath)
   });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -106,16 +70,14 @@ class EditDocument extends React.Component {
   }
 
   render() {
-    const { doc, domain, fieldsPath, fieldValues, /* historyPath, resetFields */ } = this.props;
+    const { doc, domain, fieldsPath, fieldValues, /* resetFields */ } = this.props;
     const schema = getSchema(domain);
-
-    // const geoPoints = getGeoPoints(doc, schema);
 
     return (
       <Page className="editDocument">
         <Form
           path={fieldsPath}
-          initialValues={doc}
+          doc={doc}
           fieldValues={fieldValues}
           schema={schema}
         />
@@ -139,7 +101,6 @@ EditDocument.propTypes = {
   deleteDoc: React.PropTypes.func,
   updateDoc: React.PropTypes.func,
   domain: React.PropTypes.string,
-  historyPath: React.PropTypes.string,
   fieldsPath: React.PropTypes.array,
   fieldValues: React.PropTypes.object,
   resetFields: React.PropTypes.func
