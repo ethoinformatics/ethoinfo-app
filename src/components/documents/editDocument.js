@@ -93,10 +93,10 @@ class EditDocument extends React.Component {
           schema={schema}
         />
 
-        <div className="actions">
+        {/* <div className="actions">
           <Button modifier="large" onClick={this.saveFields}>Save</Button>
           <Button modifier="large" onClick={this.deleteDoc}>Delete</Button>
-        </div>
+        </div> */}
       </Page>
     );
   }

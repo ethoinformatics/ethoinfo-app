@@ -87,13 +87,13 @@ export function fetchAll() {
 }
 
 // Save a new document to pouchdb.
-export function create(doc, schema) {
+export function create(doc, domainName) {
   return (dispatch, getState, { pouchdb }) => {
     dispatch(createDocStart());
 
     const newDoc = {
       _id: uuid(),
-      domainName: schema.name,
+      domainName,
       ...doc
     };
 
@@ -124,6 +124,10 @@ export function update(id, newValues) {
     .then((doc) => {
       const newDoc = { ...doc, ...newValues };
       return pouchdb.put(newDoc);
+    })
+    .catch((err) => {
+      dispatch(updateDocError(err));
+      throw err;
     })
     .then((res) => {
       dispatch(updateDocSuccess(res));

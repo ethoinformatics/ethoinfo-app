@@ -14,6 +14,8 @@ import Menu from '../menu/menu';
 import Navbar from '../navbar/navbar';
 
 // Actions
+import { create as createDoc } from '../../redux/actions/documents';
+
 import {
   watch as watchGeolocation,
   loadCache as loadGeolocationCache
@@ -60,7 +62,7 @@ class App extends Component {
   }
 
   renderNavbar() {
-    const { currentView, historyPath, onOpenMenu } = this.props;
+    const { createDoc, currentView, historyPath, onOpenMenu } = this.props;
 
     const pathToComponents = R.split('/');
     const padComponents = R.map(p => [p, '']);
@@ -76,9 +78,23 @@ class App extends Component {
           icon: 'md-menu',
           action: () => onOpenMenu()
         }}
-        rightItem={currentView.nextPath ? {
+        rightItem={currentView.name === 'documents' ? {
           icon: 'md-plus',
-          action: () => history.push(currentView.nextPath, {})
+          action: () => {
+            const domainName = currentView.params.id;
+            // history.push(currentView.nextPath, {}
+            console.log('Create new:', domainName);
+            createDoc(domainName)
+              .then((result) => {
+                console.log('Created a new doc:', result);
+                const { id: newId } = result;
+                const pathToNewDoc = `/documents/${domainName}/${newId}`;
+
+                history.push(pathToNewDoc);
+              }).catch((err) => {
+                console.log('Error creating new document:', err);
+              });
+          }
         } : null}
         title={currentView.title}
       >
@@ -191,6 +207,7 @@ class App extends Component {
 }
 
 App.propTypes = {
+  createDoc: PropTypes.func,
   currentView: PropTypes.object,
   historyPath: PropTypes.string,
   onOpenMenu: PropTypes.func,
@@ -214,6 +231,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = dispatch => ({
+  createDoc: domainName => dispatch(createDoc({}, domainName)),
   onOpenMenu: () => {
     dispatch(openMenu());
   },

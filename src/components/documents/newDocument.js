@@ -20,7 +20,7 @@ const mapStateToProps = (state, ownProps) =>
   });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  createDoc: (doc, schema) => dispatch(create(doc, schema)),
+  createDoc: (doc, domainName) => dispatch(create(doc, domainName)),
   resetFields: () => dispatch(resetFieldsAtPath(ownProps.fieldsPath))
 });
 
@@ -35,7 +35,7 @@ class NewDocument extends React.Component {
     const { actions, createDoc, domain, fieldValues, resetFields } = this.props;
     const schema = getSchema(domain);
 
-    createDoc(fieldValues, schema)
+    createDoc(fieldValues, schema.name)
     .then(() => {
       actions.onCreate();
       resetFields();
