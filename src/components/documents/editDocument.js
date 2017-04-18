@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 // Components
@@ -13,7 +13,7 @@ import { getSchema } from '../../schemas/main';
 
 // Actions
 import { update, deleteDoc as _deleteDoc } from '../../redux/actions/documents';
-import { resetFields as resetFieldsAtPath } from '../../redux/actions/fields';
+import { resetFields as resetFieldsAtPath, setField as setFieldAction } from '../../redux/actions/fields';
 
 // Selectors
 import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
@@ -31,7 +31,10 @@ const mapStateToProps = (state, ownProps) =>
 const mapDispatchToProps = (dispatch, ownProps) => ({
   updateDoc: (id, newValues) => dispatch(update(id, newValues)),
   deleteDoc: (id, rev) => dispatch(_deleteDoc(id, rev)),
-  resetFields: () => dispatch(resetFieldsAtPath(ownProps.fieldsPath))
+  resetFields: () => dispatch(resetFieldsAtPath(ownProps.fieldsPath)),
+  setField: (path, value) => {
+    dispatch(setFieldAction(path, value));
+  }
 });
 
 class EditDocument extends React.Component {
@@ -39,8 +42,15 @@ class EditDocument extends React.Component {
     super();
 
     // Bind context.
-    this.saveFields = this.saveFields.bind(this);
     this.deleteDoc = this.deleteDoc.bind(this);
+    this.onFieldChange = this.onFieldChange.bind(this);
+    this.saveFields = this.saveFields.bind(this);
+  }
+
+  onFieldChange(path, value) {
+    const { setField } = this.props;
+    console.log('***** Edit doc onFieldChange:', path, value);
+    setField(path, value);
   }
 
   saveFields() {
@@ -76,9 +86,10 @@ class EditDocument extends React.Component {
     return (
       <Page className="editDocument">
         <Form
-          path={fieldsPath}
           doc={doc}
           fieldValues={fieldValues}
+          onFieldChange={this.onFieldChange}
+          path={fieldsPath}
           schema={schema}
         />
 
@@ -93,17 +104,18 @@ class EditDocument extends React.Component {
 
 /* eslint-disable react/no-unused-prop-types */
 EditDocument.propTypes = {
-  id: React.PropTypes.string.isRequired,
-  doc: React.PropTypes.object,
-  actions: React.PropTypes.shape({
-    onUpdate: React.PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
+  doc: PropTypes.object,
+  actions: PropTypes.shape({
+    onUpdate: PropTypes.func.isRequired,
   }),
-  deleteDoc: React.PropTypes.func,
-  updateDoc: React.PropTypes.func,
-  domain: React.PropTypes.string,
-  fieldsPath: React.PropTypes.array,
-  fieldValues: React.PropTypes.object,
-  resetFields: React.PropTypes.func
+  deleteDoc: PropTypes.func,
+  updateDoc: PropTypes.func,
+  domain: PropTypes.string,
+  fieldsPath: PropTypes.array,
+  fieldValues: PropTypes.object,
+  resetFields: PropTypes.func,
+  setField: PropTypes.func.isRequired
 };
 
 export default connect(

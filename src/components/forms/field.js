@@ -26,131 +26,154 @@ const mapStateToProps = (state, ownProps) =>
 const mapDispatchToProps = () => ({
 });
 
-const Field = (props) => {
-  const {
-    docs,
-    fieldValue, // Current value of field
-    initialValue, // Initial value of field
-    isCollection,
-    isLookup,
-    name,
-    options,
-    onChange,
-    path,
-    type,
-  } = props;
 
-  // console.log('> Render field:', path, fieldValue);
+class Field extends React.Component {
+  constructor() {
+    super();
+    this.onChange = this.onChange.bind(this);
+  }
 
-  let fieldComponent = null;
-  const normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
+  onChange(value) {
+    const { onChange, name, path } = this.props;
+    console.log('^^^^ FIELD ON CHANGE:', path, name, value);
+    onChange(path, value);
+  }
 
-  let fieldProps = {
-    value: normalizedValue,
-    initialValue,
-    path,
-    name,
-    type,
-    onChange,
-    isLookup
-  };
+  render() {
+    const {
+      docs,
+      fieldValue, // Current value of field
+      initialValue, // Initial value of field
+      isCollection,
+      isLookup,
+      name,
+      options,
+      onChange,
+      path,
+      type,
+    } = this.props;
 
-  // For collections, enforce array value:
-  if (isCollection) {
-    fieldProps = {
-      ...fieldProps,
-      value: Array.isArray(normalizedValue) ? normalizedValue : [],
-      initialValue: Array.isArray(initialValue) ? initialValue : []
+    // console.log('> Render field:', path, fieldValue);
+
+    let fieldComponent = null;
+    const normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
+
+    let fieldProps = {
+      value: normalizedValue,
+      initialValue,
+      path,
+      name,
+      type,
+      onChange: this.onChange,
+      isLookup
     };
 
-    fieldComponent = <CollectionField {...fieldProps} />;
-  } else {
-    switch (type.constructor) {
-      // DATE
-      case Types.Date:
-        fieldComponent = <DateField {...fieldProps} />;
-        break;
-
-      // STRING
-      case Types.String:
-        fieldComponent = <TextInputField {...fieldProps} />;
-        break;
-
-      // NUMBER
-      case Types.Number:
-        fieldComponent = <TextInputField {...fieldProps} />;
-        break;
-
-      // GEOLOCATION
-      case Types.Geolocation:
-        // If this is a geolocation track (a series of points, field is a switch
-        // that marks tracking on and off.
-
-        // If this is a single geolocation point, field is a button fieldComponent
-        // which takes taps and returns geolocation points
-        if (options.track) {
-          fieldComponent = <BooleanField {...fieldProps} />;
-        } else {
-          fieldComponent = <Geo {...fieldProps} />;
+    // For collections, enforce array value:
+    if (isCollection) {
+      fieldProps = {
+        ...fieldProps,
+        value: Array.isArray(normalizedValue) ? normalizedValue : [],
+        initialValue: Array.isArray(initialValue) ? initialValue : [],
+        onChange: (__path, value) => {
+          console.log('FIELD >> Collection on change', __path, value);
+          this.props.onChange(__path, value);
         }
+      };
 
-        break;
+      fieldComponent = <CollectionField {...fieldProps} />;
+    } else {
+      switch (type.constructor) {
+        // DATE
+        case Types.Date:
+          fieldComponent = <DateField {...fieldProps} />;
+          break;
 
-      // CATEGORY
-      case Types.Category: {
-        const { name: domainName } = type;
-        const schema = getSchema(domainName);
-        if (!schema) { return null; }
+        // STRING
+        case Types.String:
+          fieldComponent = <TextInputField {...fieldProps} />;
+          break;
 
-        const selectOptions = docs
-          .filter(doc => doc.domainName === domainName)
-          .map(doc => ({
-            _id: doc._id,
-            name: doc[schema.displayField] || doc.name || doc._id
-          }));
+        // NUMBER
+        case Types.Number:
+          fieldComponent = <TextInputField {...fieldProps} />;
+          break;
 
-        return <SelectField options={[null, ...selectOptions]} {...fieldProps} />;
-      }
+        // GEOLOCATION
+        case Types.Geolocation:
+          // If this is a geolocation track (a series of points, field is a switch
+          // that marks tracking on and off.
 
-      // MODEL
-      case Types.Model: {
-        const { name: domainName } = type;
-        const schema = getSchema(domainName);
-        if (!schema) { return null; }
+          // If this is a single geolocation point, field is a button fieldComponent
+          // which takes taps and returns geolocation points
+          if (options.track) {
+            fieldComponent = <BooleanField {...fieldProps} />;
+          } else {
+            fieldComponent = <Geo {...fieldProps} />;
+          }
 
-        if (isLookup) {
+          break;
+
+        // CATEGORY
+        case Types.Category: {
+          const { name: domainName } = type;
+          const schema = getSchema(domainName);
+          if (!schema) { return null; }
+
           const selectOptions = docs
-          .filter(doc => doc.domainName === domainName)
-          .map(doc => ({
-            _id: doc._id,
-            name: doc[schema.displayField] || doc.name || doc._id
-          }));
+            .filter(doc => doc.domainName === domainName)
+            .map(doc => ({
+              _id: doc._id,
+              name: doc[schema.displayField] || doc.name || doc._id
+            }));
 
           return <SelectField options={[null, ...selectOptions]} {...fieldProps} />;
         }
 
-        /// HERE! This should be fields
-        return (
-          <Form
-            path={path}
-            doc={initialValue}
-            fieldValues={fieldValue}
-            schema={schema}
-          />
-        );
+        // MODEL
+        case Types.Model: {
+          const { name: domainName } = type;
+          const schema = getSchema(domainName);
+          if (!schema) { return null; }
+
+          if (isLookup) {
+            const selectOptions = docs
+            .filter(doc => doc.domainName === domainName)
+            .map(doc => ({
+              _id: doc._id,
+              name: doc[schema.displayField] || doc.name || doc._id
+            }));
+
+            return <SelectField options={[null, ...selectOptions]} {...fieldProps} />;
+          }
+
+          return (
+            <Form
+              path={path}
+              doc={initialValue}
+              fieldValues={fieldValue}
+              onFieldChange={(_path, value) => {
+                console.log('form path:', _path);
+                // this.onChange(value);
+                this.props.onChange(_path, value);
+              }}
+              schema={schema}
+            />
+          );
+        }
+
+        default:
+          break;
       }
-
-      default:
-        break;
     }
-  }
 
-  return (
-    <div className="field">
-      <div>{fieldComponent}</div>
-    </div>
-  );
-};
+    return (
+      <div className="field">
+        <div>{fieldComponent}</div>
+      </div>
+    );
+  }
+}
+
 
 Field.propTypes = {
   docs: PropTypes.arrayOf(

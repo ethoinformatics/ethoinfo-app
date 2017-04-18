@@ -1,16 +1,10 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Field from './field';
-import { setField as setFieldAction } from '../../redux/actions/fields';
 import './fields.styl';
 
 const mapStateToProps = () => ({});
-
-const mapDispatchToProps = dispatch => ({
-  setField: (path, value) => {
-    dispatch(setFieldAction(path, value));
-  }
-});
+const mapDispatchToProps = () => ({});
 
 class Fields extends React.Component {
   constructor() {
@@ -21,10 +15,13 @@ class Fields extends React.Component {
 
   // Field update
   // Path is a string or an array on nested objects
-  onFieldChange(name, value) {
-    console.log('&&& onFieldChange', name, value);
-    const { path, setField } = this.props;
-    setField([...path, name], value);
+  onFieldChange(path, value) {
+    // const { onFieldChange, path } = this.props;
+    // onFieldChange([...path, name], value);
+    // console.log('&&& onFieldChange', name, value);
+    const { onFieldChange } = this.props;
+    console.log('&&& FIELDS onFieldChange', path, value);
+    onFieldChange(path, value);
   }
 
   renderField(field) {
@@ -43,7 +40,7 @@ class Fields extends React.Component {
         initialValue={initialValue}
         isCollection={isCollection}
         isLookup={isLookup}
-        onChange={val => this.onFieldChange(name, val)}
+        onChange={this.onFieldChange}
         options={options}
         name={name}
         path={subpath}
@@ -54,8 +51,6 @@ class Fields extends React.Component {
 
   render() {
     const { schema } = this.props;
-
-    // console.log('>>> Render fields:', this.props.path);
 
     return (
       <div>
@@ -74,13 +69,14 @@ class Fields extends React.Component {
 Fields.propTypes = {
   fieldValues: PropTypes.object, // Transient form values
   initialValues: PropTypes.object, // Values from model
+  onFieldChange: PropTypes.func,
   path: PropTypes.array,
   schema: PropTypes.object.isRequired,
-  setField: PropTypes.func
 };
 
 Fields.defaultProps = {
   initialValues: {},
+  onFieldChange: () => {},
   fieldValues: {}
 };
 

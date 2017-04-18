@@ -58,7 +58,7 @@ const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
   }, []);
 };
 
-const Form = ({ doc, fieldValues, path, schema }) => {
+const Form = ({ doc, fieldValues, onFieldChange, path, schema }) => {
   const geoPoints = getGeoPoints(doc, schema);
 
   const map = (
@@ -72,10 +72,11 @@ const Form = ({ doc, fieldValues, path, schema }) => {
   const fields = (
     <ol className="formFields">
       <Fields
+        fieldValues={fieldValues}
+        initialValues={doc}
+        onFieldChange={onFieldChange}
         path={path}
         schema={schema}
-        initialValues={doc}
-        fieldValues={fieldValues}
       />
     </ol>
   );
@@ -99,10 +100,15 @@ const Form = ({ doc, fieldValues, path, schema }) => {
 };
 
 Form.propTypes = {
-  path: PropTypes.array,
   doc: PropTypes.object,
   fieldValues: PropTypes.object,
+  path: PropTypes.array,
+  onFieldChange: PropTypes.func,
   schema: PropTypes.object.isRequired,
+};
+
+Form.defaultProps = {
+  onFieldChange: () => {}
 };
 
 export default connect(

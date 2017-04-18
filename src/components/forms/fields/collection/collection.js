@@ -50,17 +50,18 @@ class CollectionField extends Component {
   }
 
   // Wraps onChange with extra logic for collections.
-  onItemChange(index, val) {
-    const { value, onChange } = this.props;
-    const newValue = R.adjust(() => val, index, value); // Merge at index
+  onItemChange(itemPath, newItemValue) {
+    const { value, onChange, path } = this.props;
+    // const newValue = R.adjust(() => newItemValue, index, value); // Merge at index
+    const newValue = value;
+    console.log('**** collection onItemChange:', itemPath, newItemValue, path, value, newValue);
 
-    console.log('**** collection onItemChange:', value, newValue);
-
-    onChange(newValue);
+    onChange(itemPath, newItemValue);
   }
 
   onItemReset(index) {
-    const { value, onChange, initialValue } = this.props;
+    console.log('Resetting!');
+    const { value, onChange, initialValue, path } = this.props;
     const initialItemValue = initialValue[index];
 
     if (_.isNil(initialItemValue)) {
@@ -74,7 +75,7 @@ class CollectionField extends Component {
 
       // Remove nulls
       newValue = newValue.filter(item => !_.isNil(item));
-      onChange(newValue);
+      onChange(path, newValue);
     }
   }
 
@@ -196,13 +197,14 @@ class CollectionField extends Component {
 
           // Push a new value to the end of collection
           const newValue = [...value, null];
-          onChange(newValue);
 
           // Index of new item is last array index
           const newIndex = newValue.length - 1;
 
           // Append index to path
           const newPath = [...path, newIndex];
+
+          onChange(newPath, null);
 
           // Make an id string from path components
           const modalId = newPath.join('/');
@@ -220,7 +222,7 @@ class CollectionField extends Component {
             value: null,
             onChange: val => this.onItemChange(newIndex, val),
             onClose: () => {
-              this.onItemReset(newIndex);
+              // this.onItemReset(newIndex);
             },
             actions: [
               {
@@ -250,6 +252,8 @@ class CollectionField extends Component {
 
     const { isExpanded } = this.state;
 
+    console.log('Rendering collection:', name, value);
+
     return (
       <div className="collectionField">
         {this.renderHeader()}
@@ -277,9 +281,9 @@ class CollectionField extends Component {
                       isLookup,
                       initialValue: initialValue[index],
                       value: value[index],
-                      onChange: val => this.onItemChange(index, val),
+                      onChange: (_itemPath, val) => this.onItemChange(_itemPath, val),
                       onClose: () => {
-                        this.onItemReset(index);
+                        // this.onItemReset(index);
                         // onResetFields(itemPath);
                       },
                       actions: [
