@@ -62,7 +62,7 @@ class App extends Component {
   }
 
   renderNavbar() {
-    const { createDoc, currentView, historyPath, onOpenMenu } = this.props;
+    const { currentView, historyPath, onOpenMenu } = this.props;
 
     const pathToComponents = R.split('/');
     const padComponents = R.map(p => [p, '']);
@@ -84,7 +84,7 @@ class App extends Component {
             const domainName = currentView.params.id;
             // history.push(currentView.nextPath, {}
             console.log('Create new:', domainName);
-            createDoc(domainName)
+            this.props.createDoc(domainName)
               .then((result) => {
                 console.log('Created a new doc:', result);
                 const { id: newId } = result;
@@ -191,8 +191,8 @@ class App extends Component {
           <Menu {...menuProps} />
           <SplitterContent>
             {/* Modal components */}
-            { modals.map(modal =>
-              <Modal key={modal.id} id={modal.id} {...modal.props} />
+            { modals.map((modal, index) =>
+              <Modal key={modal.id} id={modal.id} {...modal.props} style={{ zIndex: index }} />
             )}
 
             {/* Main page */}

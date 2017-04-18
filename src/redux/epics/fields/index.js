@@ -29,7 +29,7 @@ const autoSaveEpic = (action$, store) => {
       const fields = state.fields;
       const newValues = fields[id];
 
-      console.log('!!!!!', id, newValues);
+      console.log('>>< Set field epic', id, newValues);
 
       return update(id, newValues);
     });

@@ -56,7 +56,7 @@ class Fields extends React.Component {
       <div>
         <ol className="fields">
           { schema.fields.map((field, index) =>
-            (<li className="field" key={index}>
+            (<li key={index}>
               { this.renderField(field) }
             </li>))
           }

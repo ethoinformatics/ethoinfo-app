@@ -168,7 +168,7 @@ class Field extends React.Component {
 
     return (
       <div className="field">
-        <div>{fieldComponent}</div>
+        {fieldComponent}
       </div>
     );
   }

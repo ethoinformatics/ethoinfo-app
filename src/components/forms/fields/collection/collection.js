@@ -51,10 +51,9 @@ class CollectionField extends Component {
 
   // Wraps onChange with extra logic for collections.
   onItemChange(itemPath, newItemValue) {
-    const { value, onChange, path } = this.props;
+    const { onChange } = this.props;
     // const newValue = R.adjust(() => newItemValue, index, value); // Merge at index
-    const newValue = value;
-    console.log('**** collection onItemChange:', itemPath, newItemValue, path, value, newValue);
+    console.log('**** collection onItemChange:', itemPath, newItemValue);
 
     onChange(itemPath, newItemValue);
   }
@@ -196,15 +195,19 @@ class CollectionField extends Component {
           event.preventDefault();
 
           // Push a new value to the end of collection
-          const newValue = [...value, null];
+          const newCollectionValue = [...value, null];
 
           // Index of new item is last array index
-          const newIndex = newValue.length - 1;
+          const newIndex = newCollectionValue.length - 1;
 
           // Append index to path
           const newPath = [...path, newIndex];
 
-          onChange(newPath, null);
+          // Models need special handling for initial value or Ramda poops out
+          // When trying to use assocPath on a null value
+          const newItemValue = type.constructor === Types.Model ? {} : null;
+
+          onChange(newPath, newItemValue);
 
           // Make an id string from path components
           const modalId = newPath.join('/');
@@ -220,7 +223,7 @@ class CollectionField extends Component {
             name: title,
             isLookup,
             value: null,
-            onChange: val => this.onItemChange(newIndex, val),
+            onChange: (__path, val) => this.onItemChange(__path, val),
             onClose: () => {
               // this.onItemReset(newIndex);
             },
@@ -251,8 +254,6 @@ class CollectionField extends Component {
     } = this.props;
 
     const { isExpanded } = this.state;
-
-    console.log('Rendering collection:', name, value);
 
     return (
       <div className="collectionField">
@@ -287,7 +288,7 @@ class CollectionField extends Component {
                         // onResetFields(itemPath);
                       },
                       actions: [
-                        {
+                        /* {
                           title: 'Done',
                           callback: () => {
                             onPopModal(modalId);
@@ -300,7 +301,7 @@ class CollectionField extends Component {
                             onPopModal(modalId);
                             this.removeAtIndex(index);
                           }
-                        }
+                        } */
                       ]
                     });
                   }}

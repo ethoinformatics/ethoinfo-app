@@ -16,16 +16,18 @@ const defaultState = {
 
 function fields(state = defaultState, action) {
   switch (action.type) {
-    case FIELD_SET:
+    case FIELD_SET: {
+      console.log(action.payload.path, action.payload.value, state);
       return R.assocPath(
         action.payload.path,
         action.payload.value,
-        state
+        state || {}
       );
+    }
     case FIELDS_RESET: {
       const newState = R.dissocPath(
         action.payload.path,
-        state
+        state || {}
       );
 
       return newState;

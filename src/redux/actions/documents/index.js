@@ -117,12 +117,11 @@ export function update(id, newValues) {
   return (dispatch, getState, { pouchdb }) => {
     dispatch(updateDocStart());
 
-    console.log('!!!!! Updating:', id, newValues);
-
     // Pouch is our source of truth. Get document and merge new fields.
     return pouchdb.get(id)
     .then((doc) => {
       const newDoc = { ...doc, ...newValues };
+      console.log('>>> Updating Document:', newDoc);
       return pouchdb.put(newDoc);
     })
     .catch((err) => {
