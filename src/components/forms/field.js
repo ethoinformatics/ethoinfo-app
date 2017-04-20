@@ -34,8 +34,7 @@ class Field extends React.Component {
   }
 
   onChange(value) {
-    const { onChange, name, path } = this.props;
-    console.log('^^^^ FIELD ON CHANGE:', path, name, value);
+    const { onChange, path } = this.props;
     onChange(path, value);
   }
 
@@ -48,12 +47,9 @@ class Field extends React.Component {
       isLookup,
       name,
       options,
-      onChange,
       path,
       type,
     } = this.props;
-
-    // console.log('> Render field:', path, fieldValue);
 
     let fieldComponent = null;
     const normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
@@ -68,6 +64,8 @@ class Field extends React.Component {
       isLookup
     };
 
+    let typeString = null;
+
     // For collections, enforce array value:
     if (isCollection) {
       fieldProps = {
@@ -75,31 +73,40 @@ class Field extends React.Component {
         value: Array.isArray(normalizedValue) ? normalizedValue : [],
         initialValue: Array.isArray(initialValue) ? initialValue : [],
         onChange: (__path, value) => {
-          console.log('FIELD >> Collection on change', __path, value);
+          // console.log('FIELD >> Collection on change', __path, value);
           this.props.onChange(__path, value);
         }
       };
-
+      typeString = 'collection';
       fieldComponent = <CollectionField {...fieldProps} />;
     } else {
       switch (type.constructor) {
+
+        // --------------------
         // DATE
         case Types.Date:
+          typeString = 'date';
           fieldComponent = <DateField {...fieldProps} />;
           break;
 
+        // --------------------
         // STRING
         case Types.String:
+          typeString = 'string';
           fieldComponent = <TextInputField {...fieldProps} />;
           break;
 
+        // --------------------
         // NUMBER
         case Types.Number:
+          typeString = 'number';
           fieldComponent = <TextInputField {...fieldProps} />;
           break;
 
+        // --------------------
         // GEOLOCATION
-        case Types.Geolocation:
+        case Types.Geolocation: {
+          typeString = 'geolocation';
           // If this is a geolocation track (a series of points, field is a switch
           // that marks tracking on and off.
 
@@ -110,30 +117,42 @@ class Field extends React.Component {
           } else {
             fieldComponent = <Geo {...fieldProps} />;
           }
-
+        }
           break;
 
+        // --------------------
         // CATEGORY
         case Types.Category: {
           const { name: domainName } = type;
           const schema = getSchema(domainName);
-          if (!schema) { return null; }
 
-          const selectOptions = docs
+          typeString = 'category';
+
+          if (!schema) {
+            fieldComponent = null;
+          } else {
+            const selectOptions = docs
             .filter(doc => doc.domainName === domainName)
             .map(doc => ({
               _id: doc._id,
               name: doc[schema.displayField] || doc.name || doc._id
             }));
 
-          return <SelectField options={[null, ...selectOptions]} {...fieldProps} />;
+            fieldComponent = (
+              <SelectField options={[null, ...selectOptions]} {...fieldProps} />
+            );
+          }
         }
+          break;
 
+        // --------------------
         // MODEL
         case Types.Model: {
           const { name: domainName } = type;
           const schema = getSchema(domainName);
           if (!schema) { return null; }
+
+          typeString = 'model';
 
           if (isLookup) {
             const selectOptions = docs
@@ -143,23 +162,22 @@ class Field extends React.Component {
               name: doc[schema.displayField] || doc.name || doc._id
             }));
 
-            return <SelectField options={[null, ...selectOptions]} {...fieldProps} />;
+            fieldComponent = <SelectField options={[null, ...selectOptions]} {...fieldProps} />;
+          } else {
+            return (
+              <Form
+                path={path}
+                doc={initialValue}
+                fieldValues={fieldValue}
+                onFieldChange={(_path, value) => {
+                  this.props.onChange(_path, value);
+                }}
+                schema={schema}
+              />
+            );
           }
-
-          return (
-            <Form
-              path={path}
-              doc={initialValue}
-              fieldValues={fieldValue}
-              onFieldChange={(_path, value) => {
-                console.log('form path:', _path);
-                // this.onChange(value);
-                this.props.onChange(_path, value);
-              }}
-              schema={schema}
-            />
-          );
         }
+          break;
 
         default:
           break;
@@ -167,13 +185,12 @@ class Field extends React.Component {
     }
 
     return (
-      <div className="field">
+      <div className={`field ${typeString}`}>
         {fieldComponent}
       </div>
     );
   }
 }
-
 
 Field.propTypes = {
   docs: PropTypes.arrayOf(

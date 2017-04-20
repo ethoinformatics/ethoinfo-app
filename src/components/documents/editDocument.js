@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 // Components
-import { Button, Page } from 'react-onsenui';
+import { Page } from 'react-onsenui';
 import Form from '../forms/form';
 
 // Styles
@@ -12,8 +12,11 @@ import './documentForm.styl';
 import { getSchema } from '../../schemas/main';
 
 // Actions
-import { update, deleteDoc as _deleteDoc } from '../../redux/actions/documents';
-import { resetFields as resetFieldsAtPath, setField as setFieldAction } from '../../redux/actions/fields';
+import { deleteDoc as _deleteDoc } from '../../redux/actions/documents';
+
+import {
+  resetFields as resetFieldsAtPath,
+  setField as setFieldAction } from '../../redux/actions/fields';
 
 // Selectors
 import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
@@ -29,7 +32,6 @@ const mapStateToProps = (state, ownProps) =>
   });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  updateDoc: (id, newValues) => dispatch(update(id, newValues)),
   deleteDoc: (id, rev) => dispatch(_deleteDoc(id, rev)),
   resetFields: () => dispatch(resetFieldsAtPath(ownProps.fieldsPath)),
   setField: (path, value) => {
@@ -44,26 +46,11 @@ class EditDocument extends React.Component {
     // Bind context.
     this.deleteDoc = this.deleteDoc.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
-    this.saveFields = this.saveFields.bind(this);
   }
 
   onFieldChange(path, value) {
     const { setField } = this.props;
-    console.log('***** Edit doc onFieldChange:', path, value);
     setField(path, value);
-  }
-
-  saveFields() {
-    const { actions, updateDoc, id, fieldValues, resetFields } = this.props;
-
-    updateDoc(id, fieldValues)
-    .then(() => {
-      actions.onUpdate();
-      resetFields();
-    })
-    .catch((err) => {
-      console.log('Error saving new document:', err);
-    });
   }
 
   deleteDoc() {
@@ -94,7 +81,6 @@ class EditDocument extends React.Component {
         />
 
         {/* <div className="actions">
-          <Button modifier="large" onClick={this.saveFields}>Save</Button>
           <Button modifier="large" onClick={this.deleteDoc}>Delete</Button>
         </div> */}
       </Page>
@@ -110,7 +96,6 @@ EditDocument.propTypes = {
     onUpdate: PropTypes.func.isRequired,
   }),
   deleteDoc: PropTypes.func,
-  updateDoc: PropTypes.func,
   domain: PropTypes.string,
   fieldsPath: PropTypes.array,
   fieldValues: PropTypes.object,

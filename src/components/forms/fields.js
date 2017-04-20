@@ -16,11 +16,7 @@ class Fields extends React.Component {
   // Field update
   // Path is a string or an array on nested objects
   onFieldChange(path, value) {
-    // const { onFieldChange, path } = this.props;
-    // onFieldChange([...path, name], value);
-    // console.log('&&& onFieldChange', name, value);
     const { onFieldChange } = this.props;
-    console.log('&&& FIELDS onFieldChange', path, value);
     onFieldChange(path, value);
   }
 

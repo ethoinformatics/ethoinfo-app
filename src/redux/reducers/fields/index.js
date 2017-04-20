@@ -17,7 +17,7 @@ const defaultState = {
 function fields(state = defaultState, action) {
   switch (action.type) {
     case FIELD_SET: {
-      console.log(action.payload.path, action.payload.value, state);
+      // console.log(action.payload.path, action.payload.value, state);
       return R.assocPath(
         action.payload.path,
         action.payload.value,

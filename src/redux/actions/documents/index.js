@@ -1,4 +1,5 @@
 import uuid from 'uuid';
+import R from 'ramda';
 
 export const DOCS_LOAD_ALL = 'DOCS_LOAD_ALL';
 export const DOCS_LOAD_ALL_SUCCESS = 'DOCS_LOAD_ALL_SUCCESS';
@@ -112,6 +113,8 @@ export function create(doc, domainName) {
   };
 }
 
+const mergeFn = (l, r) => r || l;
+
 // update a document in pouchdb.
 export function update(id, newValues) {
   return (dispatch, getState, { pouchdb }) => {
@@ -120,8 +123,10 @@ export function update(id, newValues) {
     // Pouch is our source of truth. Get document and merge new fields.
     return pouchdb.get(id)
     .then((doc) => {
-      const newDoc = { ...doc, ...newValues };
-      console.log('>>> Updating Document:', newDoc);
+      // const newDoc = { ...doc, ...newValues };
+      const newDoc = R.mergeWith(mergeFn, doc, newValues);
+      console.log('>>> Updating Document:', doc, newValues);
+      console.log('>>>>> Result:', newDoc);
       return pouchdb.put(newDoc);
     })
     .catch((err) => {

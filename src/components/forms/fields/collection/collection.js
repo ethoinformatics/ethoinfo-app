@@ -51,11 +51,18 @@ class CollectionField extends Component {
 
   // Wraps onChange with extra logic for collections.
   onItemChange(itemPath, newItemValue) {
-    const { onChange } = this.props;
-    // const newValue = R.adjust(() => newItemValue, index, value); // Merge at index
-    console.log('**** collection onItemChange:', itemPath, newItemValue);
+    const { onChange, path } = this.props;
+    const relativeItemPath = R.drop(path.length, itemPath);
 
-    onChange(itemPath, newItemValue);
+    console.log('*** Collection path: ', path);
+    console.log('*** Collection value: ', this.props.value, this.props.initialValue);
+    console.log('*** Item path: ', itemPath);
+    console.log('*** Relative item path:', relativeItemPath);
+    console.log('*** New item value: ', newItemValue);
+
+    const newCollectionValue = R.assocPath(relativeItemPath, newItemValue, this.props.initialValue);
+    console.log('*** New value:', newCollectionValue);
+    onChange(this.props.path, newCollectionValue);
   }
 
   onItemReset(index) {
