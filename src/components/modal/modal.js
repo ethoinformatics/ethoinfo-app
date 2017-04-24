@@ -31,6 +31,8 @@ const Modal = (props) => {
 
   const { actions, title, onClose, path, pop } = props;
 
+  console.log('>>> MODAL PATH:', path);
+
   return (
     <Page
       className="modal"
@@ -45,7 +47,7 @@ const Modal = (props) => {
           }}
           title={title}
         >
-          <Breadcrumbs path={path} />
+          <Breadcrumbs path={''} />
         </Navbar>
       }
     >

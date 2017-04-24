@@ -22,10 +22,17 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
+const splitPath = R.split('/');
+const padPath = R.map(p => [p, '']);
+const makePaddedPath = R.pipe(splitPath, R.tail, padPath, R.flatten);
+
 class Breadcrumbs extends React.Component {
   render() {
     const { path, sliceHistory } = this.props;
-    const components = R.splitEvery(2, path);
+
+    const paddedPath = makePaddedPath(path);
+    const components = R.splitEvery(2, paddedPath);
+    console.log('^^^ BREADCRUMB COMPONENTS:', paddedPath, components);
 
     return (
       <div className="breadcrumbs">
@@ -39,7 +46,7 @@ class Breadcrumbs extends React.Component {
                 className="breadcrumbPath"
                 onClick={() => {
                   const subPath = R.slice(0, index + 1, components);
-
+                  console.log('SubPath is:', subPath);
                   // Ignore clicks on last component (we're already on that crumb)
                   if (index === components.length - 1) { return; }
 
@@ -76,12 +83,12 @@ class Breadcrumbs extends React.Component {
 }
 
 Breadcrumbs.defaultProps = {
-  path: [],
+  path: '',
   sliceHistory: () => {}
 };
 
 Breadcrumbs.propTypes = {
-  path: React.PropTypes.array,
+  path: React.PropTypes.string,
   sliceHistory: React.PropTypes.func
 };
 

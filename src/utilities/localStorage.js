@@ -12,7 +12,7 @@ export default {
   getCouchUsername() {
     const defaultValue = config[KEYS.couchUsername];
 
-    if (!store.enabled) return defaultValue;
+    if (!store.enabled) { return defaultValue; }
 
     return store.get(KEYS.couchUsername) || defaultValue;
   },
@@ -20,7 +20,7 @@ export default {
   getCouchUrlBase() {
     const defaultValue = config[KEYS.couchUrlBase];
 
-    if (!store.enabled) return defaultValue;
+    if (!store.enabled) { return defaultValue; }
 
     return store.get(KEYS.couchUrlBase) || defaultValue;
   },
@@ -28,7 +28,7 @@ export default {
   getCouchPassword() {
     const defaultValue = '';
 
-    if (!store.enabled) return defaultValue;
+    if (!store.enabled) { return defaultValue; }
 
     return store.get(KEYS.couchPassword) || '';
   },
@@ -36,7 +36,7 @@ export default {
   getShouldWatchGeolocation() {
     const defaultValue = config[KEYS.shouldWatchGeolocation];
 
-    if (!store.enabled) return defaultValue;
+    if (!store.enabled) { return defaultValue; }
 
     return store.get(KEYS.shouldWatchGeolocation) || defaultValue;
   },
@@ -48,10 +48,10 @@ export default {
     }
   },
 
-  setCouchUrl(url) {
+  setCouchUrlBase(url) {
     // Persist to localStorage if available
     if (store.enabled) {
-      store.set(KEYS.couchUrl, url);
+      store.set(KEYS.couchUrlBase, url);
     }
   },
 

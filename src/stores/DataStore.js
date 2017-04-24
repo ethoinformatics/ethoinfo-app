@@ -123,6 +123,9 @@ export default class DataStore {
    */
   @action updateCouchUrlBase(theUrl) {
     this.couchUrlBase = theUrl;
+
+    console.log('STORAGE IS:', localStorage);
+
     localStorage.setCouchUrlBase(theUrl);
   }
 
@@ -133,6 +136,7 @@ export default class DataStore {
    */
   @action updateCouchUsername(username) {
     this.couchUsername = username;
+
     localStorage.setCouchUsername(username);
   }
 

@@ -125,8 +125,8 @@ export function update(id, newValues) {
     .then((doc) => {
       // const newDoc = { ...doc, ...newValues };
       const newDoc = R.mergeWith(mergeFn, doc, newValues);
-      console.log('>>> Updating Document:', doc, newValues);
-      console.log('>>>>> Result:', newDoc);
+      // console.log('>>> Updating Document:', doc, newValues);
+      // console.log('>>>>> Result:', newDoc);
       return pouchdb.put(newDoc);
     })
     .catch((err) => {

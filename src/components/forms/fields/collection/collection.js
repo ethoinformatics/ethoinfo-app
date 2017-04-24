@@ -46,23 +46,32 @@ class CollectionField extends Component {
 
     // Bind context
     this.onItemChange = this.onItemChange.bind(this);
+    this.onItemRemove = this.onItemRemove.bind(this);
     this.removeNulls = this.removeNulls.bind(this);
   }
 
   // Wraps onChange with extra logic for collections.
   onItemChange(itemPath, newItemValue) {
-    const { onChange, path } = this.props;
+    const { onChange, path,value } = this.props;
     const relativeItemPath = R.drop(path.length, itemPath);
 
-    console.log('*** Collection path: ', path);
-    console.log('*** Collection value: ', this.props.value, this.props.initialValue);
+    /* console.log('*** Collection path: ', path);
+    console.log('*** Collection value: ', this.props.value);
+    console.log('*** Collection initial value:', this.props.initialValue);
     console.log('*** Item path: ', itemPath);
     console.log('*** Relative item path:', relativeItemPath);
-    console.log('*** New item value: ', newItemValue);
+    console.log('*** New item value: ', newItemValue); */
 
-    const newCollectionValue = R.assocPath(relativeItemPath, newItemValue, this.props.initialValue);
-    console.log('*** New value:', newCollectionValue);
-    onChange(this.props.path, newCollectionValue);
+    const newCollectionValue = R.assocPath(relativeItemPath, newItemValue, value);
+    // console.log('*** New value:', newCollectionValue);
+    onChange(path, newCollectionValue);
+  }
+
+  onItemRemove(index) {
+    const { onChange, path, value } = this.props;
+
+    const newCollectionValue = R.remove(index, 1, value);
+    onChange(path, newCollectionValue);
   }
 
   onItemReset(index) {
@@ -201,30 +210,41 @@ class CollectionField extends Component {
           // Prevent propogation
           event.preventDefault();
 
-          // Push a new value to the end of collection
-          const newCollectionValue = [...value, null];
-
-          // Index of new item is last array index
-          const newIndex = newCollectionValue.length - 1;
+          const newIndex = value.length;
 
           // Append index to path
-          const newPath = [...path, newIndex];
+          const newItemPath = [...path, newIndex];
 
           // Models need special handling for initial value or Ramda poops out
           // When trying to use assocPath on a null value
           const newItemValue = type.constructor === Types.Model ? {} : null;
 
-          onChange(newPath, newItemValue);
+          // onChange(newItemPath, newItemValue);
+
+          /* --------- */
+          const relativeItemPath = R.drop(path.length, newItemPath);
+
+          const newCollectionValue = R.assocPath(
+            relativeItemPath,
+            newItemValue,
+            this.props.value
+          );
+
+          // console.log('Creating a new entry', path, newCollectionValue);
+
+          onChange(path, newCollectionValue);
+          /* --------- */
+
 
           // Make an id string from path components
-          const modalId = newPath.join('/');
+          const modalId = newItemPath.join('/');
 
           // const title = type.name;
           const title = _.startCase(pluralize(name, 1));
 
           // View modal with new value
           onPushModal(modalId, {
-            path: newPath,
+            path: newItemPath,
             type,
             title,
             name: title,
@@ -235,12 +255,12 @@ class CollectionField extends Component {
               // this.onItemReset(newIndex);
             },
             actions: [
-              {
+              /* {
                 title: 'Done',
                 callback: () => {
                   onPopModal(modalId);
                 }
-              }
+              } */
             ]
           });
         }}
@@ -255,7 +275,7 @@ class CollectionField extends Component {
       name,
       path,
       onPushModal,
-      onPopModal,
+      // onPopModal,
       isLookup,
       initialValue
     } = this.props;
@@ -314,6 +334,17 @@ class CollectionField extends Component {
                   }}
                 >
                   { this.getDisplayText(value[index], type) }
+                  <button
+                    className="delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      this.onItemRemove(index);
+                      // console.log('Should delete!');
+                      // deleteDoc(_id, _rev);
+                    }}
+                  >
+                    <Icon icon="md-close" />
+                  </button>
                 </ListItem>
               }
             />

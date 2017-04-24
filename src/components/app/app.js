@@ -14,7 +14,7 @@ import Menu from '../menu/menu';
 import Navbar from '../navbar/navbar';
 
 // Actions
-import { create as createDoc } from '../../redux/actions/documents';
+import { create as createDoc, fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
 
 import {
   watch as watchGeolocation,
@@ -22,7 +22,6 @@ import {
 } from '../../redux/actions/geo';
 
 import { open as openMenu, close as closeMenu } from '../../redux/actions/menu';
-import { fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
 
 // Selectors
 import { getAllModals } from '../../redux/reducers';
@@ -64,10 +63,44 @@ class App extends Component {
   renderNavbar() {
     const { currentView, historyPath, onOpenMenu } = this.props;
 
-    const pathToComponents = R.split('/');
+    /* const pathToComponents = R.split('/');
     const padComponents = R.map(p => [p, '']);
     const makeComponents = R.pipe(pathToComponents, R.tail, padComponents, R.flatten);
-    const components = makeComponents(historyPath);
+    const components = makeComponents(historyPath); */
+
+    console.log('^^^ HISTORY PATH:', historyPath);
+
+    const newDocumentAction = () => {
+      const domainName = currentView.params.id;
+      // history.push(currentView.nextPath, {}
+      console.log('Create new:', domainName);
+      this.props.createDoc(domainName)
+        .then((result) => {
+          console.log('Created a new doc:', result);
+          const { id: newId } = result;
+          const pathToNewDoc = `/documents/${domainName}/${newId}`;
+
+          history.push(pathToNewDoc);
+        }).catch((err) => {
+          console.log('Error creating new document:', err);
+        });
+    };
+
+    const newCategoryAction = () => {
+      const domainName = currentView.params.id;
+      const newPath = `/categories/${domainName}/new`;
+      history.push(newPath, {});
+    };
+
+    let action = null;
+
+    if (currentView.name === 'documents') {
+      action = newDocumentAction;
+    }
+
+    if (currentView.name === 'codes') {
+      action = newCategoryAction;
+    }
 
     return (
       <Navbar
@@ -78,27 +111,13 @@ class App extends Component {
           icon: 'md-menu',
           action: () => onOpenMenu()
         }}
-        rightItem={currentView.name === 'documents' ? {
+        rightItem={action ? {
           icon: 'md-plus',
-          action: () => {
-            const domainName = currentView.params.id;
-            // history.push(currentView.nextPath, {}
-            console.log('Create new:', domainName);
-            this.props.createDoc(domainName)
-              .then((result) => {
-                console.log('Created a new doc:', result);
-                const { id: newId } = result;
-                const pathToNewDoc = `/documents/${domainName}/${newId}`;
-
-                history.push(pathToNewDoc);
-              }).catch((err) => {
-                console.log('Error creating new document:', err);
-              });
-          }
+          action
         } : null}
         title={currentView.title}
       >
-        <Breadcrumbs path={components} />
+        <Breadcrumbs path={historyPath} />
       </Navbar>
     );
   }
