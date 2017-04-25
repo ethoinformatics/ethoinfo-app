@@ -3,6 +3,9 @@ import { pop as popModal } from '../../actions/modals';
 import { getAllModals } from '../../reducers';
 import history from '../../../history';
 
+import routes from '../../../routes';
+import router from '../../../router';
+
 export const UPDATE_HISTORY = 'HISTORY_UPDATE';
 export const SLICE_HISTORY = 'HISTORY_SLICE';
 
@@ -32,17 +35,23 @@ export function slice(path) {
     // Modals don't have a leading slash
     const stringifiedPath = stringify(path);
 
-    const regEx = new RegExp(`^(${stringifiedPath}){1}.+`);
+    // Strip duplicate slashes and final slash
+    const cleanPath = `/${stringifiedPath}`.replace(/\/\//g, '/').replace(/\/$/, '');
+
+    console.log('Path to go to:', cleanPath);
+
+    const regEx = new RegExp(`^(${cleanPath}){1}.+`);
 
     // Pop all modals further down path
     const poppers = modals.filter(m => m.id.match(regEx));
     poppers.forEach(popper => dispatch(popModal(popper.id)));
-    dispatch(sliceHistory(stringifiedPath));
+    dispatch(sliceHistory(cleanPath));
 
-    // And navigate if path matches
-    // Strip duplicate slashes and final slash
-    const cleanPath = `/${stringifiedPath}`.replace(/\/\//g, '/').replace(/\/$/, '');
-    console.log(cleanPath);
-    history.push(cleanPath, {});
+    // And navigate if path matches one of our routes
+    const view = router.resolve(routes, cleanPath);
+
+    if (view) {
+      history.push(cleanPath, {});
+    }
   };
 }

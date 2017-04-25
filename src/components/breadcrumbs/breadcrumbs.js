@@ -22,26 +22,41 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-const splitPath = R.split('/');
-const padPath = R.map(p => [p, '']);
-const makePaddedPath = R.pipe(splitPath, R.tail, padPath, R.flatten);
+// const splitPath = R.split('/');
+// const padPath = R.map(p => [p, '']);
+// const makePaddedPath = R.pipe(splitPath, R.tail, padPath, R.flatten);
+
+const isNumber = value => !isNaN(parseInt(value, 10));
 
 class Breadcrumbs extends React.Component {
   render() {
     const { path, sliceHistory } = this.props;
 
-    const paddedPath = makePaddedPath(path);
-    const components = R.splitEvery(2, paddedPath);
-    console.log('^^^ BREADCRUMB COMPONENTS:', paddedPath, components);
+    const pathComponents = R.tail(path.split('/'));
+
+    const padded = pathComponents.reduce((acc, currentValue, ii, collection) => {
+      const currentIsNumber = isNumber(currentValue);
+      if (currentIsNumber) { return acc; }
+
+      const nextValue = R.nth(ii + 1, collection);
+      const nextIsNumber = isNumber(nextValue);
+
+      if (nextIsNumber) { return [...acc, currentValue, nextValue]; }
+
+      return [...acc, currentValue, ''];
+    }, []);
+
+    // const paddedPath = makePaddedPath(path);
+    // const components = R.splitEvery(2, paddedPath);
+    // console.log('^^^ BREADCRUMB COMPONENTS:', paddedPath, components);
+
+    const components = R.splitEvery(2, padded);
 
     return (
       <div className="breadcrumbs">
         {
           components.map((component, index) => (
             <div className="breadcrumbComponent" key={component.join('/')}>
-              <div className="breadcrumbSlash">
-                /
-              </div>
               <button
                 className="breadcrumbPath"
                 onClick={() => {
@@ -61,11 +76,16 @@ class Breadcrumbs extends React.Component {
                   - Join components with a space (e.g. Widgets 0)
                 */}
                 {component.map((cc) => {
-                  if (typeof cc === 'string' && !isUUID(cc)) {
+                  if (typeof cc === 'string' && !isUUID(cc) && !isNumber(cc)) {
                     if (cc === 'new') {
                       return 'New';
                     }
                     return _.startCase(pluralize(cc));
+                  }
+
+                  // Truncate UUIDs to first part
+                  if (isUUID(cc)) {
+                    return R.head(cc.split('-'));
                   }
 
                   return cc;

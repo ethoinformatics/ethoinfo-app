@@ -7,7 +7,6 @@ import moment from 'moment';
 import pluralize from 'pluralize';
 import './collection.styl';
 
-
 import { resetFields } from '../../../../redux/actions/fields';
 import { push as pushModal, pop as popModal } from '../../../../redux/actions/modals';
 
@@ -19,6 +18,7 @@ import { getAll as getAllDocs } from '../../../../redux/reducers/documents';
 const mapStateToProps = (state, { domain }) =>
   ({
     docs: getAllDocs(state.docs),
+    historyPath: state.views.history.path,
     schema: getSchema(domain)
   });
 
@@ -195,6 +195,7 @@ class CollectionField extends Component {
       type,
       value,
       name,
+      historyPath,
       path,
       onChange,
       onPushModal,
@@ -237,7 +238,10 @@ class CollectionField extends Component {
 
 
           // Make an id string from path components
-          const modalId = newItemPath.join('/');
+          const relativePath = R.tail(newItemPath).join('/');
+          const absoluteHistoryPath = `${historyPath}/${relativePath}`;
+          const modalId = absoluteHistoryPath;
+          // const modalId = newItemPath.join('/');
 
           // const title = type.name;
           const title = _.startCase(pluralize(name, 1));
@@ -276,6 +280,7 @@ class CollectionField extends Component {
       path,
       onPushModal,
       // onPopModal,
+      historyPath,
       isLookup,
       initialValue
     } = this.props;
@@ -296,7 +301,14 @@ class CollectionField extends Component {
                   key={index}
                   onClick={() => {
                     const itemPath = [...path, index];
-                    const modalId = itemPath.join('/');
+
+                    const relativePath = R.tail(itemPath).join('/');
+                    const absoluteHistoryPath = `${historyPath}/${relativePath}`;
+
+                    // const modalId = itemPath.join('/');
+
+                    const modalId = absoluteHistoryPath;
+
 
                     const title = _.startCase(pluralize(name, 1));
 
@@ -363,6 +375,7 @@ CollectionField.defaultProps = {
 CollectionField.propTypes = {
   name: PropTypes.string,
   docs: PropTypes.array,
+  historyPath: PropTypes.string,
   onPushModal: PropTypes.func,
   onPopModal: PropTypes.func,
   onChange: PropTypes.func,

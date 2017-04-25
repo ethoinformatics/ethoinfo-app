@@ -36,7 +36,7 @@ import Geo from '../geoViewer/geoViewer';
 import Modal from '../modal/modal';
 import ModelList from '../models/modelList';
 import NewCode from '../newCode/newCode';
-import NewDocument from '../documents/newDocument';
+// import NewDocument from '../documents/newDocument';
 import Settings from '../settings/settings';
 import Sync from '../sync/sync';
 
@@ -73,7 +73,7 @@ class App extends Component {
     const newDocumentAction = () => {
       const domainName = currentView.params.id;
       // history.push(currentView.nextPath, {}
-      console.log('Create new:', domainName);
+      // console.log('Create new:', domainName);
       this.props.createDoc(domainName)
         .then((result) => {
           console.log('Created a new doc:', result);
@@ -149,7 +149,7 @@ class App extends Component {
       case 'documents':
         return <DocumentList domain={id} />;
 
-      case 'newDocument':
+      /* case 'newDocument':
         return (
           <NewDocument
             domain={id}
@@ -159,7 +159,7 @@ class App extends Component {
                 history.push(`/documents/${id}/`, {})
             }}
           />
-        );
+        ); */
 
       case 'viewDocument':
         return (

@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Button, Page } from 'react-onsenui';
 import Breadcrumbs from '../breadcrumbs/breadcrumbs';
+import R from 'ramda';
 import { pop as popModal } from '../../redux/actions/modals';
 import './modal.styl';
 
@@ -15,8 +16,9 @@ const MODAL_COMPONENTS = {
   [MODAL_TYPE_FIELD]: Field
 };
 
-function mapStateToProps() {
+function mapStateToProps(state) {
   return {
+    historyPath: state.views.history.path
   };
 }
 
@@ -29,9 +31,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 const Modal = (props) => {
   const ModalComponent = MODAL_COMPONENTS[MODAL_TYPE_FIELD] || null;
 
-  const { actions, title, onClose, path, pop } = props;
+  const { actions, title, onClose, path, pop, historyPath } = props;
 
-  console.log('>>> MODAL PATH:', path);
+  // Without id
+  // e.g. ["eba7d938-3488-4c4b-94ca-4c7cb636a057", "contacts", 0]
+  // becomes ["contacts", 0]
+  const relativePath = R.tail(path).join('/');
+  const absolutePath = `${historyPath}/${relativePath}`;
 
   return (
     <Page
@@ -47,7 +53,7 @@ const Modal = (props) => {
           }}
           title={title}
         >
-          <Breadcrumbs path={''} />
+          <Breadcrumbs path={absolutePath} />
         </Navbar>
       }
     >
@@ -75,6 +81,7 @@ Modal.defaultProps = {
 /* eslint-disable react/no-unused-prop-types */
 Modal.propTypes = {
   id: PropTypes.string.isRequired,
+  historyPath: PropTypes.string,
   title: PropTypes.string,
   actions: PropTypes.arrayOf(
     PropTypes.shape({
