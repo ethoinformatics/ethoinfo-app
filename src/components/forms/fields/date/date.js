@@ -1,7 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import { SingleDatePicker } from 'react-dates';
+// import { SingleDatePicker } from 'react-dates';
+import Datetime from 'react-datetime';
 import moment from 'moment';
 import _ from 'lodash';
+
+import 'react-datetime/css/react-datetime.css';
 
 class DateField extends Component {
   constructor() {
@@ -11,12 +14,12 @@ class DateField extends Component {
 
   render() {
     const { value, name, onChange } = this.props;
-    const date = value ? moment(value) : null;
+    const date = value ? moment(value) : moment();
 
     return (
       <div>
         <label htmlFor={name}>{_.startCase(name)}</label>
-        <SingleDatePicker
+        {/* <SingleDatePicker
           date={date}
           focused={this.state.focused}
           onDateChange={(newDate) => {
@@ -27,6 +30,12 @@ class DateField extends Component {
           isOutsideRange={() => false}
           withPortal
           id={`SingleDatePicker-${value}`}
+        /> */}
+        <Datetime
+          onChange={(newDate) => {
+            onChange(newDate.utc().format());
+          }}
+          value={date}
         />
       </div>);
   }
