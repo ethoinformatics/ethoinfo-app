@@ -103,7 +103,7 @@ class Map extends React.Component {
     const lastPoint = R.last(points);
 
     if (lastPoint) {
-      console.log('Last point:', lastPoint);
+      // console.log('Last point:', lastPoint);
       const latLng = [lastPoint.coords.latitude, lastPoint.coords.longitude];
       this.map.setView(latLng, this.map.getMaxZoom());
     } else if (location) {

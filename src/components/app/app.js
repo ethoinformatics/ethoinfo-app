@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import R from 'ramda';
+
 import { connect } from 'react-redux';
 import { observer } from 'mobx-react';
 import 'normalize.css/normalize.css';
@@ -28,6 +28,7 @@ import { getAllModals } from '../../redux/reducers';
 import { getCurrentView } from '../../redux/reducers/views';
 
 // Components
+import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import CategoryList from '../categoryList/categoryList';
 import CodeList from '../codeList/codeList';
 import DocumentList from '../documents/documentList';
@@ -36,14 +37,10 @@ import Geo from '../geoViewer/geoViewer';
 import Modal from '../modal/modal';
 import ModelList from '../models/modelList';
 import NewCode from '../newCode/newCode';
-// import NewDocument from '../documents/newDocument';
 import Settings from '../settings/settings';
 import Sync from '../sync/sync';
 
 import history from '../../history';
-
-import Breadcrumbs from '../breadcrumbs/breadcrumbs';
-
 import { models, categories } from '../../schemas/main';
 
 @observer
@@ -60,20 +57,17 @@ class App extends Component {
     this.props.loadGeolocationCache();
   }
 
+  /**
+   * Render top navbar.
+   * This element will always be topmost except when
+   * a modal component is presented.
+   */
   renderNavbar() {
     const { currentView, historyPath, onOpenMenu } = this.props;
 
-    /* const pathToComponents = R.split('/');
-    const padComponents = R.map(p => [p, '']);
-    const makeComponents = R.pipe(pathToComponents, R.tail, padComponents, R.flatten);
-    const components = makeComponents(historyPath); */
-
-    console.log('^^^ HISTORY PATH:', historyPath);
-
     const newDocumentAction = () => {
       const domainName = currentView.params.id;
-      // history.push(currentView.nextPath, {}
-      // console.log('Create new:', domainName);
+
       this.props.createDoc(domainName)
         .then((result) => {
           console.log('Created a new doc:', result);
@@ -148,18 +142,6 @@ class App extends Component {
 
       case 'documents':
         return <DocumentList domain={id} />;
-
-      /* case 'newDocument':
-        return (
-          <NewDocument
-            domain={id}
-            fieldsPath={['new', id]}
-            actions={{
-              onCreate: () =>
-                history.push(`/documents/${id}/`, {})
-            }}
-          />
-        ); */
 
       case 'viewDocument':
         return (

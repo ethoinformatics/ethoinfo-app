@@ -22,11 +22,7 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-// const splitPath = R.split('/');
-// const padPath = R.map(p => [p, '']);
-// const makePaddedPath = R.pipe(splitPath, R.tail, padPath, R.flatten);
-
-const isNumber = value => !isNaN(parseInt(value, 10));
+const isNumber = value => !isNaN(parseInt(value, 10)) && !isUUID(value);
 
 class Breadcrumbs extends React.Component {
   render() {
@@ -37,18 +33,12 @@ class Breadcrumbs extends React.Component {
     const padded = pathComponents.reduce((acc, currentValue, ii, collection) => {
       const currentIsNumber = isNumber(currentValue);
       if (currentIsNumber) { return acc; }
-
       const nextValue = R.nth(ii + 1, collection);
       const nextIsNumber = isNumber(nextValue);
-
       if (nextIsNumber) { return [...acc, currentValue, nextValue]; }
 
       return [...acc, currentValue, ''];
     }, []);
-
-    // const paddedPath = makePaddedPath(path);
-    // const components = R.splitEvery(2, paddedPath);
-    // console.log('^^^ BREADCRUMB COMPONENTS:', paddedPath, components);
 
     const components = R.splitEvery(2, padded);
 
@@ -61,7 +51,7 @@ class Breadcrumbs extends React.Component {
                 className="breadcrumbPath"
                 onClick={() => {
                   const subPath = R.slice(0, index + 1, components);
-                  console.log('SubPath is:', subPath);
+
                   // Ignore clicks on last component (we're already on that crumb)
                   if (index === components.length - 1) { return; }
 
