@@ -142,7 +142,8 @@ class ModelSchema extends Schema {
     switch (fieldToDisplay.type.constructor) {
       case Types.Date:
         // https://momentjs.com/
-        return moment(displayValue).format('lll');
+        return displayValue ? moment(displayValue).format('YYYY-MM-DD h:mm a') : document._id;
+
       case Types.String:
         return displayValue;
       default:

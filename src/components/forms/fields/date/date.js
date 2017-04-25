@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-// import { SingleDatePicker } from 'react-dates';
 import Datetime from 'react-datetime';
 import moment from 'moment';
 import _ from 'lodash';
@@ -10,6 +9,14 @@ class DateField extends Component {
   constructor() {
     super();
     this.state = {};
+  }
+
+  componentDidMount() {
+    const { onChange, value } = this.props;
+
+    if (!value) {
+      onChange(moment().utc().format());
+    }
   }
 
   render() {

@@ -42,9 +42,7 @@ class DocumentList extends Component {
     const { _id, _rev } = doc;
     const { domain, schema, deleteDoc } = this.props;
     const path = `/documents/${domain}/${_id}`;
-
     const displayValue = schema.getFriendlyString(doc);
-
     return (
       <ListItem key={index} onClick={() => history.push(path, {})}>
         { displayValue }
@@ -62,12 +60,13 @@ class DocumentList extends Component {
   }
 
   render() {
-    const { docs } = this.props;
+    const { docs, schema } = this.props;
 
     return (
       <Page className="documentList">
         <List
-          dataSource={docs}
+          dataSource={docs.sort((l, r) =>
+            schema.getFriendlyString(l) < schema.getFriendlyString(r))}
           renderRow={(doc, index) => this.renderDocumentListItem(doc, index)}
         />
       </Page>
