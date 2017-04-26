@@ -1,5 +1,6 @@
-import React, { PropTypes } from 'react';
-import { List, ListHeader, ListItem, Page } from 'react-onsenui';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { List, ListItem, Page } from 'react-onsenui';
 import _ from 'lodash';
 import history from '../../history';
 import './modelList.styl';

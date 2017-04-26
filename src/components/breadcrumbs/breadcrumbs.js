@@ -1,5 +1,6 @@
 import R from 'ramda';
 import React from 'react';
+import PropTypes from 'prop-types';
 import isUUID from 'uuid-validate';
 import pluralize from 'pluralize';
 import _ from 'lodash';
@@ -98,8 +99,8 @@ Breadcrumbs.defaultProps = {
 };
 
 Breadcrumbs.propTypes = {
-  path: React.PropTypes.string,
-  sliceHistory: React.PropTypes.func
+  path: PropTypes.string,
+  sliceHistory: PropTypes.func
 };
 
 export default connect(

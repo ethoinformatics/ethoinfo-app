@@ -3,7 +3,6 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import { Page, Icon } from 'react-onsenui';
 import JSONTree from 'react-json-tree';
-import _ from 'lodash';
 
 import './debugDetail.styl';
 

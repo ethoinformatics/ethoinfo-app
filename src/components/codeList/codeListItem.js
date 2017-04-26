@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, ListItem } from 'react-onsenui';
 import _ from 'lodash';
 
@@ -32,12 +33,12 @@ const CodeListItem = ({ item, deleteAction }) => {
 
 /* eslint-disable react/no-unused-prop-types */
 CodeListItem.propTypes = {
-  item: React.PropTypes.shape({
-    name: React.PropTypes.string.isRequired,
-    _id: React.PropTypes.string.isRequired,
-    _rev: React.PropTypes.string.isRequired
+  item: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
+    _rev: PropTypes.string.isRequired
   }),
-  deleteAction: React.PropTypes.func.isRequired,
+  deleteAction: PropTypes.func.isRequired,
 };
 /* eslint-enable react/no-unused-prop-types */
 

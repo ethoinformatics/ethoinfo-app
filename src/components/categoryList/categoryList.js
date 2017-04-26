@@ -1,6 +1,7 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { List, ListItem, Page, ListHeader } from 'react-onsenui';
+import { List, ListItem, Page } from 'react-onsenui';
 import history from '../../history';
 
 import './categoryList.styl';
@@ -31,9 +32,8 @@ const CategoryList = (({ categories }) => {
 /* eslint-disable react/no-unused-prop-types */
 CategoryList.propTypes = {
   categories: PropTypes.arrayOf(
-    React.PropTypes.shape({
-      name: React.PropTypes.string.isRequired,
-      // values: PropTypes.observableArrayOf(React.PropTypes.string).isRequired
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
     })
   ).isRequired
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon, Toolbar, ToolbarButton } from 'react-onsenui';
 import './navbar.styl';
 
@@ -26,16 +27,16 @@ const Navbar = ({ leftItem, rightItem, title, children }) => (
 );
 
 Navbar.propTypes = {
-  leftItem: React.PropTypes.shape({
-    action: React.PropTypes.func.isRequired,
-    icon: React.PropTypes.string.isRequired
+  leftItem: PropTypes.shape({
+    action: PropTypes.func.isRequired,
+    icon: PropTypes.string.isRequired
   }),
-  rightItem: React.PropTypes.shape({
-    action: React.PropTypes.func.isRequired,
-    icon: React.PropTypes.string.isRequired
+  rightItem: PropTypes.shape({
+    action: PropTypes.func.isRequired,
+    icon: PropTypes.string.isRequired
   }),
-  title: React.PropTypes.string,
-  children: React.PropTypes.node
+  title: PropTypes.string,
+  children: PropTypes.node
 };
 
 export default Navbar;

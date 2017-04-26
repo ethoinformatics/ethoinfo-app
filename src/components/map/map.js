@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import React from 'react';
+import PropTypes from 'prop-types';
 import R from 'ramda';
 import L from 'leaflet';
 import raf from 'raf';
@@ -228,23 +229,23 @@ class Map extends React.Component {
 // Declare our props:
 // Location is an array of numbers [lat, long]
 Map.propTypes = {
-  followLocation: React.PropTypes.bool,
-  location: React.PropTypes.arrayOf(React.PropTypes.number),
-  entries: React.PropTypes.arrayOf(
-      React.PropTypes.shape({
-        timestamp: React.PropTypes.number,
-        coords: React.PropTypes.shape({
-          latitude: React.PropTypes.number,
-          longitude: React.PropTypes.number
+  followLocation: PropTypes.bool,
+  location: PropTypes.arrayOf(PropTypes.number),
+  entries: PropTypes.arrayOf(
+      PropTypes.shape({
+        timestamp: PropTypes.number,
+        coords: PropTypes.shape({
+          latitude: PropTypes.number,
+          longitude: PropTypes.number
         })
       })
     ),
-  points: React.PropTypes.arrayOf(
-      React.PropTypes.shape({
-        timestamp: React.PropTypes.number,
-        coords: React.PropTypes.shape({
-          latitude: React.PropTypes.number,
-          longitude: React.PropTypes.number
+  points: PropTypes.arrayOf(
+      PropTypes.shape({
+        timestamp: PropTypes.number,
+        coords: PropTypes.shape({
+          latitude: PropTypes.number,
+          longitude: PropTypes.number
         })
       })
     )

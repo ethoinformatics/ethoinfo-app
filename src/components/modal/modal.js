@@ -1,8 +1,9 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import R from 'ramda';
 import { Button, Page } from 'react-onsenui';
 import Breadcrumbs from '../breadcrumbs/breadcrumbs';
-import R from 'ramda';
 import { pop as popModal } from '../../redux/actions/modals';
 import './modal.styl';
 
@@ -90,8 +91,8 @@ Modal.propTypes = {
     })
   ),
   path: PropTypes.array,
-  pop: React.PropTypes.func.isRequired,
-  onClose: React.PropTypes.func
+  pop: PropTypes.func.isRequired,
+  onClose: PropTypes.func
 };
 /* eslint-enable react/no-unused-prop-types */
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { Page, Button } from 'react-onsenui';
 import './newCode.styl';
@@ -48,8 +49,8 @@ class NewCode extends React.Component {
 
 /* eslint-disable react/no-unused-prop-types */
 NewCode.propTypes = {
-  createAction: React.PropTypes.func.isRequired,
-  createSuccessAction: React.PropTypes.func.isRequired
+  createAction: PropTypes.func.isRequired,
+  createSuccessAction: PropTypes.func.isRequired
 };
 /* eslint-enable react/no-unused-prop-types */
 

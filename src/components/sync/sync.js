@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { AlertDialog, Button, Page, ProgressBar } from 'react-onsenui';
 import './sync.styl';
@@ -106,13 +107,13 @@ class Sync extends React.Component {
 }
 
 Sync.propTypes = {
-  store: React.PropTypes.shape({
-    couchPassword: React.PropTypes.String, // eslint-disable-line react/no-unused-prop-types
-    couchUrlBase: React.PropTypes.String, // eslint-disable-line react/no-unused-prop-types
-    couchUsername: React.PropTypes.String, // eslint-disable-line react/no-unused-prop-types
-    updateCouchPassword: React.PropTypes.function,
-    updateCouchUrlBase: React.PropTypes.function,
-    updateCouchUsername: React.PropTypes.function
+  store: PropTypes.shape({
+    couchPassword: PropTypes.String, // eslint-disable-line react/no-unused-prop-types
+    couchUrlBase: PropTypes.String, // eslint-disable-line react/no-unused-prop-types
+    couchUsername: PropTypes.String, // eslint-disable-line react/no-unused-prop-types
+    updateCouchPassword: PropTypes.function,
+    updateCouchUrlBase: PropTypes.function,
+    updateCouchUsername: PropTypes.function
   })
 };
 

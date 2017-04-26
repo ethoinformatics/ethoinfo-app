@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import R from 'ramda';
 import { connect } from 'react-redux';
 import { Fab, BottomToolbar, Page, Icon } from 'react-onsenui';
@@ -82,13 +83,13 @@ class GeoViewer extends React.Component {
 }
 
 GeoViewer.propTypes = {
-  geo: React.PropTypes.shape({
-    entries: React.PropTypes.arrayOf(
-      React.PropTypes.shape({
-        timestamp: React.PropTypes.number,
-        coords: React.PropTypes.shape({
-          latitude: React.PropTypes.number,
-          longitude: React.PropTypes.number
+  geo: PropTypes.shape({
+    entries: PropTypes.arrayOf(
+      PropTypes.shape({
+        timestamp: PropTypes.number,
+        coords: PropTypes.shape({
+          latitude: PropTypes.number,
+          longitude: PropTypes.number
         })
       })
     )

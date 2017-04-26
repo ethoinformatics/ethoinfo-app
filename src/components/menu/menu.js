@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon, Page, SplitterSide } from 'react-onsenui';
 import MenuBar from './menuBar';
 import history from '../../history';

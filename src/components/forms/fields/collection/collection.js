@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Icon, List, ListItem } from 'react-onsenui';
 import R from 'ramda';
@@ -52,7 +53,7 @@ class CollectionField extends Component {
 
   // Wraps onChange with extra logic for collections.
   onItemChange(itemPath, newItemValue) {
-    const { onChange, path,value } = this.props;
+    const { onChange, path, value } = this.props;
     const relativeItemPath = R.drop(path.length, itemPath);
 
     /* console.log('*** Collection path: ', path);

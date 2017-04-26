@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Promise from 'bluebird';
 import { Fab, Icon } from 'react-onsenui';
 import _ from 'lodash';
