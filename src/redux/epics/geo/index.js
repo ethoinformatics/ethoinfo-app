@@ -79,7 +79,7 @@ const saveEpic = (action$) => {
 const loadCacheEpic = (action$) => {
   const load$ = action$.ofType(GEOLOCATION_LOAD_CACHE);
 
-  console.log('Loading geolocation from cache');
+  // console.log('Loading geolocation from cache');
 
   return load$.switchMap(
     () =>

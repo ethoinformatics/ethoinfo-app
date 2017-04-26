@@ -1,29 +1,54 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { observer } from 'mobx-react';
-import { AlertDialog, Button, Page, ProgressBar } from 'react-onsenui';
+import { connect } from 'react-redux';
+import { /* AlertDialog, */ Button, Page, ProgressBar } from 'react-onsenui';
 import './sync.styl';
 
-@observer
+// Actions
+import {
+  downloadSync,
+  setItem as setConfigItem
+} from '../../redux/actions/config';
+
+// Redux setup
+const mapStateToProps = state =>
+  ({
+    url: state.config.url,
+    username: state.config.username,
+    password: state.config.password
+  });
+
+const mapDispatchToProps = dispatch => ({
+  downloadSync: () => {
+    dispatch(downloadSync());
+  },
+  setConfigItem: (key, value) => {
+    dispatch(setConfigItem(key, value));
+  }
+});
+
 class Sync extends React.Component {
   onURLChange() {
     const val = this.urlRef.value.trim();
-    this.props.store.updateCouchUrlBase(val);
+    this.props.setConfigItem('url', val);
+    // this.props.store.updateCouchUrlBase(val);
   }
 
   onUsernameChange() {
     const val = this.usernameRef.value.trim();
-    this.props.store.updateCouchUsername(val);
+    this.props.setConfigItem('username', val);
+    // this.props.store.updateCouchUsername(val);
   }
 
   onPasswordChange() {
     const val = this.passwordRef.value.trim();
-    this.props.store.updateCouchPassword(val);
+    this.props.setConfigItem('password', val);
+    // this.props.store.updateCouchPassword(val);
   }
 
   render() {
-    const { store } = this.props;
-    const inFlight = store.operationInFlight;
+    const inFlight = false;
+    const { url, username, password, downloadSync } = this.props;
 
     return (
       <Page className="sync">
@@ -38,7 +63,7 @@ class Sync extends React.Component {
               ref={(c) => { this.urlRef = c; }}
               onChange={() => this.onURLChange()}
               type={'text'}
-              defaultValue={store.couchUrlBase}
+              defaultValue={url}
               style={{ width: '100%' }}
             />
           </li>
@@ -49,7 +74,7 @@ class Sync extends React.Component {
               ref={(c) => { this.usernameRef = c; }}
               onChange={() => this.onUsernameChange()}
               type={'text'}
-              defaultValue={store.couchUsername}
+              defaultValue={username}
               style={{ width: '100%' }}
             />
           </li>
@@ -60,7 +85,7 @@ class Sync extends React.Component {
               ref={(c) => { this.passwordRef = c; }}
               onChange={() => this.onPasswordChange()}
               type={'password'}
-              defaultValue={store.couchPassword}
+              defaultValue={password}
               style={{ width: '100%' }}
             />
           </li>
@@ -68,7 +93,7 @@ class Sync extends React.Component {
         <Button
           disabled={inFlight}
           onClick={() => {
-            store.uploadSync();
+            // store.uploadSync();
           }}
           modifier={'outline large'}
         >
@@ -76,19 +101,19 @@ class Sync extends React.Component {
         </Button>
         <Button
           disabled={inFlight}
-          onClick={() => store.downloadSync()}
+          onClick={() => downloadSync()}
           modifier={'outline large'}
         >
           Download
         </Button>
         <Button
           disabled={inFlight}
-          onClick={() => store.deletePouch()}
+          onClick={() => /* store.deletePouch()*/ null}
           modifier={'outline large'}
         >
           Clear local database
         </Button>
-        <AlertDialog
+        {/* <AlertDialog
           isOpen={store.statusMessage !== null}
           isCancelable={false}
         >
@@ -100,22 +125,28 @@ class Sync extends React.Component {
               Ok
             </button>
           </div>
-        </AlertDialog>
+        </AlertDialog> */}
       </Page>
     );
   }
 }
 
 Sync.propTypes = {
-  store: PropTypes.shape({
-    couchPassword: PropTypes.String, // eslint-disable-line react/no-unused-prop-types
-    couchUrlBase: PropTypes.String, // eslint-disable-line react/no-unused-prop-types
-    couchUsername: PropTypes.String, // eslint-disable-line react/no-unused-prop-types
-    updateCouchPassword: PropTypes.function,
-    updateCouchUrlBase: PropTypes.function,
-    updateCouchUsername: PropTypes.function
-  })
+  downloadSync: PropTypes.func.isRequired,
+  setConfigItem: PropTypes.func.isRequired,
+  url: PropTypes.string,
+  username: PropTypes.string,
+  password: PropTypes.string
 };
 
-export default Sync;
+Sync.defaultProps = {
+  url: '',
+  username: '',
+  password: ''
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Sync);
 

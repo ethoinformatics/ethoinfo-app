@@ -22,6 +22,8 @@ import {
   loadCache as loadGeolocationCache
 } from '../../redux/actions/geo';
 
+import { loadConfig } from '../../redux/actions/config';
+
 import { open as openMenu, close as closeMenu } from '../../redux/actions/menu';
 
 // Selectors
@@ -54,8 +56,9 @@ class App extends Component {
 
   componentDidMount() {
     this.props.fetchAllDocuments();
-    this.props.watchGeolocation();
+    this.props.loadConfig();
     this.props.loadGeolocationCache();
+    this.props.watchGeolocation();
   }
 
   /**
@@ -171,7 +174,7 @@ class App extends Component {
         return <Settings />;
 
       case 'sync':
-        return <Sync store={dataStore} />;
+        return <Sync />;
 
       default:
         return <div>View not found</div>;
@@ -211,44 +214,48 @@ class App extends Component {
 App.propTypes = {
   createDoc: PropTypes.func,
   currentView: PropTypes.object,
+  fetchAllDocuments: PropTypes.func.isRequired,
   historyPath: PropTypes.string,
+  loadConfig: PropTypes.func.isRequired,
+  loadGeolocationCache: PropTypes.func.isRequired,
+  modals: PropTypes.array, // Todo: shape
   onOpenMenu: PropTypes.func,
   onCloseMenu: PropTypes.func,
-  fetchAllDocuments: PropTypes.func,
-  watchGeolocation: PropTypes.func,
-  loadGeolocationCache: PropTypes.func,
-  views: PropTypes.object, // Todo: shape
   stores: PropTypes.object, // Todo: shape
-  modals: PropTypes.array, // Todo: shape
+  views: PropTypes.object, // Todo: shape
+  watchGeolocation: PropTypes.func,
 };
 
 function mapStateToProps(state) {
   return {
-    docs: state.docs,
-    views: state.views,
-    modals: getAllModals(state),
     currentView: getCurrentView(state.views),
-    historyPath: state.views.history.path // Todo: make a selector
+    docs: state.docs,
+    historyPath: state.views.history.path,
+    modals: getAllModals(state),
+    views: state.views,
   };
 }
 
 const mapDispatchToProps = dispatch => ({
   createDoc: domainName => dispatch(createDoc({}, domainName)),
-  onOpenMenu: () => {
-    dispatch(openMenu());
+  fetchAllDocuments: () => {
+    dispatch(fetchAllDocuments());
+  },
+  loadConfig: () => {
+    dispatch(loadConfig());
+  },
+  loadGeolocationCache: () => {
+    dispatch(loadGeolocationCache());
   },
   onCloseMenu: () => {
     dispatch(closeMenu());
   },
-  fetchAllDocuments: () => {
-    dispatch(fetchAllDocuments());
+  onOpenMenu: () => {
+    dispatch(openMenu());
   },
   watchGeolocation: () => {
     dispatch(watchGeolocation());
   },
-  loadGeolocationCache: () => {
-    dispatch(loadGeolocationCache());
-  }
 });
 
 export default connect(

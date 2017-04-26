@@ -1,15 +1,17 @@
 /* @flow */
 
 import { combineReducers } from 'redux';
+import config from './config';
 import docs, * as FromDocuments from './documents';
-import views, * as FromViews from './views';
 import fields from './fields';
 import geo from './geo';
+import views, * as FromViews from './views';
 
 // -----------------------------------------------------------------------------
 // REDUCER
 
 const rootReducer = combineReducers({
+  config,
   docs,
   fields,
   geo,
