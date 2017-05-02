@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-import 'normalize.css/normalize.css';
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
+import 'normalize.css/normalize.css';
 import { Page, Splitter, SplitterContent } from 'react-onsenui';
 
 import config from '../../config/index';
