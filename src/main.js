@@ -5,8 +5,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import App from './components/app/app';
-import DataStore from './stores/DataStore';
-import GeoStore from './stores/GeoStore';
 import history from './history';
 
 import configureStore from './redux/configureStore';
@@ -48,12 +46,12 @@ function start() {
   }
 
   // Initialize our stores
-  const dataStore = new DataStore();
+  /* const dataStore = new DataStore();
   const geoStore = new GeoStore();
 
   const stores = {
     dataStore, geoStore
-  };
+  }; */
 
   // Kickoff history:
   history.replace('/documents', {});
@@ -61,7 +59,7 @@ function start() {
   // Render our app into the DOM at the node with id 'root'
   ReactDOM.render(
     <Provider store={store}>
-      <App stores={stores} />
+      <App />
     </Provider>,
     document.getElementById('root')
   );
@@ -82,7 +80,4 @@ if (window.cordova) {
 } else {
   start();
 }
-
-
-
 

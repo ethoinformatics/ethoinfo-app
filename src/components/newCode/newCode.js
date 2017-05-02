@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { observer } from 'mobx-react';
 import { Page, Button } from 'react-onsenui';
 import './newCode.styl';
 
-@observer
 class NewCode extends React.Component {
   render() {
     const { createAction, createSuccessAction } = this.props;

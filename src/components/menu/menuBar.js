@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { observer } from 'mobx-react';
 import { Icon, Toolbar, ToolbarButton } from 'react-onsenui';
 
-const MenuBar = observer(({ menuAction }) => (
+const MenuBar = ({ menuAction }) => (
   <Toolbar>
     <div className="right">
       <ToolbarButton onClick={menuAction}>
@@ -12,7 +11,7 @@ const MenuBar = observer(({ menuAction }) => (
     </div>
     <div className="center" />
   </Toolbar>
-));
+);
 
 MenuBar.propTypes = {
   menuAction: PropTypes.func

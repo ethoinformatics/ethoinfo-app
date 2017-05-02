@@ -1,5 +1,4 @@
 import moment from 'moment';
-import { toJS } from 'mobx';
 import R from 'ramda';
 
 class DataType {}
@@ -117,7 +116,7 @@ class ModelSchema extends Schema {
       ? displayFieldValue.name : '_id';
 
     // Map field strings
-    this.fields = toJS(fields).map((field) => { // eslint-disable-line arrow-body-style
+    this.fields = fields.map((field) => { // eslint-disable-line arrow-body-style
       return new Field(
         field.name,
         field.lookup || false,

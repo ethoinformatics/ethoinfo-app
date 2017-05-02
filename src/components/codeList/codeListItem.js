@@ -34,9 +34,9 @@ const CodeListItem = ({ item, deleteAction }) => {
 /* eslint-disable react/no-unused-prop-types */
 CodeListItem.propTypes = {
   item: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    _id: PropTypes.string.isRequired,
-    _rev: PropTypes.string.isRequired
+    // name: PropTypes.string.isRequired,
+    // _id: PropTypes.string.isRequired,
+    // _rev: PropTypes.string.isRequired
   }),
   deleteAction: PropTypes.func.isRequired,
 };

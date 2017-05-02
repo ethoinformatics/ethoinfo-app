@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-import { observer } from 'mobx-react';
 import 'normalize.css/normalize.css';
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
@@ -46,7 +45,6 @@ import Sync from '../sync/sync';
 import history from '../../history';
 import { models, categories } from '../../schemas/main';
 
-@observer
 class App extends Component {
   constructor() {
     super();
@@ -72,7 +70,7 @@ class App extends Component {
     const newDocumentAction = () => {
       const domainName = currentView.params.id;
 
-      this.props.createDoc(domainName)
+      this.props.createDoc(null, domainName)
         .then((result) => {
           console.log('Created a new doc:', result);
           const { id: newId } = result;
@@ -121,8 +119,7 @@ class App extends Component {
   }
 
   // Renders currentView, passing in appropriate state as props.
-  renderCurrentView(stores) {
-    const { dataStore } = stores;
+  renderCurrentView() {
     const { currentView } = this.props;
 
     const id = currentView.params.id; // domain
@@ -139,7 +136,7 @@ class App extends Component {
       case 'newCode':
         return (
           <NewCode
-            createAction={data => dataStore.createDoc(id, data)}
+            createAction={data => this.props.createDoc(data, id)}
             createSuccessAction={() => history.push(`/categories/${id}`, {})}
           />
         );
@@ -182,7 +179,7 @@ class App extends Component {
   }
 
   render() {
-    const { modals, onCloseMenu, stores, views } = this.props;
+    const { modals, onCloseMenu, views } = this.props;
 
     const menuProps = {
       items: config.views.menu.items,
@@ -202,7 +199,7 @@ class App extends Component {
 
             {/* Main page */}
             <Page renderToolbar={this.renderNavbar}>
-              { this.renderCurrentView(stores) }
+              { this.renderCurrentView() }
             </Page>
           </SplitterContent>
         </Splitter>
@@ -221,7 +218,6 @@ App.propTypes = {
   modals: PropTypes.array, // Todo: shape
   onOpenMenu: PropTypes.func,
   onCloseMenu: PropTypes.func,
-  stores: PropTypes.object, // Todo: shape
   views: PropTypes.object, // Todo: shape
   watchGeolocation: PropTypes.func,
 };
@@ -237,7 +233,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createDoc: domainName => dispatch(createDoc({}, domainName)),
+  createDoc: (data = {}, domainName) => dispatch(createDoc(data, domainName)),
   fetchAllDocuments: () => {
     dispatch(fetchAllDocuments());
   },

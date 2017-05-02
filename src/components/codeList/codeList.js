@@ -14,6 +14,10 @@ import { getSchema } from '../../schemas/main';
 
 // Function for sorting codes
 const sortFn = (a, b) => {
+  if (!!a.name || !!b.name) { // undefined
+    return 0;
+  }
+
   if (a.name.toLowerCase() > b.name.toLowerCase()) {
     return 1;
   }
@@ -74,9 +78,9 @@ CodeList.propTypes = {
   domain: PropTypes.string.isRequired,
   codes: PropTypes.arrayOf(
     PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      _id: PropTypes.string.isRequired,
-      _rev: PropTypes.string.isRequired
+      // name: PropTypes.string.isRequired,
+      // _id: PropTypes.string.isRequired,
+      // _rev: PropTypes.string.isRequired
     })
   ),
   deleteDoc: PropTypes.func.isRequired,
