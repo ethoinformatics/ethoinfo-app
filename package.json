@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "A mobile web app designed to enable the collection of flexible data structures in an offline environment. ",
   "main": "main.js",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/ethoinformatics/ethoinfo-app.git"
+  },
   "scripts": {
     "dev": "webpack-dev-server --host 0.0.0.0 --colors --hot --inline --config webpack.dev.config.js --content-base ./public/",
     "prebuild": "npm install",
@@ -14,8 +18,8 @@
     "build-cordova-android": "cd cordova && cordova build android",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Sebastian Buys <sebastian@linebreakdesign.com>",
-  "license": "?",
+  "author": "Sebastian Buys <sebastian@linebreak.studio>",
+  "license": "MIT",
   "dependencies": {
     "babel-polyfill": "6.23.0",
     "base64-url": "1.3.3",
