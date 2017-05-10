@@ -6,8 +6,10 @@ import './sync.styl';
 
 // Actions
 import {
+  deleteLocalDb,
   downloadSync,
-  setItem as setConfigItem
+  setItem as setConfigItem,
+  uploadSync,
 } from '../../redux/actions/config';
 
 // Redux setup
@@ -19,11 +21,17 @@ const mapStateToProps = state =>
   });
 
 const mapDispatchToProps = dispatch => ({
-  downloadSync: () => {
+  destroyDb: () => {
+    dispatch(deleteLocalDb());
+  },
+  download: () => {
     dispatch(downloadSync());
   },
   setConfigItem: (key, value) => {
     dispatch(setConfigItem(key, value));
+  },
+  upload: () => {
+    dispatch(uploadSync());
   }
 });
 
@@ -31,24 +39,21 @@ class Sync extends React.Component {
   onURLChange() {
     const val = this.urlRef.value.trim();
     this.props.setConfigItem('url', val);
-    // this.props.store.updateCouchUrlBase(val);
   }
 
   onUsernameChange() {
     const val = this.usernameRef.value.trim();
     this.props.setConfigItem('username', val);
-    // this.props.store.updateCouchUsername(val);
   }
 
   onPasswordChange() {
     const val = this.passwordRef.value.trim();
     this.props.setConfigItem('password', val);
-    // this.props.store.updateCouchPassword(val);
   }
 
   render() {
     const inFlight = false;
-    const { url, username, password, downloadSync } = this.props;
+    const { destroyDb, download, password, upload, url, username, } = this.props;
 
     return (
       <Page className="sync">
@@ -92,23 +97,21 @@ class Sync extends React.Component {
         </ol>
         <Button
           disabled={inFlight}
-          onClick={() => {
-            // store.uploadSync();
-          }}
+          onClick={() => upload()}
           modifier={'outline large'}
         >
           Upload
         </Button>
         <Button
           disabled={inFlight}
-          onClick={() => downloadSync()}
+          onClick={() => download()}
           modifier={'outline large'}
         >
           Download
         </Button>
         <Button
           disabled={inFlight}
-          onClick={() => /* store.deletePouch()*/ null}
+          onClick={() => destroyDb()}
           modifier={'outline large'}
         >
           Clear local database
@@ -132,11 +135,12 @@ class Sync extends React.Component {
 }
 
 Sync.propTypes = {
-  downloadSync: PropTypes.func.isRequired,
+  download: PropTypes.func.isRequired,
+  password: PropTypes.string,
   setConfigItem: PropTypes.func.isRequired,
+  upload: PropTypes.func.isRequired,
   url: PropTypes.string,
   username: PropTypes.string,
-  password: PropTypes.string
 };
 
 Sync.defaultProps = {

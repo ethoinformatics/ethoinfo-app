@@ -97,8 +97,8 @@ export function setItem(key, value) {
 }
 
 // Set couch url success
-export function setItemSuccess(key, value) {
-  return { type: CONFIG_SET_ITEM_SUCCESS, payload: { key, value } };
+export function setItemSuccess(newConfigValue) {
+  return { type: CONFIG_SET_ITEM_SUCCESS, payload: newConfigValue };
 }
 
 // Set couch url error
