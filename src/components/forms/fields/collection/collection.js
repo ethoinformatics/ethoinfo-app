@@ -42,7 +42,7 @@ class CollectionField extends Component {
 
     // Accordion state
     this.state = {
-      isExpanded: true
+      isExpanded: false
     };
 
     // Bind context
