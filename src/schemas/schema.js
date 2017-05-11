@@ -138,15 +138,19 @@ class ModelSchema extends Schema {
 
     const displayValue = document[fieldToDisplay.name];
 
+    // Prepend 'title' if there is one for the record.
+    const titleToDisplay = this.fields.find(field => field.name === 'title');
+    const titleValue = titleToDisplay ? document[titleToDisplay.name] : null;
+
     switch (fieldToDisplay.type.constructor) {
       case Types.Date:
         // https://momentjs.com/
-        return displayValue ? moment(displayValue).format('YYYY-MM-DD h:mm a') : document._id;
+        return titleValue || (displayValue ? moment(displayValue).format('YYYY-MM-DD h:mm a') : document._id);
 
       case Types.String:
-        return displayValue;
+        return titleValue || displayValue;
       default:
-        return displayValue;
+        return titleValue || displayValue;
     }
   }
 

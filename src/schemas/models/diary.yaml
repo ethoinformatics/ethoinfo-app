@@ -4,6 +4,8 @@ name: Diary
 displayField: datetime
 
 fields:
+  - name: title
+    type: String
   - name: observer
     type: Observer
     lookup: true
