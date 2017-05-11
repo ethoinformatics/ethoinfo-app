@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Icon, List, ListItem } from 'react-onsenui';
+// import ons from 'onsenui';
+import { notification } from 'onsenui';
 import R from 'ramda';
 import _ from 'lodash';
 import moment from 'moment';
@@ -71,8 +73,13 @@ class CollectionField extends Component {
   onItemRemove(index) {
     const { onChange, path, value } = this.props;
 
-    const newCollectionValue = R.remove(index, 1, value);
-    onChange(path, newCollectionValue);
+    notification.confirm('Remove?')
+    .then((response) => {
+      if (response) {
+        const newCollectionValue = R.remove(index, 1, value);
+        onChange(path, newCollectionValue);
+      }
+    });
   }
 
   onItemReset(index) {

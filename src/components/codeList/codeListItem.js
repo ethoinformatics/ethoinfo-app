@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, ListItem } from 'react-onsenui';
+import { Button, Icon, ListItem } from 'react-onsenui';
+import { notification } from 'onsenui';
 import _ from 'lodash';
 
 const CodeListItem = ({ item, deleteAction }) => {
@@ -12,19 +13,25 @@ const CodeListItem = ({ item, deleteAction }) => {
       </div>
       <div className="right">
         <Button
+          className="delete"
           style={{ margin: '0px', padding: '0px' }}
           modifier="quiet"
           onClick={() => {
-            deleteAction(_id, _rev)
-            .then(() => {
-              console.log(`Success deleting code: ${name}`);
-            })
-            .catch(() => {
-              console.log(`Error deleting code: ${name}`);
+            notification.confirm('Remove?')
+            .then((response) => {
+              if (response) {
+                deleteAction(_id, _rev)
+                .then(() => {
+                  console.log(`Success deleting code: ${name}`);
+                })
+                .catch(() => {
+                  console.log(`Error deleting code: ${name}`);
+                });
+              }
             });
           }}
         >
-          Delete
+          <Icon icon="md-close" />
         </Button>
       </div>
     </ListItem>

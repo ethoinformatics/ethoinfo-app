@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { List, ListItem, Page, Icon } from 'react-onsenui';
+import { notification } from 'onsenui';
 import './documentList.styl';
 import history from '../../history';
 
@@ -30,7 +31,14 @@ const mapDispatchToProps = dispatch => ({
   fetchAllDocuments: () => {
     dispatch(fetchAllDocuments());
   },
-  deleteDoc: (id, rev) => dispatch(_deleteDoc(id, rev)),
+  deleteDoc: (id, rev) => {
+    notification.confirm('Remove?')
+    .then((response) => {
+      if (response) {
+        dispatch(_deleteDoc(id, rev));
+      }
+    });
+  },
 });
 
 class DocumentList extends Component {
