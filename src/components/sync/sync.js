@@ -15,9 +15,10 @@ import {
 // Redux setup
 const mapStateToProps = state =>
   ({
+    password: state.config.password,
+    transactionInProgress: state.global.transactionInProgress,
     url: state.config.url,
     username: state.config.username,
-    password: state.config.password
   });
 
 const mapDispatchToProps = dispatch => ({
@@ -52,19 +53,20 @@ class Sync extends React.Component {
   }
 
   render() {
-    const inFlight = false;
-    const { destroyDb, download, password, upload, url, username, } = this.props;
+    const {
+      destroyDb, download, password, transactionInProgress, upload, url, username,
+    } = this.props;
 
     return (
       <Page className="sync">
         <div className="progressContainer">
-          { inFlight && <ProgressBar indeterminate /> }
+          { transactionInProgress && <ProgressBar indeterminate /> }
         </div>
         <ol className="syncFields">
           <li className="syncField">
             <label htmlFor="couchUrl">Couch URL</label>
             <input
-              disabled={inFlight}
+              disabled={transactionInProgress}
               ref={(c) => { this.urlRef = c; }}
               onChange={() => this.onURLChange()}
               type={'text'}
@@ -75,7 +77,7 @@ class Sync extends React.Component {
           <li className="syncField">
             <label htmlFor="couchUsername">Couch Username</label>
             <input
-              disabled={inFlight}
+              disabled={transactionInProgress}
               ref={(c) => { this.usernameRef = c; }}
               onChange={() => this.onUsernameChange()}
               type={'text'}
@@ -86,7 +88,7 @@ class Sync extends React.Component {
           <li className="syncField">
             <label htmlFor="couchPassword">Couch Password</label>
             <input
-              disabled={inFlight}
+              disabled={transactionInProgress}
               ref={(c) => { this.passwordRef = c; }}
               onChange={() => this.onPasswordChange()}
               type={'password'}
@@ -96,21 +98,21 @@ class Sync extends React.Component {
           </li>
         </ol>
         <Button
-          disabled={inFlight}
+          disabled={transactionInProgress}
           onClick={() => upload()}
           modifier={'outline large'}
         >
           Upload
         </Button>
         <Button
-          disabled={inFlight}
+          disabled={transactionInProgress}
           onClick={() => download()}
           modifier={'outline large'}
         >
           Download
         </Button>
         <Button
-          disabled={inFlight}
+          disabled={transactionInProgress}
           onClick={() => destroyDb()}
           modifier={'outline large'}
         >
@@ -135,9 +137,11 @@ class Sync extends React.Component {
 }
 
 Sync.propTypes = {
+  destroyDb: PropTypes.func.isRequired,
   download: PropTypes.func.isRequired,
   password: PropTypes.string,
   setConfigItem: PropTypes.func.isRequired,
+  transactionInProgress: PropTypes.bool.isRequired,
   upload: PropTypes.func.isRequired,
   url: PropTypes.string,
   username: PropTypes.string,

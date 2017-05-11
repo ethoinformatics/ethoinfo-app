@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import R from 'ramda';
+
 import { connect } from 'react-redux';
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
 import 'normalize.css/normalize.css';
-import { Page, Splitter, SplitterContent } from 'react-onsenui';
+import { AlertDialog, Page, Splitter, SplitterContent } from 'react-onsenui';
 
 import config from '../../config/index';
 
@@ -20,6 +22,10 @@ import {
   watch as watchGeolocation,
   loadCache as loadGeolocationCache
 } from '../../redux/actions/geo';
+
+import {
+  markMessageAsRead
+} from '../../redux/actions/global';
 
 import { loadConfig } from '../../redux/actions/config';
 
@@ -178,6 +184,27 @@ class App extends Component {
     }
   }
 
+  renderMessages() {
+    const { messages, readMessage } = this.props;
+    const lastMessage = R.last(messages);
+
+    return lastMessage ?
+      <AlertDialog
+        isOpen
+        isCancelable={false}
+      >
+        <div className="alert-dialog-content">
+          {lastMessage.text}
+        </div>
+        <div className="alert-dialog-footer">
+          <button onClick={() => readMessage(lastMessage.id)} className="alert-dialog-button">
+            Ok
+          </button>
+        </div>
+      </AlertDialog>
+    : null;
+  }
+
   render() {
     const { modals, onCloseMenu, views } = this.props;
 
@@ -200,6 +227,7 @@ class App extends Component {
             {/* Main page */}
             <Page renderToolbar={this.renderNavbar}>
               { this.renderCurrentView() }
+              { this.renderMessages() }
             </Page>
           </SplitterContent>
         </Splitter>
@@ -215,11 +243,18 @@ App.propTypes = {
   historyPath: PropTypes.string,
   loadConfig: PropTypes.func.isRequired,
   loadGeolocationCache: PropTypes.func.isRequired,
-  modals: PropTypes.array, // Todo: shape
-  onOpenMenu: PropTypes.func,
-  onCloseMenu: PropTypes.func,
-  views: PropTypes.object, // Todo: shape
-  watchGeolocation: PropTypes.func,
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      text: PropTypes.string,
+    })
+  ).isRequired,
+  modals: PropTypes.array.isRequired,
+  onOpenMenu: PropTypes.func.isRequired,
+  onCloseMenu: PropTypes.func.isRequired,
+  readMessage: PropTypes.func.isRequired,
+  views: PropTypes.object.isRequired, // Todo: shape
+  watchGeolocation: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -227,6 +262,7 @@ function mapStateToProps(state) {
     currentView: getCurrentView(state.views),
     docs: state.docs,
     historyPath: state.views.history.path,
+    messages: state.global.messages,
     modals: getAllModals(state),
     views: state.views,
   };
@@ -242,6 +278,9 @@ const mapDispatchToProps = dispatch => ({
   },
   loadGeolocationCache: () => {
     dispatch(loadGeolocationCache());
+  },
+  readMessage: (id) => {
+    dispatch(markMessageAsRead(id));
   },
   onCloseMenu: () => {
     dispatch(closeMenu());

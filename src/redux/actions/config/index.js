@@ -48,8 +48,8 @@ export function uploadSync() {
 }
 
 // Success uploading local database to remote
-export function uploadSyncSuccess() {
-  return { type: CONFIG_UPLOAD_SYNC_SUCCESS };
+export function uploadSyncSuccess(info) {
+  return { type: CONFIG_UPLOAD_SYNC_SUCCESS, payload: info };
 }
 
 // Error uploading local database to remote
@@ -63,8 +63,8 @@ export function downloadSync() {
 }
 
 // Success downloading remote database to local
-export function downloadSyncSuccess() {
-  return { type: CONFIG_DOWNLOAD_SYNC_SUCCESS };
+export function downloadSyncSuccess(info) {
+  return { type: CONFIG_DOWNLOAD_SYNC_SUCCESS, payload: info };
 }
 
 // Error downloading remote database to local

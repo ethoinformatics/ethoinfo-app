@@ -5,6 +5,7 @@ import config from './config';
 import docs, * as FromDocuments from './documents';
 import fields from './fields';
 import geo from './geo';
+import global from './global';
 import views, * as FromViews from './views';
 
 // -----------------------------------------------------------------------------
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   docs,
   fields,
   geo,
+  global,
   views
 });
 

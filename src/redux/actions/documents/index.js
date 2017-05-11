@@ -1,5 +1,24 @@
 import uuid from 'uuid';
 import R from 'ramda';
+import PouchDB from 'pouchdb';
+
+import appConfig from '../../../config';
+import { KEYS } from '../../../constants';
+
+// No longer using pouchdb injected by redux-thunk
+// This global instance causes problems when db is deleted.
+// Instead opening a new connection each time.
+
+// Pouch query API uses global namespace in a terrible way
+// https://github.com/pouchdb/pouchdb/issues/4624
+// We are using https://github.com/nolanlawson/pouchdb-find
+// as recommended by PouchDB maintainer.
+PouchDB.plugin(require('pouchdb-find'));
+
+const getDbInstance = () => {
+  const dbName = appConfig[KEYS.pouchDbName];
+  return new PouchDB(dbName);
+};
 
 export const DOCS_LOAD_ALL = 'DOCS_LOAD_ALL';
 export const DOCS_LOAD_ALL_SUCCESS = 'DOCS_LOAD_ALL_SUCCESS';
@@ -73,7 +92,9 @@ function deleteDocError(err) {
 
 // Fetch all documents from pouchdb.
 export function fetchAll() {
-  return (dispatch, getState, { pouchdb }) => {
+  return (dispatch) => {
+    const pouchdb = getDbInstance();
+
     dispatch(requestAllStart());
 
     return pouchdb.allDocs({
@@ -89,7 +110,8 @@ export function fetchAll() {
 
 // Save a new document to pouchdb.
 export function create(doc, domainName) {
-  return (dispatch, getState, { pouchdb }) => {
+  return (dispatch) => {
+    const pouchdb = getDbInstance();
     dispatch(createDocStart());
 
     const newDoc = {
@@ -117,7 +139,8 @@ const mergeFn = (l, r) => r || l;
 
 // update a document in pouchdb.
 export function update(id, newValues) {
-  return (dispatch, getState, { pouchdb }) => {
+  return (dispatch) => {
+    const pouchdb = getDbInstance();
     dispatch(updateDocStart());
 
     // Pouch is our source of truth. Get document and merge new fields.
@@ -147,8 +170,8 @@ export function update(id, newValues) {
 
 // Delete a document from pouchdb.
 export function deleteDoc(id, rev) {
-  console.log('Should delete doc:', id, rev);
-  return (dispatch, getState, { pouchdb }) => {
+  return (dispatch) => {
+    const pouchdb = getDbInstance();
     dispatch(deleteDocStart());
 
     return pouchdb.remove(id, rev)
