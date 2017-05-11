@@ -31,20 +31,6 @@ export default [
     nextPath: () => null
   },
   {
-    path: '/debug',
-    name: 'debug',
-    title: () => 'Schema Viewer',
-    prevPath: () => null,
-    nextPath: () => null
-  },
-  {
-    path: '/debug/:id',
-    name: 'debugDetail',
-    title: params => `${_.startCase(params.id)}`,
-    prevPath: () => '/documents',
-    nextPath: () => null
-  },
-  {
     path: '/categories/:id/new',
     name: 'newCode',
     title: params => `${_.startCase(params.id)}`,

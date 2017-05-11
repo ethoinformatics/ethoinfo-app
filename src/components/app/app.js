@@ -1,22 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import R from 'ramda';
-
 import { connect } from 'react-redux';
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
 import 'normalize.css/normalize.css';
 import { AlertDialog, Page, Splitter, SplitterContent } from 'react-onsenui';
 
-import config from '../../config/index';
-
-import './app.styl';
-import Menu from '../menu/menu';
-import Navbar from '../navbar/navbar';
-
-// Actions
-import { create as createDoc, fetchAll as fetchAllDocuments } from '../../redux/actions/documents';
+// ------------------------------------------------------------
+// Import actions
+//
+import { create as createDoc,
+  fetchAll as fetchAllDocuments
+} from '../../redux/actions/documents';
 
 import {
   watch as watchGeolocation,
@@ -31,26 +27,45 @@ import { loadConfig } from '../../redux/actions/config';
 
 import { open as openMenu, close as closeMenu } from '../../redux/actions/menu';
 
-// Selectors
+// ------------------------------------------------------------
+// Import selectors
+//
 import { getAllModals } from '../../redux/reducers';
 import { getCurrentView } from '../../redux/reducers/views';
 
-// Components
+// ------------------------------------------------------------
+// Import components
+//
 import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import CategoryList from '../categoryList/categoryList';
 import CodeList from '../codeList/codeList';
 import DocumentList from '../documents/documentList';
 import EditDocument from '../documents/editDocument';
 import Geo from '../geoViewer/geoViewer';
+import Menu from '../menu/menu';
 import Modal from '../modal/modal';
 import ModelList from '../models/modelList';
+import Navbar from '../navbar/navbar';
 import NewCode from '../newCode/newCode';
 import Settings from '../settings/settings';
 import Sync from '../sync/sync';
 
+// ------------------------------------------------------------
+// Import styles
+//
+import './app.styl';
+
+// ------------------------------------------------------------
+// Import helpers
+//
 import history from '../../history';
 import { models, categories } from '../../schemas/main';
+import config from '../../config/index';
 
+
+// ------------------------------------------------------------
+// APP COMPONENT
+//
 class App extends Component {
   constructor() {
     super();
@@ -184,6 +199,10 @@ class App extends Component {
     }
   }
 
+  /**
+   * Render any global app messages one at a time in LIFO order.
+   *
+   */
   renderMessages() {
     const { messages, readMessage } = this.props;
     const lastMessage = R.last(messages);
@@ -237,10 +256,10 @@ class App extends Component {
 }
 
 App.propTypes = {
-  createDoc: PropTypes.func,
-  currentView: PropTypes.object,
+  createDoc: PropTypes.func.isRequired,
+  currentView: PropTypes.object.isRequired,
   fetchAllDocuments: PropTypes.func.isRequired,
-  historyPath: PropTypes.string,
+  historyPath: PropTypes.string.isRequired,
   loadConfig: PropTypes.func.isRequired,
   loadGeolocationCache: PropTypes.func.isRequired,
   messages: PropTypes.arrayOf(
@@ -253,7 +272,7 @@ App.propTypes = {
   onOpenMenu: PropTypes.func.isRequired,
   onCloseMenu: PropTypes.func.isRequired,
   readMessage: PropTypes.func.isRequired,
-  views: PropTypes.object.isRequired, // Todo: shape
+  views: PropTypes.object.isRequired,
   watchGeolocation: PropTypes.func.isRequired,
 };
 

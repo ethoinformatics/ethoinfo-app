@@ -1,18 +1,10 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { createEpicMiddleware } from 'redux-observable';
-import PouchDB from 'pouchdb';
 import thunk from 'redux-thunk';
 import rootEpic from './epics';
-
-import { KEYS } from '../constants';
-import config from '../config';
-
 import { watchOnHistoryChange } from './sagas';
 import reducer from './reducers';
-
-const dbName = config[KEYS.pouchDbName];
-const pouchdb = new PouchDB(dbName);
 
 const epicMiddleware = createEpicMiddleware(rootEpic);
 
@@ -27,15 +19,8 @@ function configureStore(initialState) {
   const enhancers = composeEnhancers(
     // Middleware store enhancer.
     applyMiddleware(
-      // Initialising redux-thunk with extra arguments will pass the below
-      // arguments to all the redux-thunk actions.
-      // Pass a preconfigured pouchdb instance which can be used to fetch data
-      thunk.withExtraArgument({
-        pouchdb
-      }),
-
+      thunk.withExtraArgument({}),
       sagaMiddleware,
-
       epicMiddleware,
     )
   );
