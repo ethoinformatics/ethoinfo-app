@@ -41,7 +41,18 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader!postcss-loader'
+        include: /node_modules/,
+        loaders: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: true,
+            },
+          },
+          'postcss-loader',
+        ],
       },
       {
         test: /\.less$/,
@@ -56,8 +67,25 @@ module.exports = {
       { test: /\.(png|jpg)$/,
         loader: 'url-loader?limit=8192' // inline base64 URLs for <=8k images, direct URLs for the rest
       },
-      { test: /\.styl$/,
-        loader: 'style-loader!css-loader!postcss-loader!stylus-loader'
+      {
+        test: /\.styl$/,
+        exclude: /node_modules/,
+        loaders: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              modules: true,
+            },
+          },
+          'stylus-loader',
+        ]
       },
       {
         test: /\.(woff|woff2|eot|ttf|svg)(\?.*$|$)/,
