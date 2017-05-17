@@ -168,3 +168,9 @@ The following cordova plugins are installed
     ````bash
     $ sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
     ````
+
+## Application
+
+### Document View
+<img width="376" alt="screen shot 2017-05-16 at 4 43 15 pm" src="https://cloud.githubusercontent.com/assets/206423/26127405/3c549f5a-3a57-11e7-829f-9a2424642d2a.png">
+
