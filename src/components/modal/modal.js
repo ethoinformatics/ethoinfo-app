@@ -63,8 +63,8 @@ const Modal = (props) => {
       </div>
       <div className="modalActions">
         {
-          actions.map((action, index) =>
-            <Button key={index} modifier="large" onClick={action.callback}>{action.title}</Button>
+          actions.map(action =>
+            <Button key={action.title} modifier="large" onClick={action.callback}>{action.title}</Button>
           )
         }
       </div>

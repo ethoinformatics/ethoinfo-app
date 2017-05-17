@@ -1,4 +1,4 @@
-import R from 'ramda';
+// import R from 'ramda';
 
 import {
   DOCS_LOAD_ALL_SUCCESS,

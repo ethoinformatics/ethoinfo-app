@@ -17,7 +17,7 @@ Promise.config({
 // You will get "Network location provider" Error
 const geolocate = () =>
   new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
+    /* navigator.geolocation.getCurrentPosition(
       (position) => {
         // Convert position values to plain object:
         const { coords: { longitude, latitude }, timestamp } = position;
@@ -30,7 +30,12 @@ const geolocate = () =>
       (err) => {
         reject(new Error(err.message));
       }
-    );
+    ); */
+
+    resolve({
+      coords: { latitude: 40.729660, longitude: -73.993664 },
+      timestamp: 12345
+    });
   });
 
 /**

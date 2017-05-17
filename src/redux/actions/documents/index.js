@@ -143,22 +143,28 @@ export function update(id, newValues) {
     const pouchdb = getDbInstance();
     dispatch(updateDocStart());
 
+    // Ref to doc for accessing in promise scope
+    // Note: _rev is going to be incorrect after doc has updated.
+    // let _doc = null;
+
     // Pouch is our source of truth. Get document and merge new fields.
     return pouchdb.get(id)
     .then((doc) => {
       // const newDoc = { ...doc, ...newValues };
       const newDoc = R.mergeWith(mergeFn, doc, newValues);
-      // console.log('>>> Updating Document:', doc, newValues);
-      // console.log('>>>>> Result:', newDoc);
+
+      // _doc = newDoc;
       return pouchdb.put(newDoc);
     })
     .catch((err) => {
       dispatch(updateDocError(err));
       throw err;
     })
-    .then((res) => {
-      dispatch(updateDocSuccess(res));
-      return res;
+    .then(res => pouchdb.get(res.id) // Need to fetch again to get correct _rev
+    )
+    .then((doc) => {
+      // console.log('>>> Updated Document:', doc);
+      dispatch(updateDocSuccess(doc));
     })
     .catch((err) => {
       dispatch(updateDocError(err));

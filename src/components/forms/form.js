@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import { setField as setFieldAction } from '../../redux/actions/fields';
-// import { getAll as getAllDocs } from '../../redux/reducers/documents';
 
 import './form.styl';
 
@@ -61,7 +59,7 @@ const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
 
 const Form = ({ doc, fieldValues, onFieldChange, path, schema }) => {
   const geoPoints = getGeoPoints(doc, schema);
-
+  console.log('Rendering doc with points:', doc, geoPoints);
   const map = (
     <Map
       location={[40.7294245, -73.9958957]}

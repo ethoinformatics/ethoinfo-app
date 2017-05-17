@@ -74,28 +74,33 @@ class Map extends React.Component {
     } */
 
     // Use lodash isEqual to compare values.
-    if (!_.isEqual(prevProps.entries, this.props.entries)) {
+    if (
+      !_.isEqual(prevProps.entries, this.props.entries) ||
+      !_.isEqual(prevProps.points, this.props.points)) {
       this.refreshMapLayers();
     }
   }
 
   refreshMapLayers() {
+    console.log('Refreshing map');
     // Good use case for immutablejs here.
     // Difficult to diff geolocation entries to accomodate imperative leaflet api
-    const { entries, location, points } = this.props;
+    const { location, points } = this.props;
 
     // Create markers
     const pointLatLngs = points.map(point => [
       point.coords.latitude, point.coords.longitude
     ]);
 
+    // Empty layer or create new
     if (this.pointsLayerGroup) {
-      this.pointsLayerGroup.eachLayer(l => this.layerGroup.removeLayer(l));
+      this.pointsLayerGroup.eachLayer(l => this.pointsLayerGroup.removeLayer(l));
     } else {
       this.pointsLayerGroup = L.layerGroup([]).addTo(this.map);
     }
 
     pointLatLngs.forEach((ll) => {
+      console.log('Creating marker at:', ll);
       const marker = L.marker(ll, {});
       marker.bindPopup(`<p>${ll[0]}, ${ll[1]}</p>`);
       this.pointsLayerGroup.addLayer(marker);
@@ -160,6 +165,8 @@ class Map extends React.Component {
     } else {
       // this.map.setView([37.0902, -95.7129], 4); // Center USA.
     } */
+
+    this.map.invalidateSize();
   }
 
   updateLocation() {
