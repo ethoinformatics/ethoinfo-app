@@ -9,4 +9,5 @@ build/
 webpack-assets.json
 webpack-stats.json
 npm-debug.log
+debug.log
 .DS_Store
