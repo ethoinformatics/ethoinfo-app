@@ -6,7 +6,8 @@ import pluralize from 'pluralize';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { slice } from '../../redux/actions/history';
-
+import { getById } from '../../redux/reducers/documents';
+import { getSchema } from '../../schemas/main';
 
 import './breadcrumbs.styl';
 
@@ -15,7 +16,12 @@ import './breadcrumbs.styl';
  * as a series of clickable breadcrumb links.
  */
 
-const mapStateToProps = () => ({});
+// Redux setup
+const mapStateToProps = (state, ownProps) =>
+  ({
+    // TODO: Use proper selector here
+    docsById: state.docs.byId
+  });
 
 const mapDispatchToProps = dispatch => ({
   sliceHistory: (path) => {
@@ -27,7 +33,7 @@ const isNumber = value => !isNaN(parseInt(value, 10)) && !isUUID(value);
 
 class Breadcrumbs extends React.Component {
   render() {
-    const { path, sliceHistory } = this.props;
+    const { docsById, path, sliceHistory } = this.props;
 
     const pathComponents = R.tail(path.split('/'));
 
@@ -74,9 +80,17 @@ class Breadcrumbs extends React.Component {
                     return _.startCase(pluralize(cc));
                   }
 
-                  // Truncate UUIDs to first part
+                  // Use friendly name string if possible.
                   if (isUUID(cc)) {
-                    return R.head(cc.split('-'));
+                    const doc = getById(docsById, cc);
+                    if (doc) {
+                      const schema = getSchema(doc.domainName);
+                      const displayValue = schema.getFriendlyString(doc);
+                      return displayValue;
+                    } else {
+                      return R.head(cc.split('-'));
+                      return "New";
+                    }
                   }
 
                   return cc;
@@ -100,7 +114,8 @@ Breadcrumbs.defaultProps = {
 
 Breadcrumbs.propTypes = {
   path: PropTypes.string,
-  sliceHistory: PropTypes.func
+  sliceHistory: PropTypes.func,
+  domain: PropTypes.string
 };
 
 export default connect(
