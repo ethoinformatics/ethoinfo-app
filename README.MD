@@ -3,6 +3,17 @@
 ## About
 A mobile web app designed to enable the collection of flexible data structures in an offline environment. http://ethoinformatics.org/
 
+
+## Table of contents
+* [Requirements](#requirements)
+* [Getting Started](#getting-started)
+* [Couchdb](docs/couchdb.md)
+* [Application](docs/application.md)
+* [Mobile](docs/mobile.md)
+* [Reference](docs/reference.md)
+
+
+
 ## Requirements
 
 ### Dependencies
@@ -122,55 +133,3 @@ We run / build our application via scripts defined in package.json:
         └── platforms
             └──  android
     ```
-
-### Tools
-*   [ESLint](http://eslint.org/) checks our source code for potential errors. We use AirBnB's [awesome eslint config](https://www.npmjs.com/package/eslint-config-airbnb) to help us follow best practices.
-*   [Webpack](http://webpack.github.io/) is used for bundling / compiling.
-*   [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html) provides our development environment.
-*   [Babel](https://babeljs.io/) is used for compiling javascript.
-*   [React](https://facebook.github.io/react) is used to write UI components.
-*   [Mobx](https://mobxjs.github.io/mobx/) helps us manage state.
-*   [Stylus](http://stylus-lang.com/) allows us to write better CSS.
-*   [Leaflet](http://leafletjs.com/) is used for mapping.
-*   [Onsen](http://onsen.io/v2/) provides mobile UI components with a native look and feel.
-
-### Cordova plugins
-The following cordova plugins are installed
-* cordova-plugin-background-mode 0.7.2 "BackgroundMode"
-* cordova-plugin-compat 1.1.0 "Compat"
-* cordova-plugin-device 1.1.5 "Device"
-* cordova-plugin-geolocation 2.4.1 "Geolocation"
-* cordova-plugin-statusbar 2.2.0 "StatusBar"
-* cordova-plugin-whitelist 1.3.0 "Whitelist"
-
-### Quirks
-* **geolocation**
-
-    Geolocation in the browser via WiFi can be quirky and take some time.
-
-### Known issues
-* **sync error**
-
-    ![alt text](http://ethoinfo.s3.amazonaws.com/sync-error.png "Sync error")
-
-    11/26/16: May be fixed in Couch 2.0 or a CORS issue: https://github.com/pouchdb/pouchdb/issues/5810
-
-    Current config: http://demo.ethoinformatics.org:5984/_utils/config.html
-
-    See: https://pouchdb.com/errors.html
-
-### Other troubleshooting
-* **npm permissions**
-
-    If you see an error message in terminal about npm permissions, it can likely be fixed via the instructions here: [fixing-npm-permission](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
-
-    TL;DR version:
-    ````bash
-    $ sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
-    ````
-
-## Application
-
-### Document View
-<img width="376" alt="screen shot 2017-05-16 at 4 43 15 pm" src="https://cloud.githubusercontent.com/assets/206423/26127405/3c549f5a-3a57-11e7-829f-9a2424642d2a.png">
-
