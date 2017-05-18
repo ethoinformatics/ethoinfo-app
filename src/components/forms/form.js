@@ -58,7 +58,8 @@ const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
 };
 
 const Form = ({ doc, fieldValues, onFieldChange, path, schema }) => {
-  const geoPoints = getGeoPoints(doc, schema);
+  // const geoPoints = getGeoPoints(doc, schema);
+  const geoPoints = getGeoPoints(fieldValues || doc, schema);
   console.log('Rendering doc with points:', doc, geoPoints);
   const map = (
     <Map
