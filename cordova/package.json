@@ -1,0 +1,19 @@
+{
+    "name": "org.ethoinformatics.app",
+    "version": "1.0.0",
+    "displayName": "EthoinfoApp",
+    "cordova": {
+        "platforms": [
+            "android",
+            "ios"
+        ],
+        "plugins": {
+            "cordova-plugin-whitelist": {}
+        }
+    },
+    "dependencies": {
+        "cordova-android": "~5.2.2",
+        "cordova-ios": "~4.2.1",
+        "cordova-plugin-whitelist": "1"
+    }
+}

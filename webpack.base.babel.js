@@ -56,7 +56,7 @@ module.exports = options => ({
       },
       {
         test: /\.(woff|woff2|eot|ttf|svg)(\?.*$|$)/,
-        loader: 'url-loader?limit=10000'
+        loader: 'url-loader?limit=1000000'
       },
       {
         test: /\.yaml$/,
