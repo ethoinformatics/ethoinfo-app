@@ -20,6 +20,13 @@ The following cordova plugins are installed
 * cordova-plugin-statusbar 2.2.0 "StatusBar"
 * cordova-plugin-whitelist 1.3.0 "Whitelist"
 
+### CouchDB setup
+*   [Uncomplicated Firewall](https://help.ubuntu.com/community/UFW)
+*   [Installing CouchDB 2.0 with HTTPS / SSL For Free](https://medium.com/@silverbackdan/installing-couchdb-2-0-nosql-with-centos-7-and-certbot-lets-encrypt-f412198c3051)
+*   [Add systemd Startup Script For CouchDB](https://www.jamescoyle.net/how-to/2527-add-systemd-startup-script-for-couchdb)
+*   [Apache as a proxy](https://cwiki.apache.org/confluence/display/COUCHDB/Apache+as+a+proxy)
+*   [How To Install CouchDB and Futon on Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-install-couchdb-and-futon-on-ubuntu-14-04)
+
 ### Quirks
 * **geolocation**
 
