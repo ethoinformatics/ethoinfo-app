@@ -10,6 +10,7 @@ A mobile web app designed to enable the collection of flexible data structures i
 * [Couchdb](docs/couchdb.md)
 * [Application](docs/application.md)
 * [Mobile](docs/mobile.md)
+* [Next Steps](docs/nextsteps.md)
 * [Reference](docs/reference.md)
 
 
