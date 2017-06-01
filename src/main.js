@@ -26,7 +26,7 @@ import configureStore from './redux/configureStore';
 
 // https://onsen.io/v2/docs/js/util.html
 // Disable onsen from adding extra margins for status bar
-ons.disableAutoStatusBarFill();
+// ons.disableAutoStatusBarFill();
 
 ons.ready(() => {
   // Hide Cordova splash screen when Onsen UI is loaded completely
