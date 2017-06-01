@@ -49,7 +49,7 @@ module.exports = options => ({
         loader: 'json-loader'
       },
       { test: /\.(png|jpg)$/,
-        loader: 'url-loader?limit=8192' // inline base64 URLs for <=8k images, direct URLs for the rest
+        loader: 'url-loader?limit=102400' // inline base64 URLs for <=8k images, direct URLs for the rest
       },
       { test: /\.styl$/,
         loader: 'style-loader!css-loader!postcss-loader!stylus-loader'
@@ -99,7 +99,6 @@ module.exports = options => ({
       'jsnext:main',
       'main',
     ],
-    
     // https://github.com/moment/moment/issues/1435#issuecomment-188084288
     alias: { moment: 'moment/moment.js' }
   },

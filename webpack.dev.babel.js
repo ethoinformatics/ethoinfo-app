@@ -78,7 +78,11 @@ module.exports = require('./webpack.base.babel')({
     publicPath: '/',
     // Match the output of 'publicPath'
 
-    historyApiFallback: true
+    historyApiFallback: true,
+
+    // https://github.com/webpack/webpack-dev-server/issues/882
+    host: '0.0.0.0',
+    disableHostCheck: true
   },
 
   performance: {
