@@ -33,15 +33,7 @@ The following cordova plugins are installed
     Geolocation in the browser via WiFi can be quirky and take some time.
 
 ### Known issues
-* **sync error**
 
-    ![alt text](http://ethoinfo.s3.amazonaws.com/sync-error.png "Sync error")
-
-    11/26/16: May be fixed in Couch 2.0 or a CORS issue: https://github.com/pouchdb/pouchdb/issues/5810
-
-    Current config: http://demo.ethoinformatics.org:5984/_utils/config.html
-
-    See: https://pouchdb.com/errors.html
 
 ### Other troubleshooting
 * **npm permissions**
