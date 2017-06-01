@@ -8,6 +8,14 @@
 button, input, select
   font-size 16px
 
+// Remove default styles on mobile
+input[type=text] {
+  /* Remove First */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;   
+}
+
 // Fix alignment of fab icons.
 .fab
   .ons-icon

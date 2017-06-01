@@ -20,12 +20,19 @@
   position relative
   // display inline-block
   height 44px
-  padding-left 0.25em
-  padding-right 0.25em
+  padding-left 0.5em
+  padding-right 0.5em
   background #eee
   // float left
-  padding-left 22px
+  min-width 44px
   margin-top 0px
+  border 1px solid #bbb
+  margin -1px 0 0 -1px
+  color #888
+  &:first-child
+    margin-left 0px
+  &:last-child
+    color #000
 
 .breadcrumbPath
   background none
@@ -36,19 +43,21 @@
   vertical-align top
   display block
   margin 0
-  margin-left 0.25em
   padding 0
   float left
   font-weight 700
   font-size 12px
+  // text-transform uppercase
+  // letter-spacing 0.5px
   cursor pointer
+  color inherit
 
-.breadcrumbComponent::after
+/* .breadcrumbComponent::after
   content " "
   display block
   width 0
   height 0
-  border-top 22px solid transparent /* Go big on the size, and let overflow hide */
+  border-top 22px solid transparent
   border-bottom 22px solid transparent
   border-left 16px solid #eee
   position absolute
@@ -56,11 +65,12 @@
   margin-top -22px
   left 100%
   z-index 2
+*/
 
 .breadcrumbsSpacer
   clear both
 
-.breadcrumbComponent:nth-child(even)
+/* .breadcrumbComponent:nth-child(even)
   background #ddd
 
 .breadcrumbComponent:nth-child(even)::after
@@ -68,7 +78,7 @@
   display block
   width 0
   height 0
-  border-top 22px solid transparent /* Go big on the size, and let overflow hide */
+  border-top 22px solid transparent
   border-bottom 22px solid transparent
   border-left 16px solid #ddd
   position absolute
@@ -76,6 +86,7 @@
   margin-top -22px
   left 100%
   z-index 2
+*/
 
 .breadcrumbComponent
   &:hover

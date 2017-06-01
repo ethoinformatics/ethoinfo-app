@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Switch } from 'react-onsenui';
 
+import './boolean.styl';
+
 /**
  * Boolean input rendered as a switch
  *
  */
 
 const BooleanInput = ({ value, name, onChange }) =>
-  <div>
+  <div className="booleanInput">
     <label htmlFor={name}>{_.startCase(name)}</label>
 
     <Switch

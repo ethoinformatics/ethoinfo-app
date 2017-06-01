@@ -1,6 +1,6 @@
 .tabs
   height 54px
-  background #999
+  background #eee
   .tab
     outline none
     box-sizing border-box
@@ -10,14 +10,18 @@
     top 10px
     height 44px
     line-height 44px
+    color #888
     text-align center
     display inline-block
     background #f9f9f9
-    opacity 0.75
     border none
     border-top 1px solid #ddd
-    border-right 1px solid #ddd
+    // border-right 1px solid #ddd
     border-bottom 1px solid #ddd
     &.active
+      color #000
       opacity 1.0
-      border-bottom 0px
+      border-bottom 2px solid #000
+    &:hover
+      background #000
+      color #fff

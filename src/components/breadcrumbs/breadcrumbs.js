@@ -101,7 +101,7 @@ class Breadcrumbs extends React.Component {
         }
 
         { /* Clearfix */ }
-        <div className="breadcrumbsSpacer" />
+        {/* <div className="breadcrumbsSpacer" /> */}
       </div>
     );
   }

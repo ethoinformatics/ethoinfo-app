@@ -29,17 +29,43 @@
   height 44px
   line-height 44px
   padding 0
-  &:hover
-    background #ddd
+  color #888
+  
+  .collectionHeaderLabel
+    font-weight 700
+    font-size 12px
+    text-transform uppercase
+    letter-spacing 0.6px
+    position relative
+    display inline-block
+    vertical-align top
+    height 44px
+    line-height 44px
+    margin 0
+    padding 0
+    color inherit
+    color #888
 
-.expandButton
-  height 44px
-  line-height 44px
-  width calc(100% - 44px)
-  text-align left
-  background transparent
-  border none
-  outline none
+  .expandButton
+    height 44px
+    line-height 44px
+    width calc(100% - 44px)
+    text-align left
+    background transparent
+    border none
+    outline none
+    cursor pointer !important
+    color #888
+  
+  &:hover
+    background #000
+    color #fff
+    .collectionHeaderLabel
+      color #fff
+    .expandButton
+      color #fff
+
+
 
 
 .newHeaderButton
@@ -50,20 +76,11 @@
   position absolute
   text-align center
   line-height 44px
-  color #000
+  // color #000
+  color inherit
   top 0
   right 0
   z-index 99
-
-.collectionHeaderLabel
-  font-weight 700
-  position relative
-  display inline-block
-  vertical-align top
-  height 44px
-  line-height 44px
-  margin 0
-  padding 0
 
 .accordionIcon
   display inline-block
@@ -77,6 +94,7 @@
   position relative
   top 0
   left 0
+  color inherit
 
 .accordion
   .list
