@@ -18,6 +18,7 @@
 .breadcrumbComponent
   display inline-block
   position relative
+  text-align center
   // display inline-block
   height 44px
   padding-left 0.5em
@@ -41,12 +42,13 @@
   height 44px
   line-height 44px
   vertical-align top
-  display block
+  display inline-block
   margin 0
   padding 0
-  float left
+  // float left
   font-weight 700
   font-size 12px
+  text-align center
   // text-transform uppercase
   // letter-spacing 0.5px
   cursor pointer
@@ -89,10 +91,6 @@
 */
 
 .breadcrumbComponent
-  &:hover
-    background-color #000
-    .breadcrumbPath
-      color #fff
     &::after
       border-left 16px solid #000
 
