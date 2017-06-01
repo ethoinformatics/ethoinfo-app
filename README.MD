@@ -23,24 +23,6 @@ Ensure the following are installed on your system:
 1. [node](https://nodejs.org/) and [npm](https://www.npmjs.com/)
 2. [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
-### Optional
-If you want to deploy to iOS or Android with [Cordova](https://cordova.apache.org):
-
-1. Install Cordova globally:
-
-    ```bash
-    $ npm install -g cordova
-    ```
-
-2. Add a platform:
-    ```bash
-    $ cd cordova
-    $ cordova platform add ios --save
-    $ cordova platform add android --save
-    ``` 
-
-    See the [Cordova Docs](https://cordova.apache.org/docs/en/latest/guide/overview/) for more information.
-
 ## Getting started
 1. Clone git repo from github
     ```bash
