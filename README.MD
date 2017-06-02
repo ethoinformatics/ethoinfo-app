@@ -7,11 +7,9 @@ A mobile web app designed to enable the collection of flexible data structures i
 ## Table of contents
 * [Requirements](#requirements)
 * [Getting Started](#getting-started)
-* [CouchDB](docs/couchdb.md)
-* [Application](docs/application.md)
-* [Mobile](docs/mobile.md)
-* [Next Steps](docs/nextsteps.md)
-* [Reference](docs/reference.md)
+* [CouchDB](#couchdb)
+* [Mobile](#mobile)
+* [Reference](#reference)
 
 
 
@@ -217,5 +215,138 @@ We run / build our application via scripts defined in package.json:
     ```
     
     
+ ## CouchDB
+
+The application uses CouchDB 2.0 for uploading and downloading saved records.
+
+See the [CouchDB 2.0 Docs](http://docs.couchdb.org/en/2.0.0/install/) for instructions.
+
+### Digital Ocean Setup
+
+The following instructions 
+
+1.  Setup Ubuntu droplet image
+    
+    See [Digital Ocean Instructions](https://www.digitalocean.com/community/tutorials/how-to-create-your-first-digitalocean-droplet-virtual-server/) for instructions.
+
+
+2.  Download and unarchive Couch source
+    ```
+    curl http://www-us.apache.org/dist/couchdb/source/2.0.0/apache-couchdb-2.0.0.tar.gz | tar xz
+    ```
+
+3.  Enter directory of download
+    ```
+    $ cd apache-couchdb-2.0.0/
+    ```
+
+4.  Enter directory of download
+    ```
+    $ ./configure
+    ```
+
+5.  Update configuration file /etc/local.ini
+    ```
+    [chttpd]
+    port = 5984
+    bind_address = 0.0.0.0   
+    ```
+
+6.  On Ubuntu, add “ufw” firewall rule for TCP packets on the couches port (5984)
+    ```
+    $ sudo ufw allow 5984/tcp
+    ```
+   
+7.  Run CouchDB as a Daemon
+    ```
+    $ cat <<EOT >> /etc/systemd/system/couchdb.service
+      [Unit]
+      Description=Couchdb service
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=couchdb
+      ExecStart=/home/couchdb/couchdb/bin/couchdb -o /dev/stdout -e /dev/stderr
+      Restart=always
+      EOT    
+    ```
+
+8.  Reload the systemd daemon and add the couchdb service to the startup routine
+    ```
+    systemctl  daemon-reload
+    systemctl  start couchdb.service
+    systemctl  enable couchdb.service
+    ```
+
+### Running CouchDB and application on the same machine
+
+Though the database would normally run on a different server, it could be setup to run on the same machine as the application for quick testing. CORS will need to be enabled via the CouchDB web console. The setting is under the Configuration Tab. Set this to enable and select All domains (*).  
     
     
+## Mobile
+
+If you want to deploy to iOS or Android with [Cordova](https://cordova.apache.org):
+
+1. Install Cordova globally:
+
+    ```bash
+    $ npm install -g cordova
+    ```
+
+2. Add a platform:
+    ```bash
+    $ cd cordova
+    $ cordova platform add ios --save
+    $ cordova platform add android --save
+    ``` 
+
+    See the [Cordova Docs](https://cordova.apache.org/docs/en/latest/guide/overview/) for more information.
+
+    
+    
+## Reference
+
+### Tools
+*   [ESLint](http://eslint.org/) checks our source code for potential errors. We use AirBnB's [awesome eslint config](https://www.npmjs.com/package/eslint-config-airbnb) to help us follow best practices.
+*   [Webpack](http://webpack.github.io/) is used for bundling / compiling.
+*   [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html) provides our development environment.
+*   [Babel](https://babeljs.io/) is used for compiling javascript.
+*   [React](https://facebook.github.io/react) is used to write UI components.
+*   [Mobx](https://mobxjs.github.io/mobx/) helps us manage state.
+*   [Stylus](http://stylus-lang.com/) allows us to write better CSS.
+*   [Leaflet](http://leafletjs.com/) is used for mapping.
+*   [Onsen](http://onsen.io/v2/) provides mobile UI components with a native look and feel.
+
+### Cordova plugins
+The following cordova plugins are installed
+* cordova-plugin-background-mode 0.7.2 "BackgroundMode"
+* cordova-plugin-compat 1.1.0 "Compat"
+* cordova-plugin-device 1.1.5 "Device"
+* cordova-plugin-geolocation 2.4.1 "Geolocation"
+* cordova-plugin-statusbar 2.2.0 "StatusBar"
+* cordova-plugin-whitelist 1.3.0 "Whitelist"
+
+### CouchDB setup
+*   [Uncomplicated Firewall](https://help.ubuntu.com/community/UFW)
+*   [Installing CouchDB 2.0 with HTTPS / SSL For Free](https://medium.com/@silverbackdan/installing-couchdb-2-0-nosql-with-centos-7-and-certbot-lets-encrypt-f412198c3051)
+*   [Add systemd Startup Script For CouchDB](https://www.jamescoyle.net/how-to/2527-add-systemd-startup-script-for-couchdb)
+*   [Apache as a proxy](https://cwiki.apache.org/confluence/display/COUCHDB/Apache+as+a+proxy)
+*   [How To Install CouchDB and Futon on Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-install-couchdb-and-futon-on-ubuntu-14-04)
+
+### Quirks
+* **geolocation**
+
+    Geolocation in the browser via WiFi can be quirky and take some time.
+
+### Known issues
+
+
+### Other troubleshooting
+* **npm permissions**
+
+    If you see an error message in terminal about npm permissions, it can likely be fixed via the instructions here: [fixing-npm-permission](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
+
+    TL;DR version:
+    ````bash
+    $ sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
