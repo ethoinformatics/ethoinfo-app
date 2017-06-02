@@ -7,7 +7,7 @@ A mobile web app designed to enable the collection of flexible data structures i
 ## Table of contents
 * [Requirements](#requirements)
 * [Getting Started](#getting-started)
-* [Couchdb](docs/couchdb.md)
+* [CouchDB](docs/couchdb.md)
 * [Application](docs/application.md)
 * [Mobile](docs/mobile.md)
 * [Next Steps](docs/nextsteps.md)
@@ -95,7 +95,10 @@ We run / build our application via scripts defined in package.json:
     └── dist
     ```
 
-3. **Bundle source code & build with cordova for iOS**
+3. **Bundle source code & build with Cordova for iOS**
+    
+    Setup Cordova before running build scripts
+    
     ```bash
     $ npm run build-cordova-ios
     ```
@@ -106,7 +109,10 @@ We run / build our application via scripts defined in package.json:
             └──  ios
     ```
 
-4. **Bundle source code & build with cordova for android**
+4. **Bundle source code & build with Cordova for Android**
+    
+    Setup Cordova before running build scripts
+    
     ```bash
     $ npm run build-cordova-android
     ```
