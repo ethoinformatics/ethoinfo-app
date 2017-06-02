@@ -74,7 +74,10 @@ class Map extends React.Component {
     } */
 
     // Use lodash isEqual to compare values.
-    if (!_.isEqual(prevProps.entries, this.props.entries)) {
+    if (
+      !_.isEqual(prevProps.entries, this.props.entries) ||
+      !_.isEqual(prevProps.points, this.props.points)
+    ) {
       this.refreshMapLayers();
     }
   }
@@ -82,7 +85,7 @@ class Map extends React.Component {
   refreshMapLayers() {
     // Good use case for immutablejs here.
     // Difficult to diff geolocation entries to accomodate imperative leaflet api
-    const { entries, location, points } = this.props;
+    const { points } = this.props;
 
     // Create markers
     const pointLatLngs = points.map(point => [
@@ -95,13 +98,16 @@ class Map extends React.Component {
       this.pointsLayerGroup = L.layerGroup([]).addTo(this.map);
     }
 
+    const markers = [];
+
     pointLatLngs.forEach((ll) => {
       const marker = L.marker(ll, {});
       marker.bindPopup(`<p>${ll[0]}, ${ll[1]}</p>`);
       this.pointsLayerGroup.addLayer(marker);
+      markers.push(marker);
     });
 
-    const lastPoint = R.last(points);
+    /* const lastPoint = R.last(points);
 
     if (lastPoint) {
       // console.log('Last point:', lastPoint);
@@ -109,7 +115,16 @@ class Map extends React.Component {
       this.map.setView(latLng, this.map.getMaxZoom());
     } else if (location) {
       this.map.setView(location, this.map.getMaxZoom());
+    } */
+
+    // If we have markers, calculate bounds of all markers with some padding.
+    // Fit map to bounds.
+
+    if (markers.length > 0) {
+      const group = new L.featureGroup(markers); // eslint-disable-line new-cap
+      this.map.fitBounds(group.getBounds().pad(0.5));
     }
+
 
     /* const latLngs = entries.map(entry => [
       entry.coords.latitude, entry.coords.longitude

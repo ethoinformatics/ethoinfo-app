@@ -16,7 +16,13 @@ Promise.config({
 // If you are testing in desktop browser without a network connection,
 // You will get "Network location provider" Error
 const geolocate = () =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
+    // For testing:
+    /* resolve({
+      // coords: { latitude: 40.77202, longitude: -73.9769767 } // Central park
+      // coords: { latitude: 40.726417, longitude: -74.0093137 } // 304 Hudson
+      // coords: { latitude: 40.7420371, longitude: -73.9897522 } // MSP
+    }); */
     navigator.geolocation.getCurrentPosition(
       (position) => {
         // Convert position values to plain object:

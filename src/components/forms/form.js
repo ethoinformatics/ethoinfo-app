@@ -60,8 +60,10 @@ const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
 };
 
 const Form = ({ doc, fieldValues, onFieldChange, path, schema }) => {
-  const geoPoints = getGeoPoints(doc, schema);
-
+  // If doc is undefined, form is rendering for a new doc so use transient fieldValues
+  const data = doc || fieldValues;
+  const geoPoints = getGeoPoints(data, schema);
+  console.log('Rendering doc:', geoPoints);
   const map = (
     <Map
       location={[40.7294245, -73.9958957]}
