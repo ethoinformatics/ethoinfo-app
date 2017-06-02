@@ -3,6 +3,18 @@
 ## About
 A mobile web app designed to enable the collection of flexible data structures in an offline environment. http://ethoinformatics.org/
 
+
+## Table of contents
+* [Requirements](#requirements)
+* [Getting Started](#getting-started)
+* [CouchDB](docs/couchdb.md)
+* [Application](docs/application.md)
+* [Mobile](docs/mobile.md)
+* [Next Steps](docs/nextsteps.md)
+* [Reference](docs/reference.md)
+
+
+
 ## Requirements
 
 ### Dependencies
@@ -10,24 +22,6 @@ Ensure the following are installed on your system:
 
 1. [node](https://nodejs.org/) and [npm](https://www.npmjs.com/)
 2. [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-
-### Optional
-If you want to deploy to iOS or Android with [Cordova](https://cordova.apache.org):
-
-1. Install Cordova globally:
-
-    ```bash
-    $ npm install -g cordova
-    ```
-
-2. Add a platform:
-    ```bash
-    $ cd cordova
-    $ cordova platform add ios --save
-    $ cordova platform add android --save
-    ``` 
-
-    See the [Cordova Docs](https://cordova.apache.org/docs/en/latest/guide/overview/) for more information.
 
 ## Getting started
 1. Clone git repo from github
@@ -83,6 +77,99 @@ In **src/schema**, we define the shape of our data. Each schema corresponds to a
     │       └── bar.yaml
     └── ...
 
+### Generate interface from schema
+
+<table>
+  <tr>
+    <th width="20%">Define Schema</th>
+    <th width="40%">Generated Interface</th>
+  </tr>
+  <tr>
+    <td><div class="highlight highlight-source-yaml"><pre>
+ name: Diary
+ displayField: datetime
+ fields:
+   - name: title
+     type: String
+   - name: observer
+     type: Observer
+     lookup: true
+   - name: datetime
+     type: Date
+   - name: location
+     type: Geolocation
+     options:
+     track: true
+   - name: contacts
+     type: [Contact]
+   - name: biologicalSamples
+     type: [BiologicalSample]
+   - name: plantSamples
+     type: [PlantSample]
+   - name: comments
+     type: [String]
+        
+ <div></pre></td>
+<td><img src="https://cloud.githubusercontent.com/assets/206423/26733989/91b0e040-478a-11e7-8d6c-014948f360b3.png"></td>
+  </tr>
+
+  <tr>
+    <td><div class="highlight highlight-source-yaml"><pre>
+name: BiologicalSample 
+displayField: sampleLabel
+fields:
+  - name: subjects
+    type: [Subject]
+    lookup: true
+    - name: sampleLabel
+      type: String 
+    - name: datetime
+      type: Date
+    - name: sampleType
+      type: [BiologicalSampleType] 
+    - name: storageMedium
+      type: BiologicalSampleMedium 
+    - name: storageContainer
+      type: BiologicalSampleContainer
+    - name: location
+      type: Geolocation
+    - name: sampleQuality
+      type: SampleQuality 
+    
+ <div></pre></td>
+<td><img src="https://cloud.githubusercontent.com/assets/206423/26734034/b521d8ea-478a-11e7-8513-1d24db99d419.png"></td>
+  </tr>
+  
+  <tr>
+    <td><div class="highlight highlight-source-yaml"><pre>
+name: Taxonomy
+displayField: scientificName
+fields:
+  - name: scientificName
+    type: String
+  - name: kingdom
+    type: String
+  - name: phylum
+    type: String
+  - name: class
+    type: String
+  - name: order
+    type: String
+  - name: family
+    type: String
+  - name: genus
+    type: String
+  - name: species
+    type: String
+    
+ <div></pre></td>
+<td><img src="https://cloud.githubusercontent.com/assets/206423/26734241/51bc4b22-478b-11e7-99b4-faabf8aa7815.png"></td>
+  </tr>
+
+
+</table>
+
+
 ### Run
 We run / build our application via scripts defined in package.json:
 
@@ -101,7 +188,10 @@ We run / build our application via scripts defined in package.json:
     └── dist
     ```
 
-3. **Bundle source code & build with cordova for iOS**
+3. **Bundle source code & build with Cordova for iOS**
+    
+    Setup Cordova before running build scripts
+    
     ```bash
     $ npm run build-cordova-ios
     ```
@@ -112,7 +202,10 @@ We run / build our application via scripts defined in package.json:
             └──  ios
     ```
 
-4. **Bundle source code & build with cordova for android**
+4. **Bundle source code & build with Cordova for Android**
+    
+    Setup Cordova before running build scripts
+    
     ```bash
     $ npm run build-cordova-android
     ```
@@ -122,49 +215,7 @@ We run / build our application via scripts defined in package.json:
         └── platforms
             └──  android
     ```
-
-### Tools
-*   [ESLint](http://eslint.org/) checks our source code for potential errors. We use AirBnB's [awesome eslint config](https://www.npmjs.com/package/eslint-config-airbnb) to help us follow best practices.
-*   [Webpack](http://webpack.github.io/) is used for bundling / compiling.
-*   [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html) provides our development environment.
-*   [Babel](https://babeljs.io/) is used for compiling javascript.
-*   [React](https://facebook.github.io/react) is used to write UI components.
-*   [Mobx](https://mobxjs.github.io/mobx/) helps us manage state.
-*   [Stylus](http://stylus-lang.com/) allows us to write better CSS.
-*   [Leaflet](http://leafletjs.com/) is used for mapping.
-*   [Onsen](http://onsen.io/v2/) provides mobile UI components with a native look and feel.
-
-### Cordova plugins
-The following cordova plugins are installed
-* cordova-plugin-background-mode 0.7.2 "BackgroundMode"
-* cordova-plugin-compat 1.1.0 "Compat"
-* cordova-plugin-device 1.1.5 "Device"
-* cordova-plugin-geolocation 2.4.1 "Geolocation"
-* cordova-plugin-statusbar 2.2.0 "StatusBar"
-* cordova-plugin-whitelist 1.3.0 "Whitelist"
-
-### Quirks
-* **geolocation**
-
-    Geolocation in the browser via WiFi can be quirky and take some time.
-
-### Known issues
-* **sync error**
-
-    ![alt text](http://ethoinfo.s3.amazonaws.com/sync-error.png "Sync error")
-
-    11/26/16: May be fixed in Couch 2.0 or a CORS issue: https://github.com/pouchdb/pouchdb/issues/5810
-
-    Current config: http://demo.ethoinformatics.org:5984/_utils/config.html
-
-    See: https://pouchdb.com/errors.html
-
-### Other troubleshooting
-* **npm permissions**
-
-    If you see an error message in terminal about npm permissions, it can likely be fixed via the instructions here: [fixing-npm-permission](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
-
-    TL;DR version:
-    ````bash
-    $ sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
-    ````
+    
+    
+    
+    

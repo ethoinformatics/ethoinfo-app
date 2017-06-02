@@ -7,25 +7,25 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "org.ethoinformatics.app"
-        },
-        "cordova-plugin-whitelist": {
+        "cordova-plugin-background-mode": {
             "PACKAGE_NAME": "org.ethoinformatics.app"
         },
         "cordova-plugin-geolocation": {
             "GEOLOCATION_USAGE_DESCRIPTION": "Allow Geolocation",
             "PACKAGE_NAME": "org.ethoinformatics.app"
         },
-        "cordova-plugin-background-mode": {
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "org.ethoinformatics.app"
+        },
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "org.ethoinformatics.app"
         }
     },
     "dependent_plugins": {
-        "cordova-plugin-compat": {
+        "cordova-plugin-device": {
             "PACKAGE_NAME": "org.ethoinformatics.app"
         },
-        "cordova-plugin-device": {
+        "cordova-plugin-compat": {
             "PACKAGE_NAME": "org.ethoinformatics.app"
         }
     }
