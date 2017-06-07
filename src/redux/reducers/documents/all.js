@@ -1,5 +1,3 @@
-import R from 'ramda';
-
 import {
   DOCS_LOAD_ALL_SUCCESS,
   DOC_DELETE_SUCCESS,
@@ -8,12 +6,10 @@ import {
 
 // -----------------------------------------------------------------------------
 // PRIVATES
-
 const defaultState = [];
 
 // -----------------------------------------------------------------------------
 // REDUCER
-
 function all(state = defaultState, action) {
   switch (action.type) {
     case DOCS_LOAD_ALL_SUCCESS:
@@ -32,12 +28,10 @@ function all(state = defaultState, action) {
 
 // -----------------------------------------------------------------------------
 // EXPORTED SELECTORS
-
 export function getAll(state) {
   return state;
 }
 
 // -----------------------------------------------------------------------------
 // EXPORTED REDUCER
-
 export default all;

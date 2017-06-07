@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import { setField as setFieldAction } from '../../redux/actions/fields';
-// import { getAll as getAllDocs } from '../../redux/reducers/documents';
 
 import './form.styl';
 
@@ -13,14 +11,8 @@ import Fields from './fields';
 import { getSchema } from '../../schemas/main';
 import { Types } from '../../schemas/schema';
 
-const mapStateToProps = () =>
-  ({
-    // docs: getAllDocs(state.docs),
-    // fields: state.fields
-  });
-
-const mapDispatchToProps = () => ({
-});
+const mapStateToProps = () => ({});
+const mapDispatchToProps = () => ({});
 
 // Extract geo points recursively through document and children
 const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
@@ -51,7 +43,6 @@ const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
         return acc;
       }
 
-      // console.log('Recursing:', field.name);
       return [...acc, ...getGeoPoints(doc[field.name], subSchema)];
     }
 
@@ -63,7 +54,6 @@ const Form = ({ doc, fieldValues, onFieldChange, path, schema }) => {
   // If doc is undefined, form is rendering for a new doc so use transient fieldValues
   const data = doc || fieldValues;
   const geoPoints = getGeoPoints(data, schema);
-  console.log('Rendering doc:', geoPoints);
   const map = (
     <Map
       location={[40.7294245, -73.9958957]}
@@ -111,6 +101,9 @@ Form.propTypes = {
 };
 
 Form.defaultProps = {
+  doc: {},
+  fieldValues: {},
+  path: [],
   onFieldChange: () => {}
 };
 

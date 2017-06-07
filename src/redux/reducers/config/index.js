@@ -1,5 +1,3 @@
-// import R from 'ramda';
-
 import {
   CONFIG_LOAD_SUCCESS,
   CONFIG_SET_ITEM_SUCCESS,
@@ -7,13 +5,11 @@ import {
 
 // -----------------------------------------------------------------------------
 // PRIVATES
-
 const defaultState = {
 };
 
 // -----------------------------------------------------------------------------
 // REDUCER
-
 function config(state = defaultState, action) {
   switch (action.type) {
     case CONFIG_LOAD_SUCCESS:
@@ -28,10 +24,8 @@ function config(state = defaultState, action) {
 
 // -----------------------------------------------------------------------------
 // EXPORTED SELECTORS
-
 // Todo . . .
 
 // -----------------------------------------------------------------------------
 // EXPORTED REDUCER
-
 export default config;
