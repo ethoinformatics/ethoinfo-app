@@ -1,6 +1,11 @@
 #  Ethoinformatics App
 
-A mobile web application framework designed to enable the collection of flexible data structures in an offline environment. 
+A mobile GPS web application framework designed to enable the collection of flexible data structures in an offline environment. 
+
+Using simple schema files, users can easily define data relationships and hierarchies for both the frontend application and backend data storage.
+
+
+
 
 ## About Ethoinformatics
 **Ethology** is the study of animal behavior.
