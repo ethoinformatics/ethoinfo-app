@@ -11,7 +11,10 @@ import Fields from './fields';
 import { getSchema } from '../../schemas/main';
 import { Types } from '../../schemas/schema';
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  geoCache: state.geo.entries // Todo: make selector!
+});
+
 const mapDispatchToProps = () => ({});
 
 // Extract geo points recursively through document and children
@@ -50,15 +53,72 @@ const getGeoPoints = (doc, schema) => { // eslint-disable-line arrow-body-style
   }, []);
 };
 
-const Form = ({ doc, fieldValues, onFieldChange, path, schema }) => {
+// Extract geo points recursively through document and children
+const getGeo = (doc, schema) => { // eslint-disable-line arrow-body-style
+  // Return empty array if no document
+  if (!doc) { return []; }
+
+  return schema.fields.reduce((acc, field) => {
+    if (field.type.constructor === Types.Geolocation && !!field.options.track === true) {
+      // Field is a collection (would only get called recursively)
+      /* if (Array.isArray(doc)) {
+        return [
+          ...acc,
+          ...doc
+            .filter(dd => !!dd) // Remove nils
+            .map(dd => dd[field.name])
+        ].filter(element => !!element); // Remove nils
+      } */
+
+      return [...acc, doc[field.name]].filter(element => !!element);
+    }
+
+    /* if (field.type.constructor === Types.Model) {
+      const { name: domainName } = field.type;
+
+      const subSchema = getSchema(domainName);
+      if (!subSchema) { return acc; }
+
+      if (!doc[field.name]) {
+        return acc;
+      }
+
+      return [...acc, ...getGeoPoints(doc[field.name], subSchema)];
+    } */
+
+    return acc;
+  }, []);
+};
+
+const Form = ({ doc, fieldValues, geoCache, onFieldChange, path, schema }) => {
   // If doc is undefined, form is rendering for a new doc so use transient fieldValues
   const data = doc || fieldValues;
-  const geoPoints = getGeoPoints(data, schema);
+  // const geoPoints = getGeoPoints(data, schema);
+
+  const geo = getGeo(data, schema);
+  // console.log('>>> Geo:', geo);
+  // console.log('>>>> Geocache:', geoCache);
+
+  const entries = geo.map((entry) => {
+    const { timeRanges } = entry;
+
+    return timeRanges.map((timeRange) => {
+      const { start, end } = timeRange;
+      return geoCache.filter((cacheValue) => {
+        const { timestamp } = cacheValue;
+        return end ? timestamp >= start && timestamp <= end :
+          timestamp >= start;
+      });
+    });
+  });
+
+  // console.log('>>>>> Entries:', entries);
+
   const map = (
     <Map
       location={[40.7294245, -73.9958957]}
-      points={geoPoints}
-      entries={[]}
+      points={[]}
+      entries={entries}
     />
   );
 
@@ -95,6 +155,17 @@ const Form = ({ doc, fieldValues, onFieldChange, path, schema }) => {
 Form.propTypes = {
   doc: PropTypes.object,
   fieldValues: PropTypes.object,
+  geoCache: PropTypes.arrayOf(
+    PropTypes.shape(
+      {
+        coords: PropTypes.shape({
+          latitude: PropTypes.number,
+          longitude: PropTypes.number
+        }),
+        timestamp: PropTypes.number
+      }
+    )
+  ),
   path: PropTypes.array,
   onFieldChange: PropTypes.func,
   schema: PropTypes.object.isRequired,
@@ -103,6 +174,7 @@ Form.propTypes = {
 Form.defaultProps = {
   doc: {},
   fieldValues: {},
+  geoCache: [],
   path: [],
   onFieldChange: () => {}
 };

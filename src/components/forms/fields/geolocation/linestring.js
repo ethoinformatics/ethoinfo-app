@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import R from 'ramda';
 import _ from 'lodash';
+import moment from 'moment';
 
 import Boolean from '../boolean/boolean';
+
+import './linestring.styl';
 
 class GeolocationLineString extends Component {
   constructor() {
@@ -20,7 +23,7 @@ class GeolocationLineString extends Component {
   componentWillUnmount() {
   }
 
-  onSwitchToggle(switchValue) { // eslint-disable-line class-methods-use-this
+  onSwitchToggle() {
     const { onChange } = this.props;
 
     const value = this.props.value ||
@@ -29,9 +32,6 @@ class GeolocationLineString extends Component {
       };
 
     const timeRanges = value.timeRanges || [];
-
-    console.log('TIME RANGES:', timeRanges);
-
     const lastTimeRange = R.last(timeRanges);
 
     // Start a new time range if we have an open one or if none exist
@@ -40,7 +40,6 @@ class GeolocationLineString extends Component {
       const updatedTimeRanges = R.append(newEntry, timeRanges);
       const newValue = R.assoc('timeRanges', updatedTimeRanges, value);
       onChange(newValue);
-      console.log('New value is:', newValue);
     } else {
       // Update last time range
       const updatedLastTimeRange = R.assoc('end', Date.now(), lastTimeRange);
@@ -50,10 +49,39 @@ class GeolocationLineString extends Component {
         timeRanges);
       const newValue = R.assoc('timeRanges', updatedTimeRanges, value);
       onChange(newValue);
-      console.log('New value is:', newValue);
     }
 
     // console.log('Switch toggled:', switchValue);
+  }
+
+  renderTimeRanges() {
+    const { value } = this.props;
+    if (!value || !value.timeRanges) {
+      return null;
+    }
+
+    const timeRanges = value.timeRanges;
+
+    return (
+      <div>
+        <div className="timeRangesHeader">
+          <div className="timeRangesHeaderStart">Start</div>
+          <div className="timeRangesHeaderEnd">End</div>
+        </div>
+        {
+          timeRanges.map(range =>
+            <div className="timeRange" key={`timerange-${range.start}-${range.end}`}>
+              <div className="timeRangeStart">
+                { range.start && moment(range.start).format('MM-DD, h:mm a') }
+              </div>
+              <div className="timeRangeEnd">
+                { range.end && moment(range.end).format('MM-DD, h:mm a')}
+              </div>
+            </div>
+          )
+        }
+      </div>
+    );
   }
 
   render() {
@@ -63,18 +91,14 @@ class GeolocationLineString extends Component {
 
     const timeRanges = _value.timeRanges || [];
     const lastTimeRange = R.last(timeRanges);
-
     const isActive = lastTimeRange ? !lastTimeRange.end : false;
-    console.log('Time ranges:', timeRanges, typeof timeRanges);
-    console.log('last time range:', lastTimeRange);
-    console.log('is Active:', isActive);
 
-    console.log('Linestring value is:', value);
+    // console.log('Linestring value is:', value);
     return (
       <div className="geolocationField">
         <label htmlFor={name}>{_.startCase(name)}</label>
         <Boolean value={isActive} onChange={this.onSwitchToggle} />
-        {`value is: ${value}`}
+        { this.renderTimeRanges() }
       </div>
     );
   }
