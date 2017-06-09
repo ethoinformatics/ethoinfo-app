@@ -1,7 +1,25 @@
-# 🐵 ethoinfo-app
+#  Ethoinformatics App
 
-## About
-A mobile web app designed to enable the collection of flexible data structures in an offline environment. http://ethoinformatics.org/
+A mobile web application framework designed to enable the collection of flexible data structures in an offline environment. 
+
+## About Ethoinformatics
+**Ethology** is the study of animal behavior.
+
+**Informatics** is the application of computational methods for collecting, managing, and analyzing data.
+
+**Ethoinformatics** is the application of informatic techniques for animal behavior research. While this term has been coined elsewhere, its usage has so far been infrequent and inconsistent. We advocate wider use of the term in recognition of the increasing complexity and abundance of ethological data.
+
+More information is available at [ethoinformatics.org](http://ethoinformatics.org/)
+
+## Project Goals
+Lack of standardization in data management is a major impediment to comparative research. To work towards common standards in behavioral research, we take a four-part integrative approach:
+
+1. Develop a body of data standards, including a set of vocabularies and technical specifications, for behavioral research.
+2. Develop data collection software for behavioral research in the field.
+3. Develop database software and a series of tools for data upload/download, visualization, and analysis.
+4. Develop a long-term online repository as a resource for uploading, downloading, and archiving data.
+
+
 
 
 ## Table of contents
