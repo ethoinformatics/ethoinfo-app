@@ -147,7 +147,7 @@ Create and edit YAML files to define the data relationships and user interface c
     <th width="20%">Generated Interface</th>
   </tr>
   <tr>
-    <td>biologicalSample.yaml defines data structure within a diary</td>
+    <td>biologicalSample.yaml defines data within diary</td>
     <th rowspan="2"><img src="https://cloud.githubusercontent.com/assets/206423/26734034/b521d8ea-478a-11e7-8513-1d24db99d419.png"></th>
   </tr>
 
