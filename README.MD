@@ -27,7 +27,7 @@ Lack of standardization in data management is a major impediment to comparative 
 * [Getting Started](#getting-started)
 * [Application](#application)
     * [Project Structure](#project-structure)
-    * [Define Schema](#project-structure)
+    * [Schema](#Schema)
     * [Build and Run](#build-and-run)
 * [CouchDB](#couchdb)
 * [Deploying to Mobile Device](#mobile)
@@ -63,6 +63,7 @@ Ensure the following are installed on your system:
     > The development environment runs a [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html) in the background on :8080, so make sure you don't have another server running on this port. Webpack watches updates to source code in /src and rebundles the app automatically. The server uses [Hot Module Replacement](https://webpack.github.io/docs/hot-module-replacement.html) to update the app in-place when changes are made. If there are errors during bundling, you will see them in your terminal.
 
 ## Application
+The web based application is built using [React](https://facebook.github.io/react/). Apache's [Cordova](https://cordova.apache.org/) is used for building and deploying to Android or iOS devices.
 
 
 ### Project structure
@@ -98,7 +99,8 @@ In **src/schema**, we define the shape of our data. Each schema corresponds to a
     │       └── bar.yaml
     └── ...
 
-### Generate interface from schema
+### Schema
+Create and edit YAML files to define the data relationships and user interface componenents.
 
 <table>
   <tr>
