@@ -2,10 +2,7 @@
 
 A mobile GPS web application framework designed to enable the collection of flexible data structures in an offline environment. 
 
-Using simple schema files, users can easily define data relationships and hierarchies for both the frontend application and backend data storage.
-
-
-
+Using simple schema files, users can easily define data relationships and hierarchies for both the frontend application and backend data storage. The application can be deployed to either an Android or iOS device.
 
 ## About Ethoinformatics
 **Ethology** is the study of animal behavior.
@@ -25,13 +22,15 @@ Lack of standardization in data management is a major impediment to comparative 
 4. Develop a long-term online repository as a resource for uploading, downloading, and archiving data.
 
 
-
-
 ## Table of contents
 * [Requirements](#requirements)
 * [Getting Started](#getting-started)
+* [Application](#application)
+    * [Project Structure](#project-structure)
+    * [Define Schema](#project-structure)
+    * [Build and Run](#build-and-run)
 * [CouchDB](#couchdb)
-* [Mobile](#mobile)
+* [Deploying to Mobile Device](#mobile)
 * [Reference](#reference)
 
 
@@ -63,7 +62,10 @@ Ensure the following are installed on your system:
 
     > The development environment runs a [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html) in the background on :8080, so make sure you don't have another server running on this port. Webpack watches updates to source code in /src and rebundles the app automatically. The server uses [Hot Module Replacement](https://webpack.github.io/docs/hot-module-replacement.html) to update the app in-place when changes are made. If there are errors during bundling, you will see them in your terminal.
 
-## Project structure
+## Application
+
+
+### Project structure
     .
     ├── cordova                 # Cordova-specific files
     ├── dist                    # Compiled files
@@ -82,8 +84,6 @@ Ensure the following are installed on your system:
     ├── README.md
     ├── webpack<env>config.js   # Webpack (bundler) config
     └── ...                     # etc.
-
-## Usage
 
 ### Configure
 **src/config.js** is the point of contact for configuring top-level application variables, such as the remote CouchDB URL, the local PouchDB database name, etc.
@@ -140,7 +140,7 @@ In **src/schema**, we define the shape of our data. Each schema corresponds to a
 </table>
 
 
-### Run
+### Build and Run
 We run / build our application via scripts defined in package.json:
 
 1. **Run development environment**
