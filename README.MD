@@ -31,6 +31,8 @@ Lack of standardization in data management is a major impediment to comparative 
     * [GPS Data](#gps-data)
     * [Build and Run](#build-and-run)
 * [CouchDB](#couchdb)
+   * [Digital Ocean Setup](#digital-ocean-setup)
+   * [Sync with App](#sync-with-app)
 * [Deploying to Mobile Device](#mobile)
 * [Reference](#reference)
 
@@ -183,9 +185,9 @@ Record and view location data.
 
 <table>
   <tr>
-    <th width="40%">Data</th>
-    <th width="10%"></th>
-    <th width="40%">Map</th>
+    <th width="42%">Data</th>
+    <th width="16%"></th>
+    <th width="42%">Map</th>
   </tr>
   <tr>
     <th rowspan="1"><img src="https://user-images.githubusercontent.com/206423/26985071-efbfe912-4d0f-11e7-9e87-15f6d4b097f9.png"></th>
@@ -312,7 +314,20 @@ The following instructions
 ### Running CouchDB and application on the same machine
 
 Though the database would normally run on a different server, it could be setup to run on the same machine as the application for quick testing. CORS will need to be enabled via the CouchDB web console. The setting is under the Configuration Tab. Set this to enable and select All domains (*).  
-    
+
+### Sync with App
+
+<table>
+  <tr>
+    <th width="60%">Data Sync</th>
+    <th width="40%">Screen</th>
+  </tr>
+  <tr>
+    <th>...</th>
+    <th rowspan="2"><img src="https://user-images.githubusercontent.com/206423/26985076-f27a0322-4d0f-11e7-93e1-b4f6ec1e0629.png"></th>
+  </tr>
+</table>
+
     
 ## Mobile
 
