@@ -27,7 +27,8 @@ Lack of standardization in data management is a major impediment to comparative 
 * [Getting Started](#getting-started)
 * [Application](#application)
     * [Project Structure](#project-structure)
-    * [Schema](#Schema)
+    * [Schema Files](#schema-files)
+    * [GPS Data](#gps-data)
     * [Build and Run](#build-and-run)
 * [CouchDB](#couchdb)
 * [Deploying to Mobile Device](#mobile)
@@ -99,7 +100,7 @@ In **src/schema**, we define the shape of our data. Each schema corresponds to a
     │       └── bar.yaml
     └── ...
 
-### Schema
+### Schema Files
 Create and edit YAML files to define the data relationships and user interface componenents.
 
 <table>
@@ -176,6 +177,23 @@ fields:
  </tr>
 </table>
 
+### GPS Data
+
+Record and view location data.
+
+<table>
+  <tr>
+    <th width="40%">Data</th>
+    <th width="10%"></th>
+    <th width="40%">Map</th>
+  </tr>
+  <tr>
+    <th rowspan="1"><img src="https://user-images.githubusercontent.com/206423/26985071-efbfe912-4d0f-11e7-9e87-15f6d4b097f9.png"></th>
+    <th></th>
+    <th rowspan="1"><img src="https://user-images.githubusercontent.com/206423/26985073-f1189ed0-4d0f-11e7-8a8c-d0a2073cc136.png"></th>
+  </tr>
+
+</table>
 
 
 
