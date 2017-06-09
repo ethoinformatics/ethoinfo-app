@@ -79,11 +79,16 @@ In **src/schema**, we define the shape of our data. Each schema corresponds to a
 
 <table>
   <tr>
-    <th width="20%">Define Schema</th>
-    <th width="40%">Generated Interface</th>
+    <th width="30%">Define Schema</th>
+    <th width="20%">Generated Interface</th>
   </tr>
   <tr>
-    <td><div class="highlight highlight-source-yaml"><pre>
+    <td>Defined in diary.yaml</td>
+    <th rowspan="2"><img src="https://cloud.githubusercontent.com/assets/206423/26733989/91b0e040-478a-11e7-8d6c-014948f360b3.png"></th>
+  </tr>
+
+<tr>
+    <td><pre><code>
  name: Diary
  displayField: datetime
  fields:
@@ -107,64 +112,8 @@ In **src/schema**, we define the shape of our data. Each schema corresponds to a
    - name: comments
      type: [String]
         
- <div></pre></td>
-<td><img src="https://cloud.githubusercontent.com/assets/206423/26733989/91b0e040-478a-11e7-8d6c-014948f360b3.png"></td>
-  </tr>
-
-  <tr>
-    <td><div class="highlight highlight-source-yaml"><pre>
-name: BiologicalSample 
-displayField: sampleLabel
-fields:
-  - name: subjects
-    type: [Subject]
-    lookup: true
-    - name: sampleLabel
-      type: String 
-    - name: datetime
-      type: Date
-    - name: sampleType
-      type: [BiologicalSampleType] 
-    - name: storageMedium
-      type: BiologicalSampleMedium 
-    - name: storageContainer
-      type: BiologicalSampleContainer
-    - name: location
-      type: Geolocation
-    - name: sampleQuality
-      type: SampleQuality 
-    
- <div></pre></td>
-<td><img src="https://cloud.githubusercontent.com/assets/206423/26734034/b521d8ea-478a-11e7-8513-1d24db99d419.png"></td>
-  </tr>
-  
-  <tr>
-    <td><div class="highlight highlight-source-yaml"><pre>
-name: Taxonomy
-displayField: scientificName
-fields:
-  - name: scientificName
-    type: String
-  - name: kingdom
-    type: String
-  - name: phylum
-    type: String
-  - name: class
-    type: String
-  - name: order
-    type: String
-  - name: family
-    type: String
-  - name: genus
-    type: String
-  - name: species
-    type: String
-    
- <div></pre></td>
-<td><img src="https://cloud.githubusercontent.com/assets/206423/26734241/51bc4b22-478b-11e7-99b4-faabf8aa7815.png"></td>
-  </tr>
-
-
+ </code></pre></td>
+ </tr>
 </table>
 
 
