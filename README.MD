@@ -104,8 +104,8 @@ Create and edit YAML files to define the data relationships and user interface c
 
 <table>
   <tr>
-    <th width="30%">Example Schema - Top Level</th>
-    <th width="20%">Generated Interface</th>
+    <th width="60%">Example Schema - Top Level</th>
+    <th width="40%">Generated Interface</th>
   </tr>
   <tr>
     <td>diary.yaml defines top level data structure</td>
@@ -136,18 +136,17 @@ Create and edit YAML files to define the data relationships and user interface c
      type: [PlantSample]
    - name: comments
      type: [String]
-        
  </code></pre></td>
  </tr>
 </table>
 
 <table>
   <tr>
-    <th width="30%">Example Schema - Sub level</th>
-    <th width="20%">Generated Interface</th>
+    <th width="60%">Example Schema - Sub level</th>
+    <th width="40%">Generated Interface</th>
   </tr>
   <tr>
-    <td>biologicalSample.yaml defines data within diary</td>
+    <td>biologicalSample.yaml defines data structure within a diary</td>
     <th rowspan="2"><img src="https://cloud.githubusercontent.com/assets/206423/26734034/b521d8ea-478a-11e7-8513-1d24db99d419.png"></th>
   </tr>
 
@@ -173,7 +172,6 @@ fields:
       type: Geolocation
     - name: sampleQuality
       type: SampleQuality 
-        
  </code></pre></td>
  </tr>
 </table>
