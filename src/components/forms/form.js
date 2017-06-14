@@ -70,7 +70,17 @@ const getGeo = (doc, schema) => { // eslint-disable-line arrow-body-style
         ].filter(element => !!element); // Remove nils
       } */
 
-      return [...acc, doc[field.name]].filter(element => !!element);
+      const geoValue = doc[field.name];
+
+      console.log('---');
+      console.log('Doc is:', doc);
+      console.log('Geo field value is:', geoValue);
+      console.log('Schema is:', schema);
+
+      // const { _id } = doc;
+
+      // Append geolocation value to the array and filter nils
+      return [...acc, geoValue].filter(element => !!element);
     }
 
     /* if (field.type.constructor === Types.Model) {
@@ -112,7 +122,7 @@ const Form = ({ doc, fieldValues, geoCache, onFieldChange, path, schema }) => {
     });
   });
 
-  // console.log('>>>>> Entries:', entries);
+  console.log('>>>>> Entries:', entries);
 
   const map = (
     <Map

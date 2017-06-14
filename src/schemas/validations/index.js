@@ -40,6 +40,8 @@ export const validateModelShape = (model) => {
     name: pascalCasedString.required().min(1)
       .error(new Error('must be a PascalCased string.')),
 
+    displayColor: Joi.string().min(1),
+
     displayField: Joi.string().min(1),
 
     fields: Joi.array().items(Joi.object().keys({
@@ -72,6 +74,8 @@ export const validateModel = (model, validFieldTypeNames = []) => {
 
     name: pascalCasedString.required().min(1)
       .error(new Error('must be a PascalCased string.')),
+
+    displayColor: Joi.string().min(1),
 
     displayField: Joi.string().min(1),
 

@@ -3,6 +3,9 @@ name: Diary
 # Which field will we use to display instances of this model in our app
 displayField: datetime
 
+# What color should we use to render this model in our app
+displayColor: "#F44336"
+
 fields:
   - name: title
     type: String

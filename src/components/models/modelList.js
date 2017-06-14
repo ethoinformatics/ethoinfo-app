@@ -20,7 +20,13 @@ const ModelList = ({ schemas = [], visibleItems = [] }) => {
 
           return (<ListItem key={index} onClick={() => history.push(path, {})}>
             <div className="center">
-              {_.startCase(name)}
+              <div
+                className="displayColor"
+                style={{ backgroundColor: row.displayColor }}
+              />
+              <div className="name">
+                {_.startCase(name)}
+              </div>
             </div>
           </ListItem>);
         }}

@@ -111,7 +111,7 @@ class Field {
 
 class ModelSchema extends Schema {
   constructor(def, types) {
-    const { name, fields, displayField } = def;
+    const { displayColor, displayField, fields, name } = def;
     super(name);
 
     // Make sure the "displayField" actually exists as a field name on model
@@ -122,6 +122,9 @@ class ModelSchema extends Schema {
       displayFieldValue &&
       (displayFieldValue.type === 'String' || displayFieldValue.type === 'Date')
       ? displayFieldValue.name : '_id';
+
+    // Validate that displayColor exists and is a string, or assign default color
+    this.displayColor = displayColor || '#000';
 
     // Map field strings
     this.fields = fields.map((field) => { // eslint-disable-line arrow-body-style

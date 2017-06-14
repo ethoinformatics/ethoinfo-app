@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import R from 'ramda';
 import _ from 'lodash';
 import moment from 'moment';
@@ -7,6 +8,12 @@ import moment from 'moment';
 import Boolean from '../boolean/boolean';
 
 import './linestring.styl';
+
+const mapStateToProps = state => ({
+  geoCache: state.geo.entries // Todo: make selector!
+});
+
+const mapDispatchToProps = () => ({});
 
 class GeolocationLineString extends Component {
   constructor() {
@@ -55,7 +62,8 @@ class GeolocationLineString extends Component {
   }
 
   renderTimeRanges() {
-    const { value } = this.props;
+    const { geoCache, value } = this.props;
+
     if (!value || !value.timeRanges) {
       return null;
     }
@@ -67,18 +75,31 @@ class GeolocationLineString extends Component {
         <div className="timeRangesHeader">
           <div className="timeRangesHeaderStart">Start</div>
           <div className="timeRangesHeaderEnd">End</div>
+          <div className="timeRangesHeaderCount">Entries</div>
         </div>
         {
-          timeRanges.map(range =>
-            <div className="timeRange" key={`timerange-${range.start}-${range.end}`}>
-              <div className="timeRangeStart">
-                { range.start && moment(range.start).format('MM-DD, h:mm a') }
+          timeRanges.map((range) => {
+            const { start, end } = range;
+            const entries = geoCache.filter((cacheValue) => {
+              const { timestamp } = cacheValue;
+              return end ? timestamp >= start && timestamp <= end :
+                timestamp >= start;
+            });
+
+            return (
+              <div className="timeRange" key={`timerange-${range.start}-${range.end}`}>
+                <div className="timeRangeStart">
+                  { range.start && moment(range.start).format('MM-DD, h:mm a') }
+                </div>
+                <div className="timeRangeEnd">
+                  { range.end && moment(range.end).format('MM-DD, h:mm a')}
+                </div>
+                <div className="timeRangeCount">
+                  { entries.length }
+                </div>
               </div>
-              <div className="timeRangeEnd">
-                { range.end && moment(range.end).format('MM-DD, h:mm a')}
-              </div>
-            </div>
-          )
+            );
+          })
         }
       </div>
     );
@@ -105,6 +126,17 @@ class GeolocationLineString extends Component {
 }
 
 GeolocationLineString.propTypes = {
+  geoCache: PropTypes.arrayOf(
+    PropTypes.shape(
+      {
+        coords: PropTypes.shape({
+          latitude: PropTypes.number,
+          longitude: PropTypes.number
+        }),
+        timestamp: PropTypes.number
+      }
+    )
+  ),
   name: PropTypes.string,
   value: PropTypes.shape({
     coords: PropTypes.shape({
@@ -117,8 +149,12 @@ GeolocationLineString.propTypes = {
 };
 
 GeolocationLineString.defaultProps = {
+  geoCache: [],
   name: '',
   value: {},
 };
 
-export default GeolocationLineString;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(GeolocationLineString);

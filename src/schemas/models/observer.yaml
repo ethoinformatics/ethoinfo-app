@@ -3,6 +3,9 @@ name: Observer
 # Which field will we use to display instances of this model in our app
 displayField: email
 
+# What color should we use to render this model in our app
+displayColor: "#00C853"
+
 fields:
   - name: firstName
     type: String

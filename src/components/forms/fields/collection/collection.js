@@ -293,6 +293,8 @@ class CollectionField extends Component {
       initialValue
     } = this.props;
 
+    console.log('>>>>', this.props);
+
     const { isExpanded } = this.state;
 
     return (
