@@ -4,24 +4,24 @@ import { connect } from 'react-redux';
 
 // Components
 import { Page } from 'react-onsenui';
-import Form from '../forms/form';
+import Form from '../../form';
 
 // Styles
 import './editDocument.styl';
 import './documentForm.styl';
 
-import { getSchema } from '../../schemas/main';
+import { getSchema } from '../../../schemas/main';
 
 // Actions
-import { deleteDoc as _deleteDoc } from '../../redux/actions/documents';
+import { deleteDoc as _deleteDoc } from '../../../redux/actions/documents';
 
 import {
   resetFields as resetFieldsAtPath,
-  setField as setFieldAction } from '../../redux/actions/fields';
+  setField as setFieldAction } from '../../../redux/actions/fields';
 
 // Selectors
-import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
-import { makeGetById } from '../../redux/selectors/documents';
+import { getByPath as getFieldsByPath } from '../../../redux/reducers/fields';
+import { makeGetById } from '../../../redux/selectors/documents';
 
 const getById = makeGetById();
 

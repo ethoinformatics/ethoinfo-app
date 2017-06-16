@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItem, Page } from 'react-onsenui';
 import _ from 'lodash';
-import history from '../../history';
+import history from '../../../history';
 import './modelList.styl';
 
 const ModelList = ({ schemas = [], visibleItems = [] }) => {

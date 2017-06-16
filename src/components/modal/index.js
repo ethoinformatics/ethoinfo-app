@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import R from 'ramda';
 import { Button, Page } from 'react-onsenui';
-import Breadcrumbs from '../breadcrumbs/breadcrumbs';
+import Breadcrumbs from '../breadcrumbs';
 import { pop as popModal } from '../../redux/actions/modals';
 import './modal.styl';
 
 import { MODAL_TYPE_FIELD } from '../../redux/constants/modals';
 
-import Navbar from '../navbar/navbar';
+import Navbar from '../navbar';
 
-import Field from '../forms/field';
+import Field from '../form/field';
 
 const MODAL_COMPONENTS = {
   [MODAL_TYPE_FIELD]: Field
