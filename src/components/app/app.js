@@ -36,19 +36,19 @@ import { getCurrentView } from '../../redux/reducers/views';
 // ------------------------------------------------------------
 // Import components
 //
-import Breadcrumbs from '../breadcrumbs/breadcrumbs';
-import CategoryList from '../categoryList/categoryList';
-import CodeList from '../codeList/codeList';
+import Breadcrumbs from '../breadcrumbs';
+import CategoryList from '../categoryList';
+import CodeList from '../codeList';
 import DocumentList from '../documents/documentList';
 import EditDocument from '../documents/editDocument';
-import Geo from '../geoViewer/geoViewer';
-import Menu from '../menu/menu';
-import Modal from '../modal/modal';
+import Geo from '../geoViewer';
+import Menu from '../menu';
+import Modal from '../modal';
 import ModelList from '../models/modelList';
-import Navbar from '../navbar/navbar';
-import NewCode from '../newCode/newCode';
-import Settings from '../settings/settings';
-import Sync from '../sync/sync';
+import Navbar from '../navbar';
+import NewCode from '../newCode';
+import Settings from '../settings';
+import Sync from '../sync';
 
 // ------------------------------------------------------------
 // Import styles

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { List, ListHeader, ListItem, Page } from 'react-onsenui';
 import R from 'ramda';
-import history from '../../history';
-import { getAllDocs } from '../../redux/selectors/documents';
+import history from '../../../history';
+import { getAllDocs } from '../../../redux/selectors/documents';
 import './allDocuments.styl';
 
 const mapStateToProps = state =>

@@ -4,17 +4,17 @@ import { connect } from 'react-redux';
 import { List, ListItem, Page, Icon } from 'react-onsenui';
 import { notification } from 'onsenui';
 import './documentList.styl';
-import history from '../../history';
+import history from '../../../history';
 
 import {
   fetchAll as fetchAllDocuments,
   deleteDoc as _deleteDoc
-} from '../../redux/actions/documents';
+} from '../../../redux/actions/documents';
 
 // import { getDocsByDomain } from '../../redux/reducers';
 
-import { makeGetByDomain } from '../../redux/selectors/documents';
-import { getSchema } from '../../schemas/main';
+import { makeGetByDomain } from '../../../redux/selectors/documents';
+import { getSchema } from '../../../schemas/main';
 
 const getDocsByDomain = makeGetByDomain();
 

@@ -12,7 +12,7 @@ import CollectionField from './fields/collection/collection';
 import DateField from './fields/date/date';
 import Geo from './fields/geolocation/geolocation';
 import GeoLineString from './fields/geolocation/linestring';
-import Form from './form';
+import Form from './';
 import SelectField from './fields/select/select';
 import TextInputField from './fields/text/input';
 
