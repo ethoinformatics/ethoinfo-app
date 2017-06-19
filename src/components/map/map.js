@@ -3,13 +3,14 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
-import R from 'ramda';
 import L from 'leaflet';
 import raf from 'raf';
 import 'raf/polyfill';
 import 'leaflet/dist/leaflet.css';
 import 'spinkit/css/spinners/5-pulse.css';
 import './map.styl';
+
+import { getSchema } from '../../schemas/main';
 
 // Leaflet bug fix:
 // https://github.com/Leaflet/Leaflet/issues/4968
@@ -86,6 +87,8 @@ class Map extends React.Component {
     // Good use case for immutablejs here.
     // Difficult to diff geolocation entries to accomodate imperative leaflet api
     const { entries, points } = this.props;
+    console.log('ENTRIES ARE:', entries);
+    // const { geoPoints } = entries;
 
     // Create markers
     const pointLatLngs = points.map(point => [
@@ -138,8 +141,15 @@ class Map extends React.Component {
       this.layerGroup = L.layerGroup([]).addTo(this.map);
     }
 
-    entries.forEach((subEntries) => {
-      subEntries.forEach((values) => {
+    entries.forEach((subEntry) => {
+      const { domainName } = subEntry;
+
+      const schema = getSchema(domainName);
+      const color = schema ? schema.displayColor : '#000';
+
+      if (!subEntry.geoPoints) { return; }
+
+      subEntry.geoPoints.forEach((values) => {
         const latLngs = values.map(entry => [
           entry.coords.latitude, entry.coords.longitude
         ]);
@@ -149,7 +159,7 @@ class Map extends React.Component {
           const geoPath = L.polyline(
             latLngs,
             {
-              color: 'blue',
+              color,
               weight: 1
             }).addTo(this.map);
           // Zoom map to bounding box of polyline
@@ -159,7 +169,7 @@ class Map extends React.Component {
           latLngs.forEach((ll) => {
             const marker = L.circleMarker(ll, {
               radius: 1,
-              color: 'blue',
+              color,
             });
 
             marker.bindPopup(`<p>${ll[0]}, ${ll[1]}</p>`);
@@ -167,10 +177,10 @@ class Map extends React.Component {
             this.layerGroup.addLayer(marker);
           });
         }
-      })
-    })
+      });
+    });
 
-    /*const latLngs = R.flatten(entries).map(entry => [
+    /* const latLngs = R.flatten(entries).map(entry => [
       entry.coords.latitude, entry.coords.longitude
     ]);
 
@@ -279,17 +289,20 @@ Map.propTypes = {
   followLocation: PropTypes.bool,
   location: PropTypes.arrayOf(PropTypes.number),
   entries: PropTypes.arrayOf(
-    PropTypes.arrayOf(
-      PropTypes.arrayOf(
-        PropTypes.shape({
-          timestamp: PropTypes.number,
-          coords: PropTypes.shape({
-            latitude: PropTypes.number,
-            longitude: PropTypes.number
+    PropTypes.shape({
+      domainName: PropTypes.string,
+      geoPoints: PropTypes.arrayOf(
+        PropTypes.arrayOf(
+          PropTypes.shape({
+            timestamp: PropTypes.number,
+            coords: PropTypes.shape({
+              latitude: PropTypes.number,
+              longitude: PropTypes.number
+            })
           })
-        })
+        )
       )
-    )
+    })
   ),
   points: PropTypes.arrayOf(
       PropTypes.shape({

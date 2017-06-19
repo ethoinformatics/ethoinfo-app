@@ -72,15 +72,18 @@ const getGeo = (doc, schema) => { // eslint-disable-line arrow-body-style
 
       const geoValue = doc[field.name];
 
-      console.log('---');
-      console.log('Doc is:', doc);
-      console.log('Geo field value is:', geoValue);
-      console.log('Schema is:', schema);
+      // console.log('---');
+      // console.log('Doc is:', doc);
+      // console.log('Geo field value is:', geoValue);
+      // console.log('Schema is:', schema);
 
       // const { _id } = doc;
 
+      const valueWithType = { ...geoValue, domainName: schema.name };
+      // console.log('*****', valueWithType);
+
       // Append geolocation value to the array and filter nils
-      return [...acc, geoValue].filter(element => !!element);
+      return [...acc, valueWithType].filter(element => !!element);
     }
 
     /* if (field.type.constructor === Types.Model) {
@@ -110,9 +113,12 @@ const Form = ({ doc, fieldValues, geoCache, onFieldChange, path, schema }) => {
   // console.log('>>>> Geocache:', geoCache);
 
   const entries = geo.map((entry) => {
-    const { timeRanges } = entry;
+    // console.log(entry);
+    const { domainName, timeRanges } = entry;
 
-    return timeRanges.map((timeRange) => {
+    if (!timeRanges) { return {}; }
+
+    const geoPoints = timeRanges.map((timeRange) => {
       const { start, end } = timeRange;
       return geoCache.filter((cacheValue) => {
         const { timestamp } = cacheValue;
@@ -120,9 +126,11 @@ const Form = ({ doc, fieldValues, geoCache, onFieldChange, path, schema }) => {
           timestamp >= start;
       });
     });
+
+    return { domainName, geoPoints };
   });
 
-  console.log('>>>>> Entries:', entries);
+  // console.log('>>>>> Passing entries to map:', entries);
 
   const map = (
     <Map

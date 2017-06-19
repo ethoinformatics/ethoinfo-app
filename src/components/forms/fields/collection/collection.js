@@ -170,7 +170,15 @@ class CollectionField extends Component {
   }
 
   renderHeader() {
-    const { value, name } = this.props;
+    const { value, name, type } = this.props;
+
+    // console.log('Header props:', type.constructor);
+
+    const { name: domainName } = type;
+    const schema = getSchema(domainName);
+
+    const color = schema ? schema.displayColor : '#000';
+
     const { isExpanded } = this.state;
 
     // Header text is name of field and number of items in collection
@@ -191,6 +199,10 @@ class CollectionField extends Component {
                 <Icon icon={accordionIcon} />
               </div>
           }
+          <div
+            className="displayColor"
+            style={{ backgroundColor: color }}
+          />
           <div className="collectionHeaderLabel">{text}</div>
         </button>
         {this.renderNewButton()}
@@ -293,7 +305,7 @@ class CollectionField extends Component {
       initialValue
     } = this.props;
 
-    console.log('>>>>', this.props);
+    // console.log('>>>>', this.props);
 
     const { isExpanded } = this.state;
 
