@@ -7,7 +7,6 @@ import byId, * as FromById from './byId';
 
 // -----------------------------------------------------------------------------
 // REDUCER
-
 const documents = combineReducers({
   all,
   byId,
@@ -15,7 +14,6 @@ const documents = combineReducers({
 
 // -----------------------------------------------------------------------------
 // EXPORTED SELECTORS
-
 export function getById(state, id) {
   return FromById.getById(state, id);
 }
@@ -32,5 +30,4 @@ export function getByDomain(state, domain) {
 
 // -----------------------------------------------------------------------------
 // REDUCER EXPORT
-
 export default documents;

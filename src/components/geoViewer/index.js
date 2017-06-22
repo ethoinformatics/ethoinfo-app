@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import R from 'ramda';
 import { connect } from 'react-redux';
 import { Fab, BottomToolbar, Page, Icon } from 'react-onsenui';
-import Map from '../map/map';
+import Map from '../map';
 import './geoViewer.styl';
 
 /**

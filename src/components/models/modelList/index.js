@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItem, Page } from 'react-onsenui';
 import _ from 'lodash';
-import history from '../../history';
+import history from '../../../history';
 import './modelList.styl';
 
 const ModelList = ({ schemas = [], visibleItems = [] }) => {
@@ -20,7 +20,13 @@ const ModelList = ({ schemas = [], visibleItems = [] }) => {
 
           return (<ListItem key={index} onClick={() => history.push(path, {})}>
             <div className="center">
-              {_.startCase(name)}
+              <div
+                className="displayColor"
+                style={{ backgroundColor: row.displayColor }}
+              />
+              <div className="name">
+                {_.startCase(name)}
+              </div>
             </div>
           </ListItem>);
         }}

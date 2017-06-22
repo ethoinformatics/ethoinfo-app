@@ -3,6 +3,9 @@ name: Subject
 # Which field will we use to display instances of this model in our app
 displayField: subjectName
 
+# What color should we use to render this model in our app
+displayColor: "#2196F3"
+
 fields:
   - name: subjectName
     type: String

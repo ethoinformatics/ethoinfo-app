@@ -3,6 +3,9 @@ name: Contact
 # Which field will we use to display instances of this model in our app
 displayField: datetime
 
+# What color should we use to render this model in our app
+displayColor: "#9C27B0"
+
 fields:
   - name: observer
     type: [Observer]
@@ -13,6 +16,8 @@ fields:
   #  required: true
   - name: location
     type: Geolocation
+    options:
+      track: true
   #  required: true
   - name: subject
     type: [Subject]

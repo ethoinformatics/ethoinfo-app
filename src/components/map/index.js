@@ -74,7 +74,10 @@ class Map extends React.Component {
     } */
 
     // Use lodash isEqual to compare values.
-    if (!_.isEqual(prevProps.entries, this.props.entries)) {
+    if (
+      !_.isEqual(prevProps.entries, this.props.entries) ||
+      !_.isEqual(prevProps.points, this.props.points)
+    ) {
       this.refreshMapLayers();
     }
   }
@@ -82,7 +85,7 @@ class Map extends React.Component {
   refreshMapLayers() {
     // Good use case for immutablejs here.
     // Difficult to diff geolocation entries to accomodate imperative leaflet api
-    const { entries, location, points } = this.props;
+    const { entries, points } = this.props;
 
     // Create markers
     const pointLatLngs = points.map(point => [
@@ -95,13 +98,16 @@ class Map extends React.Component {
       this.pointsLayerGroup = L.layerGroup([]).addTo(this.map);
     }
 
+    const markers = [];
+
     pointLatLngs.forEach((ll) => {
       const marker = L.marker(ll, {});
       marker.bindPopup(`<p>${ll[0]}, ${ll[1]}</p>`);
       this.pointsLayerGroup.addLayer(marker);
+      markers.push(marker);
     });
 
-    const lastPoint = R.last(points);
+    /* const lastPoint = R.last(points);
 
     if (lastPoint) {
       // console.log('Last point:', lastPoint);
@@ -109,11 +115,19 @@ class Map extends React.Component {
       this.map.setView(latLng, this.map.getMaxZoom());
     } else if (location) {
       this.map.setView(location, this.map.getMaxZoom());
+    } */
+
+    // If we have markers, calculate bounds of all markers with some padding.
+    // Fit map to bounds.
+
+    if (markers.length > 0) {
+      const group = new L.featureGroup(markers); // eslint-disable-line new-cap
+      this.map.fitBounds(group.getBounds().pad(0.5));
     }
 
     /* const latLngs = entries.map(entry => [
       entry.coords.latitude, entry.coords.longitude
-    ]);
+    ]); */
 
     // For now we are just going to refresh map each time
     if (this.layerGroup) {
@@ -123,6 +137,42 @@ class Map extends React.Component {
       // Create layer group if it  doesn't exist
       this.layerGroup = L.layerGroup([]).addTo(this.map);
     }
+
+    entries.forEach((subEntries) => {
+      subEntries.forEach((values) => {
+        const latLngs = values.map(entry => [
+          entry.coords.latitude, entry.coords.longitude
+        ]);
+
+        if (latLngs.length > 0) {
+            // Re-add path
+          const geoPath = L.polyline(
+            latLngs,
+            {
+              color: 'blue',
+              weight: 1
+            }).addTo(this.map);
+          // Zoom map to bounding box of polyline
+          this.map.fitBounds(geoPath.getBounds());
+
+          // Add individual points
+          latLngs.forEach((ll) => {
+            const marker = L.circleMarker(ll, {
+              radius: 1,
+              color: 'blue',
+            });
+
+            marker.bindPopup(`<p>${ll[0]}, ${ll[1]}</p>`);
+
+            this.layerGroup.addLayer(marker);
+          });
+        }
+      })
+    })
+
+    /*const latLngs = R.flatten(entries).map(entry => [
+      entry.coords.latitude, entry.coords.longitude
+    ]);
 
     if (latLngs.length > 0) {
         // Re-add path
@@ -139,17 +189,14 @@ class Map extends React.Component {
       latLngs.forEach((ll) => {
         const marker = L.circleMarker(ll, {
           radius: 1,
-          color: 'red',
+          color: 'blue',
         });
 
         marker.bindPopup(`<p>${ll[0]}, ${ll[1]}</p>`);
 
         this.layerGroup.addLayer(marker);
       });
-    } else if (location) {
-      this.map.setView(location, this.map.getMaxZoom());
-    }
-    */
+    }*/
 
     // Zoom to first entry
     /* const firstEntry = R.head(entries);
@@ -232,14 +279,18 @@ Map.propTypes = {
   followLocation: PropTypes.bool,
   location: PropTypes.arrayOf(PropTypes.number),
   entries: PropTypes.arrayOf(
-      PropTypes.shape({
-        timestamp: PropTypes.number,
-        coords: PropTypes.shape({
-          latitude: PropTypes.number,
-          longitude: PropTypes.number
+    PropTypes.arrayOf(
+      PropTypes.arrayOf(
+        PropTypes.shape({
+          timestamp: PropTypes.number,
+          coords: PropTypes.shape({
+            latitude: PropTypes.number,
+            longitude: PropTypes.number
+          })
         })
-      })
-    ),
+      )
+    )
+  ),
   points: PropTypes.arrayOf(
       PropTypes.shape({
         timestamp: PropTypes.number,

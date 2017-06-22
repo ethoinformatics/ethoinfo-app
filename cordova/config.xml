@@ -16,6 +16,9 @@
     <allow-intent href="geo:*" />
     <allow-intent href="data:*" />
     <access origin="data:*" />
+    <preference name="webviewbounce" value="true" />
+    <preference name="DisallowOverscroll" value="false" />
+    <preference name="StatusBarOverlaysWebView" value="true" />
     <platform name="android">
         <allow-intent href="market:*" />
     </platform>

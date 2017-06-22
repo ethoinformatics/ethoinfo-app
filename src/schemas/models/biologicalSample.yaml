@@ -3,6 +3,9 @@ name: BiologicalSample # renamed from FecalSample to encompass other similar typ
 # Which field will we use to display instances of this model in our app
 displayField: sampleLabel
 
+# What color should we use to render this model in our app
+displayColor: "#00BCD4"
+
 fields:
   - name: subjects
     type: [Subject]

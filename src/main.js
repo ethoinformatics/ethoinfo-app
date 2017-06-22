@@ -3,7 +3,7 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-
+import ons from 'onsenui';
 import App from './components/app/app';
 import history from './history';
 
@@ -24,12 +24,26 @@ import configureStore from './redux/configureStore';
  * and renders our top-level <App /> React component.
  */
 
+// https://onsen.io/v2/docs/js/util.html
+// Disable onsen from adding extra margins for status bar
+// ons.disableAutoStatusBarFill();
+
+ons.ready(() => {
+  // Hide Cordova splash screen when Onsen UI is loaded completely
+  // API reference: https://github.com/apache/cordova-plugin-splashscreen/blob/master/doc/index.md
+  // navigator.splashscreen.hide();
+  /* const { splashscreen } = navigator;
+  if (splashscreen) {
+    splashscreen.hide();
+  } */
+});
+
 // Create redux store.
 const store = configureStore();
 
 function start() {
   // Some cordova logic:
-  const { cordova } = window;
+  const { cordova, StatusBar } = window;
 
   if (cordova) {
     // Enable background mode
@@ -45,13 +59,9 @@ function start() {
     // alert('This is a cordova app');
   }
 
-  // Initialize our stores
-  /* const dataStore = new DataStore();
-  const geoStore = new GeoStore();
-
-  const stores = {
-    dataStore, geoStore
-  }; */
+  /* if (StatusBar) {
+    StatusBar.hide();
+  } */
 
   // Kickoff history:
   history.replace('/documents', {});
@@ -66,7 +76,7 @@ function start() {
 }
 
 // We should try to keep cordova specific logic compartmentalized,
-// but for the simplicity of our initial use case,
+// but for the simplicity,
 // we hook into the Cordova device lifecycle events here.
 // The 'deviceready' event signals that Cordova's device APIs
 // have loaded and are ready to access.
@@ -80,4 +90,3 @@ if (window.cordova) {
 } else {
   start();
 }
-

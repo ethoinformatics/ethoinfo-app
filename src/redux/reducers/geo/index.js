@@ -2,6 +2,7 @@ import R from 'ramda';
 
 import {
   GEOLOCATION_LOAD_CACHE_SUCCESS,
+  GEOLOCATION_SAVED,
 } from '../../actions/geo';
 
 // -----------------------------------------------------------------------------
@@ -18,6 +19,8 @@ function all(state = defaultState, action) {
   switch (action.type) {
     case GEOLOCATION_LOAD_CACHE_SUCCESS:
       return R.assoc('entries', action.payload, state);
+    case GEOLOCATION_SAVED:
+      return R.assoc('entries', R.append(action.payload, state.entries), state);
     default:
       break;
   }

@@ -3,6 +3,9 @@ name: Taxonomy
 # Which field will we use to display instances of this model in our app
 displayField: scientificName
 
+# What color should we use to render this model in our app
+displayColor: "#FFEB3B"
+
 fields:
   - name: scientificName
     type: String

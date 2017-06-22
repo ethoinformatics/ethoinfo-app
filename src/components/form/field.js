@@ -7,13 +7,14 @@ import { Types } from '../../schemas/schema';
 
 import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
 
-import Form from './form';
-import TextInputField from './fields/text/input';
-import DateField from './fields/date/date';
-import CollectionField from './fields/collection/collection';
-import SelectField from './fields/select/select';
 import BooleanField from './fields/boolean/boolean';
+import CollectionField from './fields/collection/collection';
+import DateField from './fields/date/date';
 import Geo from './fields/geolocation/geolocation';
+import GeoLineString from './fields/geolocation/linestring';
+import Form from './';
+import SelectField from './fields/select/select';
+import TextInputField from './fields/text/input';
 
 import { getSchema } from '../../schemas/main';
 
@@ -54,6 +55,8 @@ class Field extends React.Component {
 
     let fieldComponent = null;
     const normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
+
+    // Todo: default field values?
 
     let fieldProps = {
       value: normalizedValue,
@@ -106,7 +109,7 @@ class Field extends React.Component {
 
         // --------------------
         // GEOLOCATION
-        case Types.Geolocation: {
+        case Types.Geolocation:
           typeString = 'geolocation';
           // If this is a geolocation track (a series of points, field is a switch
           // that marks tracking on and off.
@@ -114,11 +117,11 @@ class Field extends React.Component {
           // If this is a single geolocation point, field is a button fieldComponent
           // which takes taps and returns geolocation points
           if (options.track) {
-            fieldComponent = <BooleanField {...fieldProps} />;
+            /* fieldComponent = <BooleanField {...fieldProps} />; */
+            fieldComponent = <GeoLineString {...fieldProps} />;
           } else {
             fieldComponent = <Geo {...fieldProps} />;
           }
-        }
           break;
 
         // --------------------

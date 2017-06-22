@@ -3,12 +3,10 @@ import { DOCS_LOAD_ALL_SUCCESS } from '../../actions/documents';
 
 // -----------------------------------------------------------------------------
 // PRIVATES
-
 const defaultState = {};
 
 // -----------------------------------------------------------------------------
 // REDUCER
-
 function byId(state = defaultState, action) {
   switch (action.type) {
     case DOCS_LOAD_ALL_SUCCESS:
@@ -24,12 +22,10 @@ function byId(state = defaultState, action) {
 
 // -----------------------------------------------------------------------------
 // EXPORTED SELECTORS
-
 export function getById(state, id) {
   return state[id];
 }
 
 // -----------------------------------------------------------------------------
 // EXPORTED REDUCER
-
 export default byId;

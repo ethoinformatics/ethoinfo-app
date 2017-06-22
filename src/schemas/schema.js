@@ -52,10 +52,14 @@ class Field {
   constructor(name, isLookup, typeStringOrArray, options, customTypes) {
     this.name = name;
     this.isCollection = false;
+    this.options = {};
 
     let typeString = typeStringOrArray;
 
-    // Check if type is a string
+    // Check if type is a single string or array of strings.
+    // If type is a string, field is a singular reference.
+    // If type is an array of strings, this field is a collection
+    // eg. [Monkey] is a collection of monkeys
     if (Array.isArray(typeStringOrArray)) {
       if (typeStringOrArray.length === 0) {
         throw new Error('Type array must contain a Type string');
@@ -65,11 +69,10 @@ class Field {
       }
     }
 
-    this.options = {};
-
-    // console.log('Making field', name, typeString, this.isCollection);
-
+    // Set field properties based on the type of field
     switch (typeString) {
+
+      // Primitives
       case 'String':
         this.type = new Types.String();
         break;
@@ -83,9 +86,14 @@ class Field {
         this.type = new Types.Date();
         break;
       case 'Geolocation':
+        // https://macwright.org/2015/03/23/geojson-second-bite.html
         this.type = new Types.Geolocation();
+        // this.timeRanges = [];
+        // this
         this.options.track = !!options.track; // coerce boolean.
         break;
+
+      // Custom user defined types
       default:
         if (customTypes.modelNames.includes(typeString)) {
           this.type = new Types.Model(typeString);
@@ -103,7 +111,7 @@ class Field {
 
 class ModelSchema extends Schema {
   constructor(def, types) {
-    const { name, fields, displayField } = def;
+    const { displayColor, displayField, fields, name } = def;
     super(name);
 
     // Make sure the "displayField" actually exists as a field name on model
@@ -114,6 +122,9 @@ class ModelSchema extends Schema {
       displayFieldValue &&
       (displayFieldValue.type === 'String' || displayFieldValue.type === 'Date')
       ? displayFieldValue.name : '_id';
+
+    // Validate that displayColor exists and is a string, or assign default color
+    this.displayColor = displayColor || '#000';
 
     // Map field strings
     this.fields = fields.map((field) => { // eslint-disable-line arrow-body-style

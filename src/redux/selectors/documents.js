@@ -25,3 +25,11 @@ export const makeGetByDomain = () =>
    getAll, getDomainFromProps,
    (docs, domain) => docs.filter(doc => doc.domainName === domain)
   );
+
+// Get minimum timestamp for all documents tracking geolocation
+/* export const makeGetMinGeoTimestamp = () =>
+  createSelector(
+    getAll,
+    docs => docs.reduce((acc, curr) => Math.min(acc, curr), Infinity)
+  );
+*/

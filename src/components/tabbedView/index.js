@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import R from 'ramda';
 
-import Tabs from '../tabs/tabs';
+import Tabs from '../tabs';
 
 import './tabbedView.styl';
 
