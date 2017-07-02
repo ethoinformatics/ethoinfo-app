@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import './form.styl';
 
-// import Map from '../map';
 import Mapper from '../mapper';
 import TabbedView from '../tabbedView';
 import Fields from './fields';
@@ -61,33 +59,36 @@ const getGeo = (doc, schema) => { // eslint-disable-line arrow-body-style
 
   return schema.fields.reduce((acc, field) => {
     if (field.type.constructor === Types.Geolocation && !!field.options.track === true) {
-      // Field is a collection (would only get called recursively)
-      /* if (Array.isArray(doc)) {
+      // Field is a collection (this can only get called recursively)
+      if (Array.isArray(doc)) {
         return [
           ...acc,
           ...doc
             .filter(dd => !!dd) // Remove nils
-            .map(dd => dd[field.name])
+            .map((dd) => {
+              const value = dd[field.name];
+              const valueWithType = { ...value, domainName: schema.name };
+              return valueWithType;
+            })
         ].filter(element => !!element); // Remove nils
-      } */
+      }
 
       const geoValue = doc[field.name];
 
-      // console.log('---');
-      // console.log('Doc is:', doc);
-      // console.log('Geo field value is:', geoValue);
-      // console.log('Schema is:', schema);
-
-      // const { _id } = doc;
+      /* console.log('---');
+      console.log('Doc is:', doc);
+      console.log('Geo field is:', field.name, geoValue);
+      console.log('Schema is:', schema); */
 
       const valueWithType = { ...geoValue, domainName: schema.name };
-      // console.log('*****', valueWithType);
 
       // Append geolocation value to the array and filter nils
       return [...acc, valueWithType].filter(element => !!element);
     }
 
-    /* if (field.type.constructor === Types.Model) {
+    // Fields that are models can themselves have geo data
+    // Recurse through their fields
+    if (field.type.constructor === Types.Model) {
       const { name: domainName } = field.type;
 
       const subSchema = getSchema(domainName);
@@ -97,8 +98,8 @@ const getGeo = (doc, schema) => { // eslint-disable-line arrow-body-style
         return acc;
       }
 
-      return [...acc, ...getGeoPoints(doc[field.name], subSchema)];
-    } */
+      return [...acc, ...getGeo(doc[field.name], subSchema)];
+    }
 
     return acc;
   }, []);
