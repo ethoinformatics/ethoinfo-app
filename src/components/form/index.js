@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 
 import './form.styl';
 
-import Map from '../map';
+// import Map from '../map';
+import Mapper from '../mapper';
 import TabbedView from '../tabbedView';
 import Fields from './fields';
 
@@ -133,11 +134,12 @@ const Form = ({ doc, fieldValues, geoCache, onFieldChange, path, schema }) => {
   // console.log('>>>>> Passing entries to map:', entries);
 
   const map = (
-    <Map
+    /* <Map
       location={[40.7294245, -73.9958957]}
       points={[]}
       entries={entries}
-    />
+    /> */
+    <Mapper entries={entries} />
   );
 
   const fields = (
