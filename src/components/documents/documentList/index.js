@@ -48,13 +48,18 @@ class DocumentList extends Component {
   }
 
   renderDocumentListItem(doc, index) {
-    const { _id, _rev } = doc;
+    const { _id, _rev, isLocked } = doc;
     const { domain, schema, deleteDoc } = this.props;
     const path = `/documents/${domain}/${_id}`;
     const displayValue = schema.getFriendlyString(doc);
+    /* const statusIcon = isLocked ?
+      <Icon className="lockedDocIcon" icon="ion-ios-locked-outline" /> : null; */
     return (
       <ListItem key={index} onClick={() => history.push(path, {})}>
-        { displayValue }
+        <div className={`displayValue ${isLocked ? 'locked' : ''}`}>
+          { displayValue }
+        </div>
+        { /* statusIcon */ }
         <button
           className="delete"
           onClick={(e) => {

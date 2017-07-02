@@ -6,6 +6,8 @@ displayField: datetime
 # What color should we use to render this model in our app
 displayColor: "#F44336"
 
+lockOnUpload: true
+
 fields:
   - name: title
     type: String

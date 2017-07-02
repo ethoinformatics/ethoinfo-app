@@ -44,6 +44,8 @@ export const validateModelShape = (model) => {
 
     displayField: Joi.string().min(1),
 
+    lockOnUpload: Joi.boolean(),
+
     fields: Joi.array().items(Joi.object().keys({
 
       name: alphabeticalString.required().min(1),
@@ -78,6 +80,9 @@ export const validateModel = (model, validFieldTypeNames = []) => {
     displayColor: Joi.string().min(1),
 
     displayField: Joi.string().min(1),
+
+
+    lockOnUpload: Joi.boolean(),
 
     fields: Joi.array().items(Joi.object().keys({
 

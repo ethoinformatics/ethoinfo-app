@@ -7,6 +7,8 @@ import PouchDB from 'pouchdb';
 import appConfig from '../../../config';
 import { KEYS } from '../../../constants';
 
+import { getSchema } from '../../../schemas/main';
+
 import {
   CONFIG_LOAD,
   CONFIG_SET_ITEM,
@@ -147,6 +149,35 @@ const uploadSyncEpic = (action$, store) => {
 
       const opts = { live: false };
 
+      const lockIfNeeded = () =>
+        db.allDocs({
+          include_docs: true,
+          attachments: true,
+        }).then((info) => {
+          const docs = info.rows.map(r => r.doc);
+
+          // Filter for only docs with schemas that require lock on upload and aren't locked yet
+          const needsLock = docs.filter((d) => {
+            const dSchema = getSchema(d.domainName);
+
+            if (!dSchema) { return false; }
+            return dSchema.lockOnUpload && !d.isLocked;
+          });
+
+          const updatedDocs = needsLock.map(doc => ({ ...doc, isLocked: true }));
+
+          return db.bulkDocs(updatedDocs);
+        }).then((results) => {
+          const errored = results.filter(r => !!r.ok);
+
+          if (errored.count) {
+            throw new Error('Error locking docs before upload:', errored);
+          }
+
+          console.log('>>>> info:', results);
+          return uploadSyncSuccess(results);
+        });
+
       const replicateUp = () =>
         db.replicate.to(fullUrl, opts)
         .then((info) => {
@@ -161,7 +192,8 @@ const uploadSyncEpic = (action$, store) => {
 
       return Observable.concat(
         Observable.of(beginTransaction()),
-        replicateUp(),
+        lockIfNeeded(),
+        // replicateUp(),
         Observable.of(endTransaction())
       );
     }

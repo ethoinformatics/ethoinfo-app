@@ -111,7 +111,7 @@ class Field {
 
 class ModelSchema extends Schema {
   constructor(def, types) {
-    const { displayColor, displayField, fields, name } = def;
+    const { displayColor, displayField, fields, lockOnUpload, name } = def;
     super(name);
 
     // Make sure the "displayField" actually exists as a field name on model
@@ -125,6 +125,8 @@ class ModelSchema extends Schema {
 
     // Validate that displayColor exists and is a string, or assign default color
     this.displayColor = displayColor || '#000';
+
+    this.lockOnUpload = lockOnUpload || false;
 
     // Map field strings
     this.fields = fields.map((field) => { // eslint-disable-line arrow-body-style
