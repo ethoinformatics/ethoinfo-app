@@ -3,14 +3,14 @@
   "version": "0.0.1",
   "description": "A mobile web app designed to enable the collection of flexible data structures in an offline environment. ",
   "main": "main.js",
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/ethoinformatics/ethoinfo-app.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ethoinformatics/ethoinfo-app.git"
   },
   "scripts": {
     "dev": "webpack-dev-server --colors --config webpack.dev.babel.js --content-base ./public/",
     "prebuild": "npm install",
-    "build": "cross-env NODE_ENV=production rimraf dist && webpack --verbose --colors --display-error-details --config webpack.production.babel.js && cp public/index.html dist/index.html",
+    "build": "cross-env NODE_ENV=production rimraf dist && webpack --verbose --colors --display-error-details --config webpack.production.babel.js && cp -R public/ dist/",
     "build-cordova": "npm run build && mkdir -p cordova/www/build && rimraf cordova/www/build && cp -R dist/ cordova/www/build/",
     "prebuild-cordova-ios": "npm run build-cordova",
     "build-cordova-ios": "cd cordova && cordova build ios",
