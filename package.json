@@ -8,7 +8,8 @@
     "url": "https://github.com/ethoinformatics/ethoinfo-app.git"
   },
   "scripts": {
-    "dev": "webpack-dev-server --colors --config webpack.dev.babel.js --content-base ./public/",
+    "predev": "cp -R public/ dist/",
+    "dev": "webpack-dev-server --colors --config webpack.dev.babel.js --content-base public/",
     "prebuild": "npm install",
     "build": "cross-env NODE_ENV=production rimraf dist && webpack --verbose --colors --display-error-details --config webpack.production.babel.js && cp -R public/ dist/",
     "build-cordova": "npm run build && mkdir -p cordova/www/build && rimraf cordova/www/build && cp -R dist/ cordova/www/build/",

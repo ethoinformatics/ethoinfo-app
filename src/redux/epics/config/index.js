@@ -28,6 +28,10 @@ import {
 } from '../../actions/config';
 
 import {
+  bulkDocUpdateSuccess
+} from '../../actions/documents';
+
+import {
   beginTransaction,
   endTransaction,
 } from '../../actions/global';
@@ -149,6 +153,8 @@ const uploadSyncEpic = (action$, store) => {
 
       const opts = { live: false };
 
+      let docsToUpdate = [];
+
       const lockIfNeeded = () =>
         db.allDocs({
           include_docs: true,
@@ -164,18 +170,31 @@ const uploadSyncEpic = (action$, store) => {
             return dSchema.lockOnUpload && !d.isLocked;
           });
 
-          const updatedDocs = needsLock.map(doc => ({ ...doc, isLocked: true }));
+          docsToUpdate = needsLock.map(doc => ({ ...doc, isLocked: true }));
 
-          return db.bulkDocs(updatedDocs);
+          return db.bulkDocs(docsToUpdate);
         }).then((results) => {
           const errored = results.filter(r => !!r.ok);
+
+          const updatedIds = results.filter(r => r.ok === true).map(r => r.id);
+          console.log('>>>>', results, docsToUpdate, updatedIds);
+          const updatedDocs = docsToUpdate.filter(doc => updatedIds.find(id => id === doc._id));
+
+          console.log('Updated docs:', updatedDocs);
 
           if (errored.count) {
             throw new Error('Error locking docs before upload:', errored);
           }
 
-          console.log('>>>> info:', results);
-          return uploadSyncSuccess(results);
+          // Results will be an array of objects with shape:
+          // id: "13ef78a4-7021-44ea-adff-927aea8457f4"
+          // ok: true
+          // rev: "4-8c3f728a7ec417fc4903298267978d30"
+
+          // Successful updates:
+
+          return bulkDocUpdateSuccess(updatedDocs);
+          // return uploadSyncSuccess(results);
         });
 
       const replicateUp = () =>

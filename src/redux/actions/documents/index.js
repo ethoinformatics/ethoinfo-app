@@ -36,6 +36,9 @@ export const DOC_DELETE = 'DOC_DELETE';
 export const DOC_DELETE_SUCCESS = 'DOC_DELETE_SUCCESS';
 export const DOC_DELETE_ERROR = 'DOC_DELETE_ERROR';
 
+// Bulk update
+export const BULK_DOC_UPDATE_SUCCESS = 'BULK_DOC_UPDATE_SUCCESS';
+
 // -----------------------------------------------------------------------------
 // PRIVATE ACTION CREATORS
 
@@ -183,4 +186,8 @@ export function deleteDoc(id, rev) {
         throw err;
       });
   };
+}
+
+export function bulkDocUpdateSuccess(docs) {
+  return { type: BULK_DOC_UPDATE_SUCCESS, payload: docs };
 }

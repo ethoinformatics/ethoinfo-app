@@ -148,6 +148,11 @@ class LeafletMap extends Component {
         }
       });
     });
+
+    // Tiputini
+    this.layerGroup.addLayer(
+      L.marker([-0.63684, -76.14968])
+    );
   }
 
   render() {
