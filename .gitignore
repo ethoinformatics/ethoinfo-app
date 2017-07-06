@@ -5,6 +5,7 @@ uploads/
 generated/
 dist/
 build/
+public/maptiles
 *.iml
 webpack-assets.json
 webpack-stats.json

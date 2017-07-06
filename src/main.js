@@ -43,7 +43,7 @@ const store = configureStore();
 
 function start() {
   // Some cordova logic:
-  const { cordova, StatusBar } = window;
+  const { cordova } = window;
 
   if (cordova) {
     // Enable background mode

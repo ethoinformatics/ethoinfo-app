@@ -162,6 +162,8 @@ const uploadSyncEpic = (action$, store) => {
         }).then((info) => {
           const docs = info.rows.map(r => r.doc);
 
+          console.log(docs.filter(d => d.domainName === 'Diary'));
+
           // Filter for only docs with schemas that require lock on upload and aren't locked yet
           const needsLock = docs.filter((d) => {
             const dSchema = getSchema(d.domainName);

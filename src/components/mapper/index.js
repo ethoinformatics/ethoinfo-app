@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import R from 'ramda';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import './mapper.styl';
 
@@ -15,6 +17,9 @@ const mapStateToProps = state =>
 const mapDispatchToProps = () => ({
 });
 
+const mapPoints = entry => entry.geoPoints;
+const timeDiff = (t1, t2) => t1 - t2;
+
 class Mapper extends Component {
   componentDidMount() {
   }
@@ -22,8 +27,23 @@ class Mapper extends Component {
   render() {
     const { entries, useLocalTiles } = this.props;
 
+    // Flatmap entries into a single array and sort by timestamp:
+    const flatEntries = R.flatten(R.map(mapPoints, entries));
+    const sortedFlatEntries = R.sort(timeDiff, flatEntries);
+
+    // Most recent entry:
+    const lastEntry = R.last(sortedFlatEntries);
+
+    const elapsed = lastEntry ? moment(lastEntry.timestamp).fromNow() : null;
+    const timeDisplay = elapsed ? `Last entry: ${elapsed}` : 'No entries';
+
+
     return (
       <div className="mapper">
+        <div className="mapStatus">
+          { useLocalTiles ? 'Using local tiles' : 'Using remote tiles'}
+          {`, ${timeDisplay}`}
+        </div>
         <LeafletMap
           entries={entries}
           useLocalTiles={useLocalTiles}

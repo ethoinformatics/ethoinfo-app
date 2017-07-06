@@ -22,6 +22,9 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
+const maxZoom = 17;
+const minZoom = 3;
+
 class LeafletMap extends Component {
   componentDidMount() {
     // Create leaflet map
@@ -81,14 +84,18 @@ class LeafletMap extends Component {
       this.tileLayer = L.tileLayer(
         '/maptiles/{z}/{x}/{y}.png',
         {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+          minZoom,
+          maxZoom
         }
       );
     } else {
       this.tileLayer = L.tileLayer(
         'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
         {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+          minZoom,
+          maxZoom
         }
       );
     }

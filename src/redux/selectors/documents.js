@@ -3,9 +3,15 @@ import { createSelector } from 'reselect';
 import * as FromAll from '../reducers/documents/all';
 import * as FromById from '../reducers/documents/byId';
 
+
+import { mapGeoFromCache } from '../../utilities/geoUtils';
+import { getSchema } from '../../schemas/main';
+
 const getDocuments = state => state.docs;
 const getDomainFromProps = (_, props) => props.domain;
 const getIdFromProps = (_, props) => props.id;
+
+const getGeoCache = state => state.geo.entries;
 
 export const getAll = createSelector(
   getDocuments,
@@ -16,8 +22,17 @@ export const getAll = createSelector(
 
 export const makeGetById = () =>
   createSelector(
-    getDocuments, getIdFromProps,
-    (docs, id) => FromById.getById(docs.byId, id)
+    getDocuments, getIdFromProps, getGeoCache,
+    (docs, id, geoCache) => {
+      const doc = FromById.getById(docs.byId, id);
+
+      if (!doc) { return null; }
+
+      const { domainName } = doc;
+      const schema = getSchema(domainName);
+      const geoData = mapGeoFromCache(doc, schema, geoCache);
+      return { ...doc, tmp: geoData };
+    }
   );
 
 export const makeGetByDomain = () =>

@@ -119,6 +119,7 @@ class GeolocationLineString extends Component {
       <div className="geolocationField">
         <label htmlFor={name}>{_.startCase(name)}</label>
         <Boolean value={isActive} onChange={this.onSwitchToggle} />
+        <div className={'boolValue'}>{ isActive ? 'On' : 'Off'}</div>
         { this.renderTimeRanges() }
       </div>
     );
