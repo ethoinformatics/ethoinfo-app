@@ -15,15 +15,16 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = () => ({});
 
-const Form = ({ doc, fieldValues, geoCache, onFieldChange, path, schema }) => {
+const Form = ({ doc, disabled, fieldValues, geoCache, onFieldChange, path, schema }) => {
   // If doc is undefined, form is rendering for a new doc so use transient fieldValues
   const data = doc ? { ...doc, ...fieldValues } : fieldValues;
+  const isLocked = disabled || (doc ? !!doc.isLocked : false);
 
-  console.log('Rendering form for:', doc, fieldValues, schema);
+  // console.log('Rendering form for:', doc, isLocked, disabled, fieldValues, schema);
 
   // Gather any geolocation data contained in document, including through children
   const entries = mapGeoFromCache(data, schema, geoCache);
-  console.log('>>> Entries:', entries);
+  // console.log('>>> Entries:', entries);
 
   const map = (
     <Mapper entries={entries} />
@@ -32,6 +33,7 @@ const Form = ({ doc, fieldValues, geoCache, onFieldChange, path, schema }) => {
   const fields = (
     <ol className="formFields">
       <Fields
+        disabled={isLocked}
         fieldValues={fieldValues}
         initialValues={doc}
         onFieldChange={onFieldChange}
@@ -62,6 +64,7 @@ const Form = ({ doc, fieldValues, geoCache, onFieldChange, path, schema }) => {
 Form.propTypes = {
   doc: PropTypes.object,
   fieldValues: PropTypes.object,
+  disabled: PropTypes.bool,
   geoCache: PropTypes.arrayOf(
     PropTypes.shape(
       {

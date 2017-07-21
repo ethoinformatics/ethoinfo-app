@@ -220,12 +220,14 @@ class CollectionField extends Component {
       onChange,
       onPushModal,
       onPopModal,
-      isLookup
+      isLookup,
+      disabled,
     } = this.props;
 
     return (
       <Button
         className="newHeaderButton"
+        disabled={disabled}
         modifier="quiet"
         onClick={(event) => {
           // Prevent propogation
@@ -268,6 +270,7 @@ class CollectionField extends Component {
 
           // View modal with new value
           onPushModal(modalId, {
+            disabled,
             path: newItemPath,
             type,
             title,
@@ -294,6 +297,7 @@ class CollectionField extends Component {
 
   render() {
     const {
+      disabled,
       type,
       value,
       name,
@@ -304,8 +308,6 @@ class CollectionField extends Component {
       isLookup,
       initialValue
     } = this.props;
-
-    // console.log('>>>>', this.props);
 
     const { isExpanded } = this.state;
 
@@ -342,6 +344,7 @@ class CollectionField extends Component {
                       title,
                       isLookup,
                       initialValue: initialValue[index],
+                      disabled,
                       value: value[index],
                       onChange: (_itemPath, val) => this.onItemChange(_itemPath, val),
                       onClose: () => {
@@ -370,14 +373,23 @@ class CollectionField extends Component {
                   { this.getDisplayText(value[index], type) }
                   <button
                     className="delete"
+                    disabled={disabled}
                     onClick={(e) => {
                       e.stopPropagation();
+                      if (disabled) { return; }
                       this.onItemRemove(index);
                       // console.log('Should delete!');
                       // deleteDoc(_id, _rev);
                     }}
                   >
-                    <Icon icon="md-close" />
+                    {
+                      !disabled &&
+                        <Icon icon="md-close" />
+                    }
+                    {
+                      disabled &&
+                        <Icon style={{ color: 'black' }} icon="ion-ios-locked-outline" />
+                    }
                   </button>
                 </ListItem>
               }
@@ -391,11 +403,13 @@ class CollectionField extends Component {
 
 CollectionField.defaultProps = {
   docs: [],
+  disabled: false,
   initialValue: []
 };
 
 CollectionField.propTypes = {
   name: PropTypes.string,
+  disabled: PropTypes.bool,
   docs: PropTypes.array,
   historyPath: PropTypes.string,
   onPushModal: PropTypes.func,

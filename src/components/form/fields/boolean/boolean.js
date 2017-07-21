@@ -10,24 +10,26 @@ import './boolean.styl';
  *
  */
 
-const BooleanInput = ({ value, name, onChange }) =>
+const BooleanInput = ({ value, name, onChange, disabled }) =>
   <div className="booleanInput">
     <label htmlFor={name}>{_.startCase(name)}</label>
 
     <Switch
-      checked={value} onChange={(event) => {
+      checked={value} disabled={disabled} onChange={(event) => {
         onChange(event.value);
       }}
     />
   </div>;
 
 BooleanInput.defaultProps = {
+  disabled: false,
   name: '',
   value: false,
 };
 
 BooleanInput.propTypes = {
   name: PropTypes.string,
+  disabled: PropTypes.bool,
   value: PropTypes.bool,
   onChange: PropTypes.func.isRequired
 };

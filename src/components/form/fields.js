@@ -25,7 +25,7 @@ class Fields extends React.Component {
     // These properties are defined per field by the model schema
     const { isCollection = false, isLookup = false, name, options = {}, type } = field;
 
-    const { fieldValues, initialValues, path } = this.props;
+    const { fieldValues, disabled, initialValues, path } = this.props;
 
     const fieldValue = fieldValues ? fieldValues[name] : null;
     const initialValue = initialValues ? initialValues[name] || null : null;
@@ -33,6 +33,7 @@ class Fields extends React.Component {
 
     return (
       <Field
+        disabled={disabled}
         fieldValue={fieldValue}
         initialValue={initialValue}
         isCollection={isCollection}
@@ -47,10 +48,16 @@ class Fields extends React.Component {
   }
 
   render() {
-    const { schema } = this.props;
+    const { disabled, schema } = this.props;
+
+    const isLockedMessage = disabled ?
+      'Document is locked' : '';
 
     return (
       <div>
+        <div className="isLockedMessage">
+          {isLockedMessage}
+        </div>
         <ol className="fields">
           { schema.fields.map(field =>
             (<li key={field.name}>
@@ -66,6 +73,7 @@ class Fields extends React.Component {
 Fields.propTypes = {
   fieldValues: PropTypes.object, // Transient form values
   initialValues: PropTypes.object, // Values from model
+  disabled: PropTypes.bool,
   onFieldChange: PropTypes.func,
   path: PropTypes.array,
   schema: PropTypes.object.isRequired,
@@ -73,6 +81,7 @@ Fields.propTypes = {
 
 Fields.defaultProps = {
   initialValues: {},
+  disabled: false,
   onFieldChange: () => {},
   fieldValues: {}
 };

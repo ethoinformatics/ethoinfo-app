@@ -51,8 +51,6 @@ class EditDocument extends React.Component {
     const { doc, domain, fieldsPath, fieldValues, /* resetFields */ } = this.props;
     const schema = getSchema(domain);
 
-    console.log('Rendering Edit doc:', doc);
-
     return (
       <Page className="editDocument">
         <Form

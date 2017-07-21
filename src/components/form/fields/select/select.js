@@ -9,13 +9,14 @@ class Select extends Component {
   }
 
   render() {
-    const { value, name, onChange, options = [] } = this.props;
+    const { disabled, name, onChange, options = [], value } = this.props;
     const normalizedValue = value ? value._id : '';
     return (
       <div>
         <label htmlFor={name}>{_.startCase(name)}</label>
         <select
           className="fieldSelect"
+          disabled={disabled}
           value={normalizedValue}
           onChange={(e) => {
             if (e.target.value) {
@@ -43,6 +44,7 @@ class Select extends Component {
 
 /* eslint-disable react/no-unused-prop-types */
 Select.propTypes = {
+  disabled: PropTypes.bool,
   value: PropTypes.shape({
     name: PropTypes.string,
     _id: PropTypes.string
@@ -57,5 +59,9 @@ Select.propTypes = {
   )
 };
 /* eslint-enable react/no-unused-prop-types */
+
+Select.defaultProps = {
+  disabled: false,
+};
 
 export default Select;

@@ -106,7 +106,7 @@ class GeolocationLineString extends Component {
   }
 
   render() {
-    const { name, value } = this.props;
+    const { name, value, disabled } = this.props;
 
     const _value = value || {}; // Temporary
 
@@ -118,7 +118,7 @@ class GeolocationLineString extends Component {
     return (
       <div className="geolocationField">
         <label htmlFor={name}>{_.startCase(name)}</label>
-        <Boolean value={isActive} onChange={this.onSwitchToggle} />
+        <Boolean value={isActive} disabled={disabled} onChange={this.onSwitchToggle} />
         <div className={'boolValue'}>{ isActive ? 'On' : 'Off'}</div>
         { this.renderTimeRanges() }
       </div>
@@ -127,6 +127,7 @@ class GeolocationLineString extends Component {
 }
 
 GeolocationLineString.propTypes = {
+  disabled: PropTypes.bool,
   geoCache: PropTypes.arrayOf(
     PropTypes.shape(
       {
@@ -150,6 +151,7 @@ GeolocationLineString.propTypes = {
 };
 
 GeolocationLineString.defaultProps = {
+  disabled: false,
   geoCache: [],
   name: '',
   value: {},

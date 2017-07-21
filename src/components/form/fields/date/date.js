@@ -21,8 +21,10 @@ class DateField extends Component {
   }
 
   render() {
-    const { value, name, onChange } = this.props;
+    const { disabled, name, onChange, value } = this.props;
     const date = value ? moment(value) : moment();
+
+    const inputProps = { disabled };
 
     return (
       <div>
@@ -40,6 +42,7 @@ class DateField extends Component {
           id={`SingleDatePicker-${value}`}
         /> */}
         <Datetime
+          inputProps={inputProps}
           onChange={(newDate) => {
             onChange(newDate.utc().format());
           }}
@@ -51,8 +54,13 @@ class DateField extends Component {
 
 DateField.propTypes = {
   name: PropTypes.string,
+  disabled: PropTypes.bool,
   value: PropTypes.string,
   onChange: PropTypes.func
+};
+
+DateField.defaultProps = {
+  disabled: false,
 };
 
 export default DateField;

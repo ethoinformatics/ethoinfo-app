@@ -9,6 +9,8 @@ import { KEYS } from '../../../constants';
 
 import { getSchema } from '../../../schemas/main';
 
+import { uncacheDocumentGeo } from '../../../utilities/geoUtils';
+
 import {
   CONFIG_LOAD,
   CONFIG_SET_ITEM,
@@ -153,6 +155,8 @@ const uploadSyncEpic = (action$, store) => {
 
       const opts = { live: false };
 
+      const geoCache = state.geo.entries;
+
       let docsToUpdate = [];
 
       const lockIfNeeded = () =>
@@ -161,8 +165,6 @@ const uploadSyncEpic = (action$, store) => {
           attachments: true,
         }).then((info) => {
           const docs = info.rows.map(r => r.doc);
-
-          console.log(docs.filter(d => d.domainName === 'Diary'));
 
           // Filter for only docs with schemas that require lock on upload and aren't locked yet
           const needsLock = docs.filter((d) => {
@@ -174,16 +176,23 @@ const uploadSyncEpic = (action$, store) => {
 
           docsToUpdate = needsLock.map(doc => ({ ...doc, isLocked: true }));
 
+          docsToUpdate.forEach((doc) => {
+            const dSchema = getSchema(doc.domainName);
+            console.log('>>>', uncacheDocumentGeo(doc, dSchema, geoCache));
+          });
+
           return db.bulkDocs(docsToUpdate);
         }).then((results) => {
           const errored = results.filter(r => !!r.ok);
 
           const updatedIds = results.filter(r => r.ok === true).map(r => r.id);
-          console.log('>>>>', results, docsToUpdate, updatedIds);
+          // console.log('>>>>', results, docsToUpdate, updatedIds);
           const updatedDocs = docsToUpdate.filter(doc => updatedIds.find(id => id === doc._id));
 
-          console.log('Updated docs:', updatedDocs);
+          // console.log('Updated docs:', updatedDocs);
 
+
+          // Todo: Errored case:
           if (errored.count) {
             throw new Error('Error locking docs before upload:', errored);
           }

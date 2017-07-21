@@ -1,3 +1,4 @@
+import R from 'ramda';
 import { getSchema } from '../schemas/main';
 import { Types } from '../schemas/schema';
 
@@ -105,4 +106,88 @@ export const mapGeoFromCache = (doc, schema, cache) => {
 
     return { domainName, geoPoints };
   });
+};
+
+export const mapTimeRangesToPointsInCache = (timeRanges, cache) => {
+  if (!timeRanges) { return []; }
+
+  return timeRanges.map((timeRange) => {
+    const { start, end } = timeRange;
+    return cache.filter((cacheValue) => {
+      const { timestamp } = cacheValue;
+      return end ? timestamp >= start && timestamp <= end :
+        timestamp >= start;
+    });
+  });
+};
+
+export const uncacheDocumentGeo = (doc, schema, cache) => {
+  // console.log('Uncaching:', doc, schema);
+  if (!schema) { return doc; }
+
+  const docIsCollection = Array.isArray(doc);
+
+  if (docIsCollection) {
+    return doc.map(subdoc => uncacheDocumentGeo(subdoc, schema, cache));
+  }
+
+  const docWithGeo = schema.fields.reduce((acc, field) => {
+    const fieldName = field.name;
+
+    const fieldIsGeoLine =
+      field.type.constructor === Types.Geolocation &&
+      !!field.options.track === true;
+
+    /* const fieldIsCollection =
+      Array.isArray(field); */
+
+    const fieldIsModel =
+      field.type.constructor === Types.Model;
+
+    if (fieldIsModel) {
+      const { name: domainName } = field.type;
+      const subSchema = getSchema(domainName);
+
+      if (!subSchema) { return acc; }
+      if (!doc[field.name]) { return acc; }
+
+      const subDocWithGeo = uncacheDocumentGeo(doc[field.name], subSchema, cache);
+      return R.assoc(fieldName, subDocWithGeo, acc);
+    }
+
+    // console.log(fieldName, acc);
+
+    if (fieldIsGeoLine) {
+      const geoValue = doc[field.name];
+
+      if (!geoValue) { return null; }
+
+      const timeRanges = geoValue.timeRanges;
+
+      const geoPoints = mapTimeRangesToPointsInCache(timeRanges, cache);
+      return R.assoc(fieldName, { timeRanges, geoPoints }, acc);
+    }
+
+    if (!doc[fieldName]) { return acc; }
+    return R.assoc(fieldName, doc[fieldName], acc);
+  }, {});
+
+  return docWithGeo;
+  // return R.pickBy(val => val, docWithGeo);
+
+  /* return R.mapObjIndexed((num, key, _) {
+
+  }, schema.fields);*/
+
+  /* return schema.fields.map(field => {
+    const fieldIsGeoLine =
+      field.type.constructor === Types.Geolocation &&
+      !!field.options.track === true;
+
+    const fieldIsCollection =
+      Array.isArray(doc);
+
+    const fieldIsModel =
+      field.type.constructor === Types.Model;
+  }); */
 };

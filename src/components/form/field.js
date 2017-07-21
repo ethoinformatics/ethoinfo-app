@@ -7,7 +7,7 @@ import { Types } from '../../schemas/schema';
 
 import { getByPath as getFieldsByPath } from '../../redux/reducers/fields';
 
-import BooleanField from './fields/boolean/boolean';
+// import BooleanField from './fields/boolean/boolean';
 import CollectionField from './fields/collection/collection';
 import DateField from './fields/date/date';
 import Geo from './fields/geolocation/geolocation';
@@ -43,6 +43,7 @@ class Field extends React.Component {
   render() {
     const {
       docs,
+      disabled,
       fieldValue, // Current value of field
       initialValue, // Initial value of field
       isCollection,
@@ -57,8 +58,8 @@ class Field extends React.Component {
     const normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
 
     // Todo: default field values?
-
     let fieldProps = {
+      disabled,
       value: normalizedValue,
       initialValue,
       path,
@@ -172,6 +173,7 @@ class Field extends React.Component {
               <Form
                 path={path}
                 doc={initialValue}
+                disabled={disabled}
                 fieldValues={fieldValue}
                 onFieldChange={(_path, value) => {
                   this.props.onChange(_path, value);
@@ -200,6 +202,7 @@ Field.propTypes = {
   docs: PropTypes.arrayOf(
     PropTypes.object
   ).isRequired,
+  disabled: PropTypes.bool,
   fieldValue: PropTypes.any,
   options: PropTypes.object,
   path: PropTypes.array,
@@ -209,6 +212,10 @@ Field.propTypes = {
   name: PropTypes.string,
   onChange: PropTypes.func,
   type: PropTypes.any
+};
+
+Field.defaultProps = {
+  disabled: false,
 };
 
 export default connect(
