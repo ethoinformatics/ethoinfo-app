@@ -21,13 +21,50 @@ const THROTTLE_TIME = 10000; // ms
 // Geolocation Observable wraps geolocation API
 const watchPosition = options =>
   Observable.create((observer) => {
-    const watchId = window.navigator.geolocation.watchPosition(
-      loc => observer.next(loc),
-      err => observer.error(err),
-      options
-    );
 
-    return () => window.navigator.geolocation.clearWatch(watchId);
+    // CORDOVA SPECIFIC USAGE VIA CORDOVA BACKGROUND GEOLOCATION PLUGIN
+    // https://github.com/transistorsoft/cordova-background-geolocation-lt
+
+    const bgGeo = window.BackgroundGeolocation;
+
+    if (bgGeo) {
+      alert('Using background geolocation!');
+
+      bgGeo.on('location', (loc, taskId) => {
+        // const { coords } = location;
+        // const { latitude, longitude } = coords;
+        observer.next(loc);
+        bgGeo.finish(taskId);
+      });
+
+      bgGeo.configure({
+        // Geolocation config
+        desiredAccuracy: 0,
+        distanceFilter: 10,
+        stationaryRadius: 25,
+        // Activity Recognition config
+        activityRecognitionInterval: 10000,
+        stopTimeout: 5,
+        // Application config
+        debug: true,  // <-- Debug sounds & notifications.
+        stopOnTerminate: false,
+        startOnBoot: true,
+      }, (state) => {
+        alert('Background geo ready');
+
+        if (!state.enabled) {
+          bgGeo.start();
+        }
+      });
+    } else { // Normal watch
+      const watchId = window.navigator.geolocation.watchPosition(
+        loc => observer.next(loc),
+        err => observer.error(err),
+        options
+      );
+
+      return () => window.navigator.geolocation.clearWatch(watchId);
+    }
   }).publish().refCount();
 
 
@@ -38,8 +75,14 @@ const watchEpic = (action$) => {
   const watch$ = action$.ofType(GEOLOCATION_WATCH);
   const unWatch$ = action$.ofType(GEOLOCATION_UNWATCH);
 
+  // https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions
+  const watchOptions = {
+    enableHighAccuracy: true,
+    maximumAge: 0 // Don't cache
+  };
+
   return watch$.mergeMap(
-    () => watchPosition()
+    () => watchPosition(watchOptions)
       .debounceTime(THROTTLE_TIME)
       .map(geoposition => received({
         coords: {

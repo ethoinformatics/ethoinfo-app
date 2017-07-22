@@ -8,11 +8,13 @@
             "ios"
         ],
         "plugins": {
-            "cordova-plugin-whitelist": {}
+            "cordova-plugin-whitelist": {},
+            "cordova-background-geolocation-lt": {}
         }
     },
     "dependencies": {
         "cordova-android": "~5.2.2",
+        "cordova-background-geolocation-lt": "^2.7.4",
         "cordova-ios": "~4.2.1",
         "cordova-plugin-whitelist": "1"
     }

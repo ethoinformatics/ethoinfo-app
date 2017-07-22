@@ -49,5 +49,13 @@
         },
         "is_top_level": false,
         "variables": {}
+    },
+    "cordova-background-geolocation-lt": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-background-geolocation-lt"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }
