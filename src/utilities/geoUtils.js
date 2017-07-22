@@ -90,25 +90,29 @@ export const getGeoTimeRanges = (doc, schema) => {
 export const mapGeoFromCache = (doc, schema, cache) => {
   const ranges = getGeoTimeRanges(doc, schema);
 
-  return ranges.map((entry) => {
+  const polylines = ranges.map((entry) => {
     const { domainName, timeRanges } = entry;
 
-    if (!timeRanges) { return {}; }
+    if (!timeRanges) { return null; }
 
-    const geoPoints = timeRanges.map((timeRange) => {
+    const lines = timeRanges.map((timeRange) => {
       const { start, end } = timeRange;
       return cache.filter((cacheValue) => {
         const { timestamp } = cacheValue;
         return end ? timestamp >= start && timestamp <= end :
           timestamp >= start;
       });
-    });
+    }).filter(l => l.length > 0);
 
-    return { domainName, geoPoints };
-  });
+    return { domainName, lines };
+  }).filter(l => l).filter(l => l.lines.length > 0); // Filter null and empty array
+
+  const markers = [];
+
+  return { markers, polylines };
 };
 
-export const mapTimeRangesToPointsInCache = (timeRanges, cache) => {
+export const mapTimeRangesToPointLinesInCache = (timeRanges, cache) => {
   if (!timeRanges) { return []; }
 
   return timeRanges.map((timeRange) => {
@@ -155,8 +159,6 @@ export const uncacheDocumentGeo = (doc, schema, cache) => {
       return R.assoc(fieldName, subDocWithGeo, acc);
     }
 
-    // console.log(fieldName, acc);
-
     if (fieldIsGeoLine) {
       const geoValue = doc[field.name];
 
@@ -164,15 +166,15 @@ export const uncacheDocumentGeo = (doc, schema, cache) => {
 
       const timeRanges = geoValue.timeRanges;
 
-      const geoPoints = mapTimeRangesToPointsInCache(timeRanges, cache);
-      return R.assoc(fieldName, { timeRanges, geoPoints }, acc);
+      const polyLines = mapTimeRangesToPointLinesInCache(timeRanges, cache);
+      return R.assoc(fieldName, { timeRanges, polyLines }, acc);
     }
 
     if (!doc[fieldName]) { return acc; }
     return R.assoc(fieldName, doc[fieldName], acc);
   }, {});
 
-  return docWithGeo;
+  return { ...doc, ...docWithGeo };
   // return R.pickBy(val => val, docWithGeo);
 
   /* return R.mapObjIndexed((num, key, _) {
@@ -190,4 +192,73 @@ export const uncacheDocumentGeo = (doc, schema, cache) => {
     const fieldIsModel =
       field.type.constructor === Types.Model;
   }); */
+};
+
+const makeMapData = (doc, schema) => {
+  const polylines = schema.fields.reduce((acc, field) => {
+    const fieldIsGeoLine =
+      field.type.constructor === Types.Geolocation &&
+      !!field.options.track === true;
+
+    const fieldIsCollection =
+      Array.isArray(doc);
+
+    const fieldIsModel =
+      field.type.constructor === Types.Model;
+
+    if (fieldIsGeoLine) {
+      // Field is a collection (this can only get called recursively)
+      if (fieldIsCollection) {
+        return [
+          ...acc,
+          ...doc
+            .filter(dd => !!dd) // Remove nils
+            .map(dd => dd[field.name])
+            .filter(dd => !!dd) // Remove nils
+            .map(dd => dd.polylines)
+        ].filter(element => !!element); // Remove nils
+      }
+
+      const geoValue = doc[field.name];
+      console.log('***', geoValue);
+
+      // Append geolocation value to the array and filter nils
+      return [...acc, geoValue.polylines].filter(element => !!element);
+    }
+
+    // Fields that are models can themselves have geo data
+    // Recurse through their fields
+    if (fieldIsModel) {
+      const { name: domainName } = field.type;
+      const subSchema = getSchema(domainName);
+
+      if (!subSchema) { return acc; }
+      if (!doc[field.name]) { return acc; }
+
+      return [...acc, ...makeMapData(doc[field.name], subSchema)];
+    }
+
+    return acc;
+  }, []);
+
+  return {
+    polylines
+  };
+
+  /* return {
+    markers: [],
+    polylines: []
+  }; */
+};
+
+export const getGeoData = (doc, schema, cache) => {
+  if (!doc || !schema) { return {}; }
+
+  const shouldGetFromCache = !doc.isLocked;
+
+  if (shouldGetFromCache) {
+    return mapGeoFromCache(doc, schema, cache);
+  }
+
+  return makeMapData(doc, schema);
 };

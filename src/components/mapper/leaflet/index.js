@@ -107,6 +107,7 @@ class LeafletMap extends Component {
     // Good use case for immutablejs here.
     // Difficult to diff geolocation entries to accomodate imperative leaflet api
     const { entries } = this.props;
+    const { markers, polylines } = entries;
 
     // For now we are just going to refresh map each time
     if (this.layerGroup) {
@@ -117,15 +118,15 @@ class LeafletMap extends Component {
       this.layerGroup = L.layerGroup([]).addTo(this.map);
     }
 
-    entries.forEach((subEntry) => {
-      const { domainName } = subEntry;
+    polylines.forEach((subEntry) => {
+      const { domainName, lines } = subEntry;
 
       const schema = getSchema(domainName);
       const color = schema ? schema.displayColor : '#000';
 
-      if (!subEntry.geoPoints) { return; }
+      if (!lines) { return; }
 
-      subEntry.geoPoints.forEach((values) => {
+      subEntry.lines.forEach((values) => {
         const latLngs = values.map(entry => [
           entry.coords.latitude, entry.coords.longitude
         ]);
@@ -172,12 +173,18 @@ class LeafletMap extends Component {
 }
 
 LeafletMap.defaultProps = {
-  entries: [],
+  entries: {
+    markers: [],
+    polylines: [],
+  },
   useLocalTiles: false,
 };
 
 LeafletMap.propTypes = {
-  entries: PropTypes.arrayOf(PropTypes.object),
+  entries: PropTypes.shape({
+    markers: PropTypes.arrayOf(PropTypes.object),
+    polylines: PropTypes.arrayOf(PropTypes.object),
+  }),
   useLocalTiles: PropTypes.bool,
 };
 

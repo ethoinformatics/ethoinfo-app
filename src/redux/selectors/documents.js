@@ -28,10 +28,10 @@ export const makeGetById = () =>
 
       if (!doc) { return null; }
 
-      const { domainName } = doc;
-      const schema = getSchema(domainName);
-      const geoData = mapGeoFromCache(doc, schema, geoCache);
-      return { ...doc, tmp: geoData };
+      // const { domainName } = doc;
+      // const schema = getSchema(domainName);
+      // const geoData = mapGeoFromCache(doc, schema, geoCache);
+      return { ...doc };
     }
   );
 

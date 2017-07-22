@@ -174,12 +174,20 @@ const uploadSyncEpic = (action$, store) => {
             return dSchema.lockOnUpload && !d.isLocked;
           });
 
+          // Set isLocked flag to true
           docsToUpdate = needsLock.map(doc => ({ ...doc, isLocked: true }));
+          // docsToUpdate = needsLock;
 
-          docsToUpdate.forEach((doc) => {
+          /* docsToUpdate.forEach((doc) => {
             const dSchema = getSchema(doc.domainName);
-            console.log('>>>', uncacheDocumentGeo(doc, dSchema, geoCache));
+          }); */
+
+          docsToUpdate = docsToUpdate.map((doc) => {
+            const dSchema = getSchema(doc.domainName);
+            return uncacheDocumentGeo(doc, dSchema, geoCache);
           });
+
+          console.log('Locking:', docsToUpdate);
 
           return db.bulkDocs(docsToUpdate);
         }).then((results) => {

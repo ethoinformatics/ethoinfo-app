@@ -54,12 +54,18 @@ class Mapper extends Component {
 }
 
 Mapper.defaultProps = {
-  entries: [],
+  entries: {
+    markers: [],
+    polylines: [],
+  },
   useLocalTiles: false,
 };
 
 Mapper.propTypes = {
-  entries: PropTypes.arrayOf(PropTypes.object),
+  entries: PropTypes.shape({
+    markers: PropTypes.arrayOf(PropTypes.object),
+    polylines: PropTypes.arrayOf(PropTypes.object),
+  }),
   useLocalTiles: PropTypes.bool
 };
 
