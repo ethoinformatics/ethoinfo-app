@@ -178,16 +178,10 @@ const uploadSyncEpic = (action$, store) => {
           docsToUpdate = needsLock.map(doc => ({ ...doc, isLocked: true }));
           // docsToUpdate = needsLock;
 
-          /* docsToUpdate.forEach((doc) => {
-            const dSchema = getSchema(doc.domainName);
-          }); */
-
           docsToUpdate = docsToUpdate.map((doc) => {
             const dSchema = getSchema(doc.domainName);
             return uncacheDocumentGeo(doc, dSchema, geoCache);
           });
-
-          console.log('Locking:', docsToUpdate);
 
           return db.bulkDocs(docsToUpdate);
         }).then((results) => {
@@ -197,7 +191,7 @@ const uploadSyncEpic = (action$, store) => {
           // console.log('>>>>', results, docsToUpdate, updatedIds);
           const updatedDocs = docsToUpdate.filter(doc => updatedIds.find(id => id === doc._id));
 
-          // console.log('Updated docs:', updatedDocs);
+          console.log('Updated docs:', updatedDocs);
 
 
           // Todo: Errored case:

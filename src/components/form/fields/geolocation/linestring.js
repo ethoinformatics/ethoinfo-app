@@ -69,6 +69,7 @@ class GeolocationLineString extends Component {
     }
 
     const timeRanges = value.timeRanges;
+    const polylines = value.polylines;
 
     return (
       <div>
@@ -78,13 +79,20 @@ class GeolocationLineString extends Component {
           <div className="timeRangesHeaderCount">Entries</div>
         </div>
         {
-          timeRanges.map((range) => {
+          timeRanges.map((range, index) => {
             const { start, end } = range;
-            const entries = geoCache.filter((cacheValue) => {
-              const { timestamp } = cacheValue;
-              return end ? timestamp >= start && timestamp <= end :
-                timestamp >= start;
-            });
+
+            let entries = [];
+
+            if (polylines) { // Uncached geolocation
+              entries = R.nth(index, polylines);
+            } else { // Cached (local) geolocation
+              entries = geoCache.filter((cacheValue) => {
+                const { timestamp } = cacheValue;
+                return end ? timestamp >= start && timestamp <= end :
+                  timestamp >= start;
+              });
+            }
 
             return (
               <div className="timeRange" key={`timerange-${range.start}-${range.end}`}>

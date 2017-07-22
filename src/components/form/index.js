@@ -7,7 +7,7 @@ import Mapper from '../mapper';
 import TabbedView from '../tabbedView';
 import Fields from './fields';
 
-import { getGeoData } from '../../utilities/geoUtils';
+import { makeMapData } from '../../utilities/geoUtils';
 
 const mapStateToProps = state => ({
   geoCache: state.geo.entries // Todo: make selector!
@@ -23,7 +23,7 @@ const Form = ({ doc, disabled, fieldValues, geoCache, onFieldChange, path, schem
   // console.log('Rendering form for:', doc, isLocked, disabled, fieldValues, schema);
 
   // Gather any geolocation data contained in document, including through children
-  const entries = getGeoData(data, schema, geoCache);
+  const entries = makeMapData(data, schema, geoCache);
   console.log('>>> Map entries:', entries);
 
   const map = (

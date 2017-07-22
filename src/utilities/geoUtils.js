@@ -164,10 +164,13 @@ export const uncacheDocumentGeo = (doc, schema, cache) => {
 
       if (!geoValue) { return null; }
 
-      const timeRanges = geoValue.timeRanges;
+      // Set end time to any active tracks
+      const timeRanges = geoValue.timeRanges.map(tr =>
+        (tr.end ? tr : { start: tr.start, end: Date.now() })
+      );
 
-      const polyLines = mapTimeRangesToPointLinesInCache(timeRanges, cache);
-      return R.assoc(fieldName, { timeRanges, polyLines }, acc);
+      const polylines = mapTimeRangesToPointLinesInCache(timeRanges, cache);
+      return R.assoc(fieldName, { timeRanges, polylines }, acc);
     }
 
     if (!doc[fieldName]) { return acc; }
@@ -194,48 +197,53 @@ export const uncacheDocumentGeo = (doc, schema, cache) => {
   }); */
 };
 
-const makeMapData = (doc, schema) => {
+const makeMapDataFromDocument = (doc, schema) => {
+  // Combine all fields that are of type geolocation
+  // Tracks become polylines
+  // Points become markers
   const polylines = schema.fields.reduce((acc, field) => {
-    const fieldIsGeoLine =
+    // A polyline is made up of a track of geolocations
+    const isPolyline =
       field.type.constructor === Types.Geolocation &&
       !!field.options.track === true;
 
-    const fieldIsCollection =
-      Array.isArray(doc);
+    const isCollection = Array.isArray(doc);
 
-    const fieldIsModel =
-      field.type.constructor === Types.Model;
+    const isModel = field.type.constructor === Types.Model;
 
-    if (fieldIsGeoLine) {
+    if (isPolyline) {
       // Field is a collection (this can only get called recursively)
-      if (fieldIsCollection) {
+      if (isCollection) {
         return [
           ...acc,
           ...doc
             .filter(dd => !!dd) // Remove nils
-            .map(dd => dd[field.name])
+            .map((dd) => {
+              const value = dd[field.name];
+              const valueWithType = { lines: value.polylines, domainName: schema.name };
+              return valueWithType;
+            })
             .filter(dd => !!dd) // Remove nils
-            .map(dd => dd.polylines)
         ].filter(element => !!element); // Remove nils
       }
 
-      const geoValue = doc[field.name];
-      console.log('***', geoValue);
+      const value = doc[field.name];
+      const valueWithType = { lines: value.polylines, domainName: schema.name };
 
       // Append geolocation value to the array and filter nils
-      return [...acc, geoValue.polylines].filter(element => !!element);
+      return [...acc, valueWithType].filter(element => !!element);
     }
 
     // Fields that are models can themselves have geo data
     // Recurse through their fields
-    if (fieldIsModel) {
+    if (isModel) {
       const { name: domainName } = field.type;
       const subSchema = getSchema(domainName);
 
       if (!subSchema) { return acc; }
       if (!doc[field.name]) { return acc; }
 
-      return [...acc, ...makeMapData(doc[field.name], subSchema)];
+      return [...acc, ...makeMapDataFromDocument(doc[field.name], subSchema)];
     }
 
     return acc;
@@ -251,7 +259,7 @@ const makeMapData = (doc, schema) => {
   }; */
 };
 
-export const getGeoData = (doc, schema, cache) => {
+export const makeMapData = (doc, schema, cache) => {
   if (!doc || !schema) { return {}; }
 
   const shouldGetFromCache = !doc.isLocked;
@@ -260,5 +268,5 @@ export const getGeoData = (doc, schema, cache) => {
     return mapGeoFromCache(doc, schema, cache);
   }
 
-  return makeMapData(doc, schema);
+  return makeMapDataFromDocument(doc, schema);
 };
