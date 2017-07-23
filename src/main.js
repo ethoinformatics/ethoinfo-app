@@ -56,7 +56,9 @@ function start() {
     );
 
     // Debug cordova presence:
-    // alert('This is a cordova app');
+    alert('This is a cordova app');
+    alert(cordova.plugins);
+    alert(window.BackgroundGeolocation);
   }
 
   /* if (StatusBar) {

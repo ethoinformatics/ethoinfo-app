@@ -44,6 +44,7 @@ const watchPosition = options =>
         stationaryRadius: 25,
         // Activity Recognition config
         activityRecognitionInterval: 10000,
+        logLevel: bgGeo.LOG_LEVEL_VERBOSE,
         stopTimeout: 5,
         // Application config
         debug: true,  // <-- Debug sounds & notifications.
@@ -57,6 +58,7 @@ const watchPosition = options =>
         }
       });
     } else { // Normal watch
+      alert('Using navigator.geolocation');
       const watchId = window.navigator.geolocation.watchPosition(
         loc => observer.next(loc),
         err => observer.error(err),
