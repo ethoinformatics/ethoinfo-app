@@ -30,10 +30,10 @@
     <engine name="ios" spec="~4.2.1" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <plugin name="cordova-background-geolocation-lt" spec="^2.7.4">
+        <variable name="LICENSE" value="YOUR_LICENSE_KEY" />
+        <variable name="BACKGROUND_MODE_LOCATION" value="&lt;string&gt;location&lt;/string&gt;" />
         <variable name="LOCATION_ALWAYS_USAGE_DESCRIPTION" value="Background location-tracking is required" />
         <variable name="LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION" value="Background location-tracking is required" />
         <variable name="MOTION_USAGE_DESCRIPTION" value="Using the accelerometer increases battery-efficiency by intelligently toggling location-tracking only when the device is detected to be moving" />
-        <!-- Android only -->
-        <variable name="LICENSE" value="YOUR_LICENSE_KEY" />
     </plugin>
 </widget>
