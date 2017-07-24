@@ -14,7 +14,7 @@
     "build": "cross-env NODE_ENV=production rimraf dist && webpack --verbose --colors --display-error-details --config webpack.production.babel.js && cp -R public/ dist/",
     "build-cordova": "npm run build && mkdir -p cordova/www/build && rimraf cordova/www/build && cp -R dist/ cordova/www/build/",
     "prebuild-cordova-ios": "npm run build-cordova",
-    "build-cordova-ios": "cd cordova && cordova build ios",
+    "build-cordova-ios": "cd cordova && cordova prepare ios && cordova build ios",
     "prebuild-cordova-android": "npm run build-cordova",
     "build-cordova-android": "cd cordova && cordova build android",
     "test": "echo \"Error: no test specified\" && exit 1"

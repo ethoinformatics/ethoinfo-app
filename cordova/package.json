@@ -9,7 +9,13 @@
         ],
         "plugins": {
             "cordova-plugin-whitelist": {},
-            "cordova-background-geolocation-lt": {}
+            "cordova-background-geolocation-lt": {
+                "LICENSE": "YOUR_LICENSE_KEY",
+                "BACKGROUND_MODE_LOCATION": "<string>location</string>",
+                "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Background location-tracking is required",
+                "LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION": "Background location-tracking is required",
+                "MOTION_USAGE_DESCRIPTION": "Using the accelerometer increases battery-efficiency by intelligently toggling location-tracking only when the device is detected to be moving"
+            }
         }
     },
     "dependencies": {

@@ -48,17 +48,17 @@ function start() {
   if (cordova) {
     // Enable background mode
     // https://github.com/katzer/cordova-plugin-background-mode
-    cordova.plugins.backgroundMode.enable();
+    // cordova.plugins.backgroundMode.enable();
 
     // Addresses background mode quirks around GPS on android:
-    cordova.plugins.backgroundMode.on('activate', () =>
+    /* cordova.plugins.backgroundMode.on('activate', () =>
       cordova.plugins.backgroundMode.disableWebViewOptimizations()
-    );
+    ); */
+
+    // alert(Object.keys(cordova.plugins));
 
     // Debug cordova presence:
-    alert('This is a cordova app');
-    alert(window.BackgroundGeolocation);
-    alert(cordova.plugins.BackgroundGeolocation);
+    // alert('This is a cordova app');
   }
 
   /* if (StatusBar) {

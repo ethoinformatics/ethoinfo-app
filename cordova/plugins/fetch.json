@@ -33,15 +33,6 @@
             "GEOLOCATION_USAGE_DESCRIPTION": "Allow Geolocation"
         }
     },
-    "cordova-plugin-background-mode": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/katzer/cordova-plugin-background-mode.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-device": {
         "source": {
             "type": "registry",
@@ -56,6 +47,35 @@
             "id": "cordova-background-geolocation-lt"
         },
         "is_top_level": true,
+        "variables": {
+            "BACKGROUND_MODE_LOCATION": "<string>location</string>",
+            "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Background location-tracking is required",
+            "LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION": "Background location-tracking is required",
+            "MOTION_USAGE_DESCRIPTION": "Using the accelerometer increases battery-efficiency by intelligently toggling location-tracking only when the device is detected to be moving"
+        }
+    },
+    "cordova-plugin-dialogs": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-dialogs"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-background-fetch": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-background-fetch"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-cocoalumberjack": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-cocoalumberjack"
+        },
+        "is_top_level": false,
         "variables": {}
     }
 }

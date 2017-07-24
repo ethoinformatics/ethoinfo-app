@@ -21,44 +21,57 @@ const THROTTLE_TIME = 10000; // ms
 // Geolocation Observable wraps geolocation API
 const watchPosition = options =>
   Observable.create((observer) => {
-
     // CORDOVA SPECIFIC USAGE VIA CORDOVA BACKGROUND GEOLOCATION PLUGIN
     // https://github.com/transistorsoft/cordova-background-geolocation-lt
 
     const bgGeo = window.BackgroundGeolocation;
 
     if (bgGeo) {
-      alert('Using background geolocation!');
+      // alert('Using background geolocation!');
 
       bgGeo.on('location', (loc, taskId) => {
         // const { coords } = location;
         // const { latitude, longitude } = coords;
+        alert(loc);
         observer.next(loc);
         bgGeo.finish(taskId);
       });
 
       bgGeo.configure({
         // Geolocation config
-        desiredAccuracy: 0,
-        distanceFilter: 10,
-        stationaryRadius: 25,
+        desiredAccuracy: 0, // HIGHEST POWER, HIGHEST ACCURACY
+        distanceFilter: 0.5,
+        // The minimum distance (measured in meters) a device must move
+        // horizontally before an update event is generated.
+        stationaryRadius: 25, // 25 is minimum on ios
+        // When stopped, the minimum distance the device
+        // must move beyond the stationary location for aggressive background-tracking to engage.
         // Activity Recognition config
-        activityRecognitionInterval: 10000,
-        logLevel: bgGeo.LOG_LEVEL_VERBOSE,
-        stopTimeout: 5,
+        activityRecognitionInterval: 0,
+        stopTimeout: 15,
+        // The number of minutes to wait before turning off location-services
+        // after the ActivityRecognition System (ARS) detects the device is STILL
         // Application config
+        logLevel: bgGeo.LOG_LEVEL_VERBOSE,
         debug: true,  // <-- Debug sounds & notifications.
         stopOnTerminate: false,
         startOnBoot: true,
+        preventSuspend: true,
+        heartbeatInterval: 60,
       }, (state) => {
-        alert('Background geo ready');
+        alert('Background geolocation ready');
 
         if (!state.enabled) {
-          bgGeo.start();
+          alert('Starting Background geolocation');
+          bgGeo.start(() => {
+            alert('Background geolocation started');
+          });
+        } else {
+          alert('Background geolocation enabled');
         }
       });
     } else { // Normal watch
-      alert('Using navigator.geolocation');
+      // alert('Using navigator.geolocation');
       const watchId = window.navigator.geolocation.watchPosition(
         loc => observer.next(loc),
         err => observer.error(err),

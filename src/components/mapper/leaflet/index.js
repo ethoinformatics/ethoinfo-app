@@ -81,8 +81,10 @@ class LeafletMap extends Component {
     }
 
     if (useLocalTiles) {
+      const cordovaPrefix = window.cordova ? 'build/' : '';
+
       this.tileLayer = L.tileLayer(
-        '/maptiles/{z}/{x}/{y}.png',
+        `${cordovaPrefix}maptiles/{z}/{x}/{y}.png`,
         {
           attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
           minZoom,
