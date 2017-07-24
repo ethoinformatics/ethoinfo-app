@@ -55,8 +55,6 @@ function start() {
       cordova.plugins.backgroundMode.disableWebViewOptimizations()
     ); */
 
-    // alert(Object.keys(cordova.plugins));
-
     // Debug cordova presence:
     // alert('This is a cordova app');
   }

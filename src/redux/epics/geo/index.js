@@ -32,9 +32,20 @@ const watchPosition = options =>
       bgGeo.on('location', (loc, taskId) => {
         // const { coords } = location;
         // const { latitude, longitude } = coords;
-        alert(loc);
         observer.next(loc);
         bgGeo.finish(taskId);
+      });
+
+      // Force retrieve geolocation
+      bgGeo.on('heartbeat', () => { // params
+        // const lastKnownLocation = params.location;
+        // console.log('- heartbeat: ', lastKnownLocation);
+        // Request a new location
+        bgGeo.getCurrentPosition((loc, taskId) => {
+          // console.log('- current position: ', location);
+          observer.next(loc);
+          bgGeo.finish(taskId);
+        });
       });
 
       bgGeo.configure({
@@ -48,38 +59,44 @@ const watchPosition = options =>
         // must move beyond the stationary location for aggressive background-tracking to engage.
         // Activity Recognition config
         activityRecognitionInterval: 0,
+        stopDetectionDelay: 5,
+        // Allows the stop-detection system to be delayed from activating.
         stopTimeout: 15,
         // The number of minutes to wait before turning off location-services
         // after the ActivityRecognition System (ARS) detects the device is STILL
         // Application config
         logLevel: bgGeo.LOG_LEVEL_VERBOSE,
         debug: true,  // <-- Debug sounds & notifications.
-        stopOnTerminate: false,
-        startOnBoot: true,
+        stopOnTerminate: true,
+        startOnBoot: false,
         preventSuspend: true,
-        heartbeatInterval: 60,
+        heartbeatInterval: 30,
+        // disableMotionActivityUpdates: false,
       }, (state) => {
-        alert('Background geolocation ready');
+        // alert('Background geolocation ready');
 
         if (!state.enabled) {
-          alert('Starting Background geolocation');
+          // alert('Starting Background geolocation');
           bgGeo.start(() => {
-            alert('Background geolocation started');
+            // alert('Background geolocation started');
           });
         } else {
-          alert('Background geolocation enabled');
+          // alert('Background geolocation enabled');
         }
       });
-    } else { // Normal watch
-      // alert('Using navigator.geolocation');
-      const watchId = window.navigator.geolocation.watchPosition(
-        loc => observer.next(loc),
-        err => observer.error(err),
-        options
-      );
 
-      return () => window.navigator.geolocation.clearWatch(watchId);
+      return () => bgGeo.stop();
     }
+
+    // Normal watch
+    // alert('Using navigator.geolocation');
+    const watchId = window.navigator.geolocation.watchPosition(
+      loc => observer.next(loc),
+      err => observer.error(err),
+      options
+    );
+
+    return () => window.navigator.geolocation.clearWatch(watchId);
   }).publish().refCount();
 
 

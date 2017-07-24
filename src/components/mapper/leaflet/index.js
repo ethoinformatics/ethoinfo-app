@@ -147,7 +147,7 @@ class LeafletMap extends Component {
           // Add individual points
           latLngs.forEach((ll) => {
             const marker = L.circleMarker(ll, {
-              radius: 1,
+              radius: 2,
               color,
             });
 
