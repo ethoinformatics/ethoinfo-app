@@ -26,7 +26,7 @@ class Mapper extends Component {
 
   render() {
     const { entries, useLocalTiles } = this.props;
-    const { polylines } = entries;
+    const polylines = entries.polylines || [];
 
     // Flatmap entries into a single array and sort by timestamp:
     const flatEntries = R.flatten(R.map(mapPoints, polylines));

@@ -225,7 +225,7 @@ const uploadSyncEpic = (action$, store) => {
       return Observable.concat(
         Observable.of(beginTransaction()),
         lockIfNeeded(),
-        // replicateUp(),
+        replicateUp(),
         Observable.of(endTransaction())
       );
     }
