@@ -17,8 +17,8 @@ const mapStateToProps = state =>
 const mapDispatchToProps = () => ({
 });
 
-const mapPoints = entry => entry.geoPoints;
-const timeDiff = (t1, t2) => t1 - t2;
+const mapPoints = entry => entry.lines;
+const timeDiff = (t1, t2) => t1.timestamp - t2.timestamp;
 
 class Mapper extends Component {
   componentDidMount() {
@@ -26,9 +26,10 @@ class Mapper extends Component {
 
   render() {
     const { entries, useLocalTiles } = this.props;
+    const { polylines } = entries;
 
     // Flatmap entries into a single array and sort by timestamp:
-    const flatEntries = R.flatten(R.map(mapPoints, entries));
+    const flatEntries = R.flatten(R.map(mapPoints, polylines));
     const sortedFlatEntries = R.sort(timeDiff, flatEntries);
 
     // Most recent entry:

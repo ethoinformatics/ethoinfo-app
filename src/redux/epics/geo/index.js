@@ -69,8 +69,8 @@ const watchPosition = options =>
         // The number of minutes to wait before turning off location-services
         // after the ActivityRecognition System (ARS) detects the device is STILL
         // Application config
-        logLevel: bgGeo.LOG_LEVEL_VERBOSE,
-        debug: true,  // <-- Debug sounds & notifications.
+        logLevel: bgGeo.LOG_LEVEL_OFF, // LOG_LEVEL_VERBOSE
+        debug: false,  // <-- Debug sounds & notifications.
         stopOnTerminate: true,
         startOnBoot: false,
         preventSuspend: true,
