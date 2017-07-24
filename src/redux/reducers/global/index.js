@@ -2,6 +2,7 @@
 import uuid from 'uuid';
 
 import {
+  GLOBAL_DEBUG_LOG_MESSAGE_CREATE,
   GLOBAL_MESSAGE_CREATE,
   GLOBAL_MESSAGE_MARK_READ,
   GLOBAL_TRANSACTION_BEGIN,
@@ -12,6 +13,7 @@ import {
 // PRIVATES
 
 const defaultState = {
+  log: [],
   messages: [],
   transactionInProgress: false,
 };
@@ -21,6 +23,10 @@ const defaultState = {
 
 function global(state = defaultState, action) {
   switch (action.type) {
+    case GLOBAL_DEBUG_LOG_MESSAGE_CREATE: {
+      const newMessage = { timestamp: Date.now(), text: action.payload };
+      return { ...state, log: [...state.log, newMessage] };
+    }
     case GLOBAL_MESSAGE_CREATE: {
       const newMessage = { id: uuid.v4(), text: action.payload };
       return { ...state, messages: [...state.messages, newMessage] };

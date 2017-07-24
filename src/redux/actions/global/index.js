@@ -30,3 +30,12 @@ export function markMessageAsRead(id) {
   return { type: GLOBAL_MESSAGE_MARK_READ, payload: id };
 }
 
+// ------------------------------------------------------------
+// DEBUG LOG
+export const GLOBAL_DEBUG_LOG_MESSAGE_CREATE =
+  'GLOBAL_DEBUG_LOG_MESSAGE_CREATE';
+
+export function createLogMessage(message = '') {
+  return { type: GLOBAL_DEBUG_LOG_MESSAGE_CREATE, payload: message };
+}
+

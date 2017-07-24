@@ -14,6 +14,10 @@ import {
   loadCacheError,
 } from '../../actions/geo';
 
+import {
+  createLogMessage,
+} from '../../actions/global';
+
 // Amount to throttle geolocation.watch
 // This keeps us from being spammed
 const THROTTLE_TIME = 10000; // ms
@@ -116,13 +120,30 @@ const watchEpic = (action$) => {
   return watch$.mergeMap(
     () => watchPosition(watchOptions)
       .debounceTime(THROTTLE_TIME)
-      .map(geoposition => received({
+      /* .map(geoposition => received({
         coords: {
           latitude: geoposition.coords.latitude,
           longitude: geoposition.coords.longitude
         },
         timestamp: geoposition.timestamp
-      }))
+      })) */
+      .flatMap((geoposition) => {
+        const geoReceived = received({
+          coords: {
+            latitude: geoposition.coords.latitude,
+            longitude: geoposition.coords.longitude
+          },
+          timestamp: geoposition.timestamp
+        });
+
+        const logMessage = createLogMessage(`Geo received: ${geoposition.coords.latitude}, ${geoposition.coords.longitude}`);
+
+        // Concat 2 observables so they fire sequentially
+        return Observable.concat(
+          Observable.of(geoReceived),
+          Observable.of(logMessage)
+        );
+      })
       .takeUntil(unWatch$)
     );
 };
