@@ -219,7 +219,7 @@ const makeMapDataFromDocument = (doc, schema) => {
           ...doc
             .filter(dd => !!dd) // Remove nils
             .map((dd) => {
-              const value = dd[field.name];
+              const value = dd[field.name] || { polylines: [] };
               const valueWithType = { lines: value.polylines, domainName: schema.name };
               return valueWithType;
             })
@@ -227,11 +227,13 @@ const makeMapDataFromDocument = (doc, schema) => {
         ].filter(element => !!element); // Remove nils
       }
 
-      const value = doc[field.name];
+      const value = doc[field.name] || { polylines: [] };
       const valueWithType = { lines: value.polylines, domainName: schema.name };
 
       // Append geolocation value to the array and filter nils
-      return [...acc, valueWithType].filter(element => !!element);
+      return [...acc, valueWithType]
+        .filter(element => !!element)
+        .filter(element => element.lines.length > 0);
     }
 
     // Fields that are models can themselves have geo data
