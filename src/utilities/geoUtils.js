@@ -220,7 +220,7 @@ const makeMapDataFromDocument = (doc, schema) => {
             .filter(dd => !!dd) // Remove nils
             .map((dd) => {
               const value = dd[field.name] || { polylines: [] };
-              const valueWithType = { lines: value.polylines, domainName: schema.name };
+              const valueWithType = { lines: value.polylines || [], domainName: schema.name };
               return valueWithType;
             })
             .filter(dd => !!dd) // Remove nils
@@ -228,7 +228,7 @@ const makeMapDataFromDocument = (doc, schema) => {
       }
 
       const value = doc[field.name] || { polylines: [] };
-      const valueWithType = { lines: value.polylines, domainName: schema.name };
+      const valueWithType = { lines: value.polylines || [], domainName: schema.name };
 
       // Append geolocation value to the array and filter nils
       return [...acc, valueWithType]
