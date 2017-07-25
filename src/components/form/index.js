@@ -24,7 +24,7 @@ const Form = ({ doc, disabled, fieldValues, geoCache, onFieldChange, path, schem
 
   // Gather any geolocation data contained in document, including through children
   const entries = makeMapData(data, schema, geoCache);
-  console.log('>>> Map entries:', entries);
+  // console.log('>>> Map entries:', entries);
 
   const map = (
     <Mapper entries={entries} />

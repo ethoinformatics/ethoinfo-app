@@ -108,8 +108,12 @@ class LeafletMap extends Component {
   refreshMapLayers() {
     // Good use case for immutablejs here.
     // Difficult to diff geolocation entries to accomodate imperative leaflet api
-    const { entries } = this.props;
-    const { markers, polylines } = entries;
+    const entries = this.props.entries || {
+      markers: [],
+      polylines: []
+    };
+
+    const { polylines } = entries;
 
     // For now we are just going to refresh map each time
     if (this.layerGroup) {
