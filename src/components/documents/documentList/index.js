@@ -62,13 +62,19 @@ class DocumentList extends Component {
         { /* statusIcon */ }
         <button
           className="delete"
+          disabled={isLocked}
           onClick={(e) => {
             e.stopPropagation();
             deleteDoc(_id, _rev);
           }}
         >
           {
-            <Icon icon="md-close" />
+            !isLocked &&
+              <Icon icon="md-close" />
+          }
+          {
+            isLocked &&
+              <Icon style={{ color: 'black' }} icon="ion-ios-locked-outline" />
           }
 
         </button>
