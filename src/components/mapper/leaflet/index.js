@@ -113,7 +113,7 @@ class LeafletMap extends Component {
       polylines: []
     };
 
-    const { polylines } = entries;
+    const polylines = entries.polylines || [];
 
     // For now we are just going to refresh map each time
     if (this.layerGroup) {

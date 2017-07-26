@@ -20,11 +20,12 @@ const Form = ({ doc, disabled, fieldValues, geoCache, onFieldChange, path, schem
   const data = doc ? { ...doc, ...fieldValues } : fieldValues;
   const isLocked = disabled || (doc ? !!doc.isLocked : false);
 
-  // console.log('Rendering form for:', doc, isLocked, disabled, fieldValues, schema);
+  // const data = doc;
 
   // Gather any geolocation data contained in document, including through children
   const entries = makeMapData(data, schema, geoCache);
-  // console.log('>>> Map entries:', entries);
+
+  console.log('>>> Entries are:', entries);
 
   const map = (
     <Mapper entries={entries} />

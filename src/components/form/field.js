@@ -1,4 +1,5 @@
 import React from 'react';
+import R from 'ramda';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { connect } from 'react-redux';
@@ -55,7 +56,25 @@ class Field extends React.Component {
     } = this.props;
 
     let fieldComponent = null;
-    const normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
+    // const normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
+
+    let normalizedValue = null;
+    /* console.log(name);
+    console.log('1', initialValue);
+    console.log('2', fieldValue);
+    if (initialValue === Object(initialValue)) {
+      console.log(R.mergeDeepRight(initialValue, fieldValue || {}));
+    }
+    console.log('----'); */
+    console.log('---');
+    if (initialValue === Object(initialValue) && !Array.isArray(initialValue)) {
+      console.log('1 >>>', initialValue);
+      console.log('2 >>>', fieldValue);
+      normalizedValue = R.mergeDeepRight(initialValue, fieldValue || {});
+      console.log('3 >>>', normalizedValue);
+    } else {
+      normalizedValue = _.isNil(fieldValue) ? initialValue || null : fieldValue;
+    }
 
     // Todo: default field values?
     let fieldProps = {
@@ -118,6 +137,8 @@ class Field extends React.Component {
           // If this is a single geolocation point, field is a button fieldComponent
           // which takes taps and returns geolocation points
           if (options.track) {
+            // console.log('%% initial', initialValue);
+            // console.log('%% normal', normalizedValue);
             /* fieldComponent = <BooleanField {...fieldProps} />; */
             fieldComponent = <GeoLineString {...fieldProps} />;
           } else {

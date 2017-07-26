@@ -1,4 +1,5 @@
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Rx';
+
 // import moment from 'moment';
 import localforage from 'localforage';
 
@@ -145,7 +146,10 @@ const watchEpic = (action$) => {
         );
       })
       .takeUntil(unWatch$)
-    );
+    ).catch((err) => {
+      console.log('>>> Geo error:', err);
+      return Observable.of(errored(err ? err.message : ''));
+    });
 };
 
 

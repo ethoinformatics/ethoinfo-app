@@ -64,6 +64,8 @@ class GeolocationLineString extends Component {
   renderTimeRanges() {
     const { geoCache, value } = this.props;
 
+    // console.log('Rendering time ranges:', value);
+
     if (!value || !value.timeRanges) {
       return null;
     }

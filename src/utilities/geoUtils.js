@@ -202,6 +202,7 @@ const makeMapDataFromDocument = (doc, schema) => {
   // Tracks become polylines
   // Points become markers
   const polylines = schema.fields.reduce((acc, field) => {
+    // console.log('Reducing field:', field.name, acc);
     // A polyline is made up of a track of geolocations
     const isPolyline =
       field.type.constructor === Types.Geolocation &&
@@ -210,11 +211,14 @@ const makeMapDataFromDocument = (doc, schema) => {
     const isCollection = Array.isArray(doc);
 
     const isModel = field.type.constructor === Types.Model;
+    // console.log('Reducing field:', field.name);
 
     if (isPolyline) {
       // Field is a collection (this can only get called recursively)
       if (isCollection) {
-        return [
+        // console.log('Field is model collection:', schema.name);
+
+        const entries = [
           ...acc,
           ...doc
             .filter(dd => !!dd) // Remove nils
@@ -225,6 +229,8 @@ const makeMapDataFromDocument = (doc, schema) => {
             })
             .filter(dd => !!dd) // Remove nils
         ].filter(element => !!element); // Remove nils
+
+        return entries;
       }
 
       const value = doc[field.name] || { polylines: [] };
@@ -240,16 +246,24 @@ const makeMapDataFromDocument = (doc, schema) => {
     // Recurse through their fields
     if (isModel) {
       const { name: domainName } = field.type;
+
       const subSchema = getSchema(domainName);
 
       if (!subSchema) { return acc; }
       if (!doc[field.name]) { return acc; }
 
-      return [...acc, ...makeMapDataFromDocument(doc[field.name], subSchema)];
-    }
+      // console.log('Recursing:', domainName, acc);
 
+      const { polylines: nestedPolyLines } = makeMapDataFromDocument(doc[field.name], subSchema);
+
+      // console.log('Returning:', acc, nestedPolyLines);
+
+      return [...acc, ...nestedPolyLines];
+    }
     return acc;
   }, []);
+
+  // console.log('*** polylines:', polylines);
 
   return {
     polylines

@@ -5,6 +5,10 @@ import {
   FIELDS_RESET,
 } from '../../actions/fields';
 
+import {
+  BULK_DOC_UPDATE_SUCCESS,
+} from '../../actions/documents';
+
 // -----------------------------------------------------------------------------
 // PRIVATES
 
@@ -16,6 +20,10 @@ const defaultState = {
 
 function fields(state = defaultState, action) {
   switch (action.type) {
+    case BULK_DOC_UPDATE_SUCCESS: {
+      const updated = action.payload.map(o => o._id);
+      return R.omit(updated, state);
+    }
     case FIELD_SET: {
       // console.log(action.payload.path, action.payload.value, state);
       return R.assocPath(

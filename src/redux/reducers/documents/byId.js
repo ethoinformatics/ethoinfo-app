@@ -17,9 +17,12 @@ function byId(state = defaultState, action) {
       console.log('>>>> update:', action.payload);
       return state; */
     case BULK_DOC_UPDATE_SUCCESS: {
+      console.log('>>> Bulk update success:', action.payload);
       const updatedDocs = action.payload
         .reduce((acc, val) => R.assoc(val._id, val, acc), {});
-      return R.merge(state, updatedDocs);
+      const newState = R.merge(state, updatedDocs);
+      console.log('>>> New state:', newState);
+      return newState;
     }
 
     case DOCS_LOAD_ALL_SUCCESS:
